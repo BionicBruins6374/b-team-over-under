@@ -4,25 +4,29 @@
       "name": "PROS Project",
       "includePath": [
         "${workspaceFolder}/**",
-        "c:\\Users\\zoya\\Documents\\robotics\\overUnder\\B-TEAM-1\\include"
+        "c:\\Users\\zoya\\Documents\\robotics\\overUnder\\B-TEAM-1\\include",
+        "/Users/adellekang/b-team-OverUnder/include"
       ],
       "defines": [
         "_DEBUG",
         "UNICODE",
         "_UNICODE"
       ],
-      "compilerPath": "C:\\Program Files\\PROS\\toolchain\\usr\\bin\\arm-none-eabi-g++",
+      "compilerPath": "/Users/adellekang/Library/Application Support/Code/User/globalStorage/sigbots.pros/install/pros-toolchain-macos/bin/arm-none-eabi-g++",
       "cStandard": "c17",
       "cppStandard": "c++17",
       "intelliSenseMode": "gcc-arm",
-      "compileCommands": "c:\\Users\\zoya\\Documents\\robotics\\overUnder\\B-TEAM-1\\compile_commands.json",
+      "compileCommands": "/Users/adellekang/b-team-OverUnder/compile_commands.json",
       "browse": {
         "path": [
-          "c:\\Users\\zoya\\Documents\\robotics\\overUnder\\B-TEAM-1"
+          "/Users/adellekang/b-team-OverUnder"
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""
-      }
+      },
+      "macFrameworkPath": [
+        "/System/Library/Frameworks"
+      ]
     }
   ],
   "version": 4

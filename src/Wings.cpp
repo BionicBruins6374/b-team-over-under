@@ -1,6 +1,6 @@
 #include "Wings.hpp"
 
-Wings::Wings(int8_t pistonPort):
+Wings::Wings(uint8_t pistonPort):
     piston (pistonPort){ 
     }
 

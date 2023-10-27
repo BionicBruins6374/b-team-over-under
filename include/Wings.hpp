@@ -9,5 +9,5 @@ private:
 
 public:
     void pistonOut();
-    Wings(int8_t pistonPort);
+    Wings(uint8_t pistonPort);
 };

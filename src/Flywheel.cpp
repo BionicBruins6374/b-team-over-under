@@ -1,5 +1,10 @@
 #include "Flywheel.hpp"
 
+
+Flywheel::Flywheel(uint8_t m_left_port) 
+: m_left{ m_left_port, true } 
+{}
+
 // changes the speed and power state of Flywheel according to the button press 
 void Flywheel::speed_change(Speed buttonPressed) {
     // if the flywheel is off or the flywheel speed button different 
@@ -9,6 +14,7 @@ void Flywheel::speed_change(Speed buttonPressed) {
         speed = buttonPressed;
         m_left.move_voltage(speed  * polarity);
     }
+
     else {
             powerState = false;
             speed = high; // resets speed to default value, TODO: should I do this or make it = to 0

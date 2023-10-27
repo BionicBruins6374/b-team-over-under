@@ -18,6 +18,23 @@ void Flywheel::speed_change() {
     m_left.move_voltage(speed  * polarity);
 }
 
+void Flywheel::speed_change(Speed buttonPressed) {
+    if (!powerState) {
+        powerState = true; 
+        speed = buttonPressed;
+    }
+    else {
+        if (buttonPressed == speed) {
+            powerState = false;
+            speed = high;
+        }
+        else {
+            speed = buttonPressed; 
+        }
+    }
+
+}
+
 void Flywheel::toggle() {
     
 }

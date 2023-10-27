@@ -1,44 +1,25 @@
 #include "Flywheel.hpp"
 
-// TODO: only allows speed change if motor is on; change behavior?
-// other options include: turning off flywheel sets speed back to high by default, but pressing the speed change 
-//   button would turn on the flywheel with the low speed
-void Flywheel::speed_change() {
-    if (powerState) {
-        switch (speed)
-        {
-        case high:
-            speed = low;
-            break;
-        case low: 
-            speed = high;
-            break;
-        }
-    }
-    m_left.move_voltage(speed  * polarity);
-}
-
+// changes the speed and power state of Flywheel according to the button press 
 void Flywheel::speed_change(Speed buttonPressed) {
-    if (!powerState) {
+    // if the flywheel is off or the flywheel speed button different 
+    //    from the current speed button is pressed (trying to change the speed)
+    if (!powerState || (powerState && buttonPressed!= speed)) {
         powerState = true; 
         speed = buttonPressed;
+        m_left.move_voltage(speed  * polarity);
     }
     else {
-        if (buttonPressed == speed) {
             powerState = false;
-            speed = high;
-        }
-        else {
-            speed = buttonPressed; 
-        }
+            speed = high; // resets speed to default value, TODO: should I do this or make it = to 0
+            m_left.move_voltage(0);
     }
-
-}
-
-void Flywheel::toggle() {
-    
 }
 
 void Flywheel::change_direction() {
+    polarity *= -1; 
+}
 
+void Flywheel::set_voltage(int16_t voltage) {
+    m_left.move_voltage(voltage);
 }

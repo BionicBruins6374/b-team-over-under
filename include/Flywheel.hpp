@@ -17,7 +17,7 @@ class Flywheel {
         int8_t polarity = -1; // -1 = deintaking, 1 = shooting; TODO: change default value?     
     public:
         Flywheel(uint8_t m_left_port);
-        void toggle();
-        void speed_change(); 
         void change_direction();
+        void speed_change(Speed buttonPressed); 
+        void set_voltage(int16_t voltage);
 };

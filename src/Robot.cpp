@@ -9,7 +9,6 @@ void Robot::update_intake() {
         if (R2_press) {
             intake.move_level();
         }
-
         if (R1_press) {
             if (intake.get_volt() != 0) {
                 intake.set_voltage(0);
@@ -18,7 +17,6 @@ void Robot::update_intake() {
                 intake.set_voltage(intake.get_level());
             }
         }
-        
         if (B_press) {
             intake.switch_polarity(); 
         }

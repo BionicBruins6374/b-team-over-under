@@ -2,8 +2,8 @@
 
 /* constructor 
 */
-Intake::Intake(uint8_t port) 
-: Intake{ port } 
+Intake::Intake(int8_t port) 
+: intakeMotor{ port } 
 {}; 
 
 /* sets voltage to the motor based on input 
@@ -29,7 +29,7 @@ void Intake::switch_polarity() {
 
 /* returns current voltage level of intake--high or low
 */
-level Intake::get_level() {
+Intake::level Intake::get_level() {
     return level_state;
 }
 

@@ -1,5 +1,8 @@
 #include "Robot.hpp"
 
+Robot::Robot(Intake intake_in) :
+intake {intake_in}
+{}; 
 
 void Robot::update_intake() {
     int8_t R1_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1); 

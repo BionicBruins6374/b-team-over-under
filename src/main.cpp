@@ -1,7 +1,10 @@
 #include "main.h"
+#include "Robot.hpp"
+#include "ports.hpp"
 
 
-// Chassis constructor
+
+// Chassis constructor DIRECTIONS ARE FORM FRONT
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   // RED AND GREEN = LEFT 
@@ -44,10 +47,13 @@ void autonomous() {
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+  Intake intake = Intake {ports::INTAKE_MOTOR};
+  Robot robot = Robot {intake}; 
 
   while (true) {
     chassis.arcade_standard(ez::SPLIT); // Standard split arcade
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+    robot.update("TESTING");
   }
 }
 

@@ -6,14 +6,16 @@ Intake::Intake(int8_t port)
 : intakeMotor{ port } 
 {}; 
 
-/* sets voltage to the motor based on input 
+/* sets voltage to the motor based on input and dampens the voltage if motor is at risk of overheating
 */
 void Intake::set_voltage(int voltage) {
     int32_t volt; 
     // TODO: change temperature--check motors during testing for ideal temp
+    // temperature in Celsius 
     if (intakeMotor.get_temperature() < 50) {
     volt = voltage * polarity;
     }
+    // dampens voltage supply if motor is near threshold of overheating
     else {
         volt = voltage * 0.90 * polarity; // TODO: change scaler amnt
     }

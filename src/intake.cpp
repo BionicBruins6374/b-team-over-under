@@ -9,13 +9,16 @@ Intake::Intake(uint8_t port)
 /* sets voltage to the motor based on input 
 */
 void Intake::set_voltage(int voltage) {
+    int32_t volt; 
     // TODO: change temperature--check motors during testing for ideal temp
     if (intakeMotor.get_temperature() < 50) {
-    intakeMotor.move_voltage(voltage * polarity );
+    volt = voltage * polarity;
     }
     else {
-        intakeMotor.move_voltage(voltage * 0.90 * polarity); // TODO: change scaler amnt
+        volt = voltage * 0.90 * polarity; // TODO: change scaler amnt
     }
+    intakeMotor.move_voltage(volt);
+    current_ideal_voltage = volt;
 }
 
 /* switches polarity of bot 

@@ -47,7 +47,6 @@ void opcontrol() {
 
   while (true) {
     chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }

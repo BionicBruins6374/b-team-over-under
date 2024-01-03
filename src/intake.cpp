@@ -27,4 +27,26 @@ void Intake::switch_polarity() {
     polarity *= -1;
 }
 
+/* returns current voltage level of intake--high or low
+*/
+level Intake::get_level() {
+    return level_state;
+}
+
+/* switches voltage level
+*/
+void Intake::move_level() {
+    if (level_state == high) {
+        level_state = low;
+    }
+    else {
+        level_state = high;
+    }
+}
+
+/* returns current ideal voltage of intake  
+*/
+int32_t Intake::get_volt() {
+    return current_ideal_voltage;
+}
 

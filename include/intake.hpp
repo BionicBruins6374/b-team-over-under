@@ -7,6 +7,10 @@ private:
     level level_state = high;
     int32_t current_ideal_voltage = 0;
 public:
+    enum level {
+        high = 12000,
+        low = 10000
+    };
     Intake(uint8_t port);
     void set_voltage(int voltage);
     void switch_polarity();
@@ -16,9 +20,6 @@ public:
 
     int32_t get_volt();
 
-    enum level {
-        high = 12000,
-        low = 10000
-    };
+    
 };
 

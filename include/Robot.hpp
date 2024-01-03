@@ -16,5 +16,5 @@ class Robot {
         void update_cata(); 
         void update_wings(); 
     public: 
-        void update(std::string[] info); 
+        void update(std::string info); 
 };

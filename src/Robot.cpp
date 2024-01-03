@@ -23,3 +23,7 @@ void Robot::update_intake() {
             intake.switch_polarity(); 
         }
     }
+
+void Robot::update(std::string info) {
+    update_intake();
+}

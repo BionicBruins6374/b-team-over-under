@@ -8,7 +8,7 @@ Intake::Intake(int8_t port)
 
 /* sets voltage to the motor based on input and dampens the voltage if motor is at risk of overheating
 */
-void Intake::set_voltage(int voltage) {
+void Intake::set_voltage(int8_t voltage) {
     int32_t volt; 
     // TODO: change temperature--check motors during testing for ideal temp
     // temperature in Celsius 

@@ -17,7 +17,7 @@ private:
 public:
     
     Intake(int8_t port);
-    void set_voltage(int voltage);
+    void set_voltage(int8_t voltage);
     void switch_polarity();
 
     Intake::level get_level();

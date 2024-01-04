@@ -1,3 +1,4 @@
+#pragma once
 #include "api.h"
 #include "Cata.hpp"
 #include "Intake.hpp"
@@ -9,11 +10,11 @@ class Robot {
         pros::Controller m_controller {pros::E_CONTROLLER_MASTER}; 
 
         Intake intake; 
-        // Catapult cata;
+        Catapult cata;
         // Wings wings;
         
         void update_intake();
-        void update_cata(); 
+        void update_cata(); // L1 toggles matchloader, L2 switches speed 
         void update_wings(); 
     public: 
         void update(std::string info); 

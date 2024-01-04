@@ -1,6 +1,7 @@
 #include "main.h"
-#include "Robot.hpp"
-// #include "ports.hpp"
+// #include "Intake.hpp"
+// #include "Robot.hpp"
+#include "ports.hpp"
 
 
 
@@ -47,7 +48,7 @@ void autonomous() {
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
-  Intake intake = Intake {2};
+  Intake intake = Intake {ports::INTAKE_MOTOR};
   Robot robot = Robot {intake}; 
 
   while (true) {

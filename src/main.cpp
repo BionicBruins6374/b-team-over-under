@@ -49,7 +49,8 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  Robot robot = Robot {intake}; 
+  Catapult cata = Catapult {ports::SMALL_CATAPULT_MOTOR, ports::BIG_CATAPULT_MOTOR};
+  Robot robot = Robot {intake, cata}; 
 
   while (true) {
     chassis.arcade_standard(ez::SPLIT); // Standard split arcade

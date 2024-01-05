@@ -1,4 +1,5 @@
 #include "intake.hpp"
+#include "constants.hpp"
 
 /* constructor 
 */
@@ -8,19 +9,23 @@ Intake::Intake(int8_t port)
 
 /* sets voltage to the motor based on input and dampens the voltage if motor is at risk of overheating
 */
-void Intake::set_voltage(int8_t voltage) {
-    int32_t volt; 
-    // TODO: change temperature--check motors during testing for ideal temp
-    // temperature in Celsius 
-    if (intakeMotor.get_temperature() < 50) {
-    volt = voltage * polarity;
-    }
-    // dampens voltage supply if motor is near threshold of overheating
-    else {
-        volt = voltage * 0.90 * polarity; // TODO: change scaler amnt
-    }
-    intakeMotor.move_voltage(volt);
-    current_ideal_voltage = volt;
+// void Intake::set_voltage(int8_t voltage) {
+//     int32_t volt; 
+//     // TODO: change temperature--check motors during testing for ideal temp
+//     // temperature in Celsius 
+//     if (intakeMotor.get_temperature() < 50) {
+//     volt = voltage * polarity;
+//     }
+//     // dampens voltage supply if motor is near threshold of overheating
+//     else {
+//         volt = voltage * 0.90 * polarity; // TODO: change scaler amnt
+//     }
+//     intakeMotor.move_voltage(volt);
+//     current_ideal_voltage = volt;
+// }
+
+void Intake::set_voltage(int32_t voltage) {
+    intakeMotor.move_voltage(voltage * polarity );
 }
 
 /* switches polarity of bot 
@@ -46,9 +51,15 @@ void Intake::move_level() {
     }
 }
 
-/* returns current ideal voltage of intake  
+/* returns current toggled status of the bot (1 = on, 0 = off)
 */
-int32_t Intake::get_volt() {
-    return current_ideal_voltage;
+int8_t Intake::get_state() {
+    return intake_on ? 1 : 0;
+}
+
+/* switches state of intake between being on and off 
+*/
+void Intake::toggle() {
+    intake_on = !intake_on;
 }
 

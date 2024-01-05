@@ -19,6 +19,6 @@ class Robot {
     public: 
         void update(std::string info); 
         // Robot(Catapult cata, Intake intake, Wings wings);
-        Robot(Intake intake);
+        Robot(Intake intake, Catapult cata);
         
 };

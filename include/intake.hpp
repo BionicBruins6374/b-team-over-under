@@ -11,18 +11,18 @@ private:
     pros::Motor intakeMotor; 
     int polarity = 1; 
     Intake::level level_state = high;
-    int32_t current_ideal_voltage = 0;
-    
-
+    bool intake_on = false;    
 public:
     
     Intake(int8_t port);
-    void set_voltage(int8_t voltage);
+    void set_voltage(int32_t voltage);
     void switch_polarity();
 
     Intake::level get_level();
     void move_level(); 
 
-    int32_t get_volt();
+    int8_t get_state();
+
+    void toggle(); 
 
 };

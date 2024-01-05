@@ -8,7 +8,4 @@ class Catapult {
     public:
         Catapult( int8_t small_motor_port, int8_t big_motor_port );
         void set_voltage(int32_t voltage);
-    
-        
-
 };

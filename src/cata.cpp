@@ -1,4 +1,5 @@
 #include "Cata.hpp"
+#include "constants.hpp"
 
 Catapult::Catapult(int8_t small_motor, int8_t big_motor) :
     m_small_motor {small_motor},
@@ -11,5 +12,14 @@ void Catapult::set_voltage(int32_t voltage) {
     m_big_motor.move_voltage(voltage);
 }
 
+void Catapult::toggle() {
+    state = !state;
+    if (state) {
+        set_voltage(constants::HIGH_VOLTAGE_CATA);
+    }
+    else {
+        set_voltage(0);
+    }
+}
 
 // TODO: slip gear cycle + task

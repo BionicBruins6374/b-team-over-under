@@ -1,8 +1,9 @@
 #include "Robot.hpp"
 
-Robot::Robot(Intake intake_in, Catapult cata_in) :
+Robot::Robot(Intake intake_in, Catapult cata_in, Wings wingin) :
 intake {intake_in},
-cata { cata_in}
+cata { cata_in},
+wings {wingin}
 {}; 
 
 void Robot::update_intake() {   
@@ -46,6 +47,12 @@ void Robot::update_cata() {
         intake.toggle();
     } 
 
+}
+
+void Robot::update_wings() {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+        wings.toggle_piston();
+    } 
 }
 void Robot::update(std::string info) {
     update_intake();

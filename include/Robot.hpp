@@ -11,6 +11,7 @@ class Robot {
 
         Intake intake; 
         Catapult cata;
+        int8_t intake_pressed_count = 0;  // whether or not the intake button is currently being pressed
         // Wings wings;
         
         void update_intake();

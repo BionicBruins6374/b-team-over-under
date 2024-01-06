@@ -5,15 +5,14 @@ intake {intake_in},
 cata { cata_in}
 {}; 
 
-void Robot::update_intake() {
-    int8_t R1_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1); 
+void Robot::update_intake() {   
+    int8_t R1_pressed = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1);
+    int8_t R1_pressing = m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);  
     int8_t R2_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2);
     int8_t B_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B);
-        
-        // turns intake on/off
-        if (R1_press) {
-            intake.toggle();
-        }
+
+        // sets intake power state to the state of the button being pressed--intake is on while button is pressed and held 
+        intake.toggle(R1_pressing); 
         // switches direction arm spins (intaking vs deintaking)
         if (R2_press) {
             intake.switch_polarity(); 

@@ -24,5 +24,7 @@ public:
     int8_t get_state();
 
     void toggle(); 
+    void toggle(bool state); // set state urself  
+
 
 };

@@ -13,18 +13,18 @@ void Robot::update_intake() {
 
     // <-----------------TODO SECTION------------------>
     // OPTION 1 
-    // intake_pressed_count += R1_pressed; 
+    /* intake_pressed_count += R1_pressed; 
 
-    // // if R1 was just pressed or just stopped being pressed, switch state
-    // if (R1_pressed ||( intake_pressed_count % 2 == 1 && !R1_pressing)) { // should it be just one or the other 
-    //     intake.toggle();;
+    // if R1 was just pressed or just stopped being pressed, switch state
+    if (R1_pressed ||( intake_pressed_count % 2 == 1 && !R1_pressing)) { // should it be just one or the other 
+        intake.toggle();
     //     intake_pressed_count += 1; 
-    // }
+    } */
 
     // OPTION 2
     // sets intake power state to the state of the button being pressed--intake is on while button is pressed and held 
     intake.toggle(R1_pressing); 
-    // <--------------END OPTIONS------------------->
+    // <--------------END TODO------------------->
 
     // switches direction arm spins (intaking vs deintaking)
     if (R2_press) {

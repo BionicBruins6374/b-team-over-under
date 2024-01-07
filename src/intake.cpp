@@ -25,13 +25,17 @@ Intake::Intake(int8_t port)
 // }
 
 void Intake::set_voltage(int32_t voltage) {
-    intakeMotor.move_voltage(voltage * polarity );
+    intakeMotor.move_voltage(voltage);
 }
 
 /* switches polarity of bot 
 */
 void Intake::switch_polarity() {
     polarity *= -1;
+}
+
+int8_t Intake::get_polarity() {
+    return polarity; 
 }
 
 /* returns current voltage level of intake--high or low

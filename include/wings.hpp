@@ -6,6 +6,8 @@ class Wings {
         pros::ADIDigitalOut piston; 
         bool state = false; 
     public:
-        Wings(int8_t piston_port);
+        Wings(uint8_t piston_port);
         void toggle_piston();
+        bool get_state();
+    
 };

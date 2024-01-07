@@ -17,6 +17,7 @@ class Robot {
         void update_intake();
         void update_cata(); // L1 toggles matchloader, L2 switches speed 
         void update_wings(); 
+        void update_drivetrain(); 
     public: 
         void update(std::string info); 
         Robot(Intake intake, Catapult cata, Wings wingin);

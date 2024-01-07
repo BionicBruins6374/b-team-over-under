@@ -51,9 +51,12 @@ void Robot::update_cata() {
 
 void Robot::update_wings() {
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+        std::printf("update_wings");
         wings.toggle_piston();
     } 
 }
 void Robot::update(std::string info) {
     update_intake();
+    update_cata(); 
+    update_wings(); 
 }

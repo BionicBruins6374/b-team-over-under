@@ -3,7 +3,7 @@
 
 class Wings {
     private:
-        pros::ADIAnalogOut piston; 
+        pros::ADIDigitalOut piston; 
         bool state = false; 
     public:
         Wings(int8_t piston_port);

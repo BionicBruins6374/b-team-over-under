@@ -50,7 +50,8 @@ void opcontrol() {
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Catapult cata = Catapult {ports::SMALL_CATAPULT_MOTOR, ports::BIG_CATAPULT_MOTOR};
-  Robot robot = Robot {intake, cata}; 
+  Wings wings = Wings {ports::WING_PORT};
+  Robot robot = Robot {intake, cata, wings}; 
 
   while (true) {
     chassis.arcade_standard(ez::SPLIT); // Standard split arcade

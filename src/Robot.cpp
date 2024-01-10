@@ -8,18 +8,20 @@ wings {wingin}
 {}; 
 
 void Robot::update_drivetrain() {
-    int left_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-    int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+    int left_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+    int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+    
+    // if left and right velociy are 40% different, dampen both sides by 0.85
+    
+    // if (wings.get_state()) {
+    //     left_velocity *= -1;
+    //     right_velocity *= -1; 
+    //     int temp = left_velocity; 
+    //     left_velocity = right_velocity;
+    //     right_velocity = temp; 
+    // }
 
-    if (wings.get_state()) {
-        left_velocity *= -1;
-        right_velocity *= -1; 
-        int temp = left_velocity; 
-        left_velocity = right_velocity;
-        right_velocity = temp; 
-    }
-
-    chassis.joy_thresh_opcontrol(left_velocity, right_velocity);
+    chassis.joy_thresh_opcontrol(left_velocity * 0.85, right_velocity * 0.85);
 
 
 
@@ -35,32 +37,30 @@ void Robot::update_intake() {
 
     int8_t B_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B);
 
-    // <-----------------TODO SECTION------------------>
-    // OPTION 1 
-    /* intake_pressed_count += R1_pressed; 
+    int8_t A_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A);
 
-    // if R1 was just pressed or just stopped being pressed, switch state
-    if (R1_pressed ||( intake_pressed_count % 2 == 1 && !R1_pressing)) { // should it be just one or the other 
-        intake.toggle();
-    //     intake_pressed_count += 1; 
-    } */
 
-    // OPTION 2
-    // sets intake power state to the state of the button being pressed--intake is on while button is pressed and held 
-    intake.toggle(R1_pressing || R2_pressing); 
-    // <--------------END TODO------------------->
 
+    if (R1_pressed) {
+        // intake.toggle(); 
+       intake.set_polarity(1); 
+    }
     // switches direction arm spins (intaking vs deintaking)
-    if (R2_pressing) {
-        multiplier = -1; 
+    if (R2_press) {
+    //    intake.switch_polarity(); 
+        intake.set_polarity(-1);
     }
      
     // change speed
     if (B_press) {
         intake.move_level();
     }
+
+    if (A_press) {
+        intake.toggle(); 
+    }
         
-    intake.set_voltage(intake.get_state() * intake.get_level() * multiplier); // get state will return 0 or 1; TODO: need to check for get_level
+    intake.set_voltage(intake.get_state() * intake.get_level() * intake.get_polarity()); // get state will return 0 or 1; TODO: need to check for get_level
 
     }
 

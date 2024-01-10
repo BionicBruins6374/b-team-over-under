@@ -28,5 +28,7 @@ public:
     void toggle(); 
     void toggle(bool state); // set state urself  
 
+    void set_polarity(int polar);
+
 
 };

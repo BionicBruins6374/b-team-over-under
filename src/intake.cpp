@@ -34,6 +34,10 @@ void Intake::switch_polarity() {
     polarity *= -1;
 }
 
+void Intake::set_polarity(int polar) {
+    polarity = polar;
+}
+
 int8_t Intake::get_polarity() {
     return polarity; 
 }

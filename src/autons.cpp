@@ -73,7 +73,7 @@ void drive_example() {
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
 
 
-  chassis.set_drive_pid(36, DRIVE_SPEED, true);
+  chassis.set_drive_pid(28, DRIVE_SPEED, true);
   chassis.wait_drive();
 
 

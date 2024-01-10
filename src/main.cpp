@@ -1,6 +1,4 @@
 #include "main.h"
-// #include "Intake.hpp"
-// #include "Robot.hpp"
 #include "ports.hpp"
 
 
@@ -25,7 +23,7 @@ Drive chassis (
   ports::RIGHT_BACK_TOP_DT}
 
   // IMU Port
-  ,20
+  ,ports::LEFT_BACK_BOTTOM_DT
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -48,23 +46,25 @@ void autonomous() {
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
   
+  default_constants(); 
+  drive_example(); 
   pros::Task::delay(3000);
   
-  chassis.joy_thresh_opcontrol(-90, -90);
-  pros::Task::delay(1000);
+  // chassis.joy_thresh_opcontrol(-90, -90);
+  // pros::Task::delay(1000);
   
-  chassis.joy_thresh_opcontrol(0,0);
-  pros::Task::delay(100); 
+  // chassis.joy_thresh_opcontrol(0,0);
+  // pros::Task::delay(100); 
 
-  chassis.joy_thresh_opcontrol(90, 90);
-  pros::Task::delay(400);
+  // chassis.joy_thresh_opcontrol(90, 90);
+  // pros::Task::delay(400);
 
-  chassis.joy_thresh_opcontrol(0,0);
-  pros::Task::delay(100); 
+  // chassis.joy_thresh_opcontrol(0,0);
+  // pros::Task::delay(100); 
 
-  chassis.joy_thresh_opcontrol(-90, -90);
-  pros::Task::delay(500);
-  chassis.joy_thresh_opcontrol(0, 0);
+  // chassis.joy_thresh_opcontrol(-90, -90);
+  // pros::Task::delay(500);
+  // chassis.joy_thresh_opcontrol(0, 0);
 
 
   // ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.

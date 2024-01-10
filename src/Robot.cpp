@@ -7,10 +7,12 @@ cata { cata_in},
 wings {wingin}
 {}; 
 
-void Robot::update_drivetrain() {
-    int left_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
-    int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
-    
+std::vector<double> Robot::dampen_turns(int left_velocity, int right_velocity) {
+    double total_dampen = constants::DAMPENING; 
+    if (std::abs(left_velocity - right_velocity) > (constants::DAMPENING * constants::MAX_DT_VELOCITY * 0.4)) {
+        total_dampen *= constants::TURN_DAMPENING; 
+    }
+
     // if left and right velociy are 40% different, dampen both sides by 0.85
     
     // if (wings.get_state()) {
@@ -20,8 +22,16 @@ void Robot::update_drivetrain() {
     //     left_velocity = right_velocity;
     //     right_velocity = temp; 
     // }
+    // dampen_turns(left_velocity, right_velocity); 
 
-    chassis.joy_thresh_opcontrol(left_velocity * 0.85, right_velocity * 0.85);
+    return {left_velocity * total_dampen, right_velocity * total_dampen};
+}
+void Robot::update_drivetrain() {
+    int left_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+    int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+    std::vector<double> dampened_velocities = this->dampen_turns(left_velocity, right_velocity);
+    
+    chassis.joy_thresh_opcontrol(dampened_velocities[0], dampened_velocities[1]);
 
 
 

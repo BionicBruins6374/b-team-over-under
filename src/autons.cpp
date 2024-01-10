@@ -71,9 +71,8 @@ void drive_example() {
   // The second parameter is max speed the robot will drive at
   // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
-
-
-  chassis.set_drive_pid(28, DRIVE_SPEED, true);
+  std::printf("called drive_example");
+  chassis.set_drive_pid(28, DRIVE_SPEED, false);
   chassis.wait_drive();
 
 

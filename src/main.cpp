@@ -46,9 +46,30 @@ void autonomous() {
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
   
+  // encoders, middle = under
+	pros::Motor left_front_encoder = pros::Motor(ports::LEFT_FRONT_DT);
+	pros::Motor left_middle_encoder = pros::Motor(ports::LEFT_BACK_BOTTOM_DT);
+	pros::Motor left_back_encoder = pros::Motor(ports::LEFT_BACK_TOP_DT);
+	pros::Motor right_front_encoder = pros::Motor(ports::RIGHT_FRONT_DT);
+	pros::Motor right_middle_encoder = pros::Motor(ports::RIGHT_BACK_BOTTOM_DT);
+	pros::Motor right_back_encoder = pros::Motor(ports::RIGHT_BACK_TOP_DT);
+
+	// std::printf("left back: %f \n", left_back_encoder.get());
+	// std::printf("right back: %f \n", right_back_encoder.get());
+	// std::printf("left front: %f \n", left_front_encoder.get());
+	// std::printf("right front: %f \n", right_front_encoder.get());
+
+
+	left_front_encoder.tare_position(); 
+	left_middle_encoder.tare_position(); 
+	left_back_encoder.tare_position(); 
+	right_front_encoder.tare_position(); 
+	right_middle_encoder.tare_position(); 
+	right_back_encoder.tare_position();
+  
+  pros::Task::delay(3000);
   default_constants(); 
   drive_example(); 
-  pros::Task::delay(3000);
   
   // chassis.joy_thresh_opcontrol(-90, -90);
   // pros::Task::delay(1000);

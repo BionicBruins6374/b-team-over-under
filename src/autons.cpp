@@ -26,10 +26,10 @@ const int SWING_SPEED = 90;
 void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, 11, 0, 20, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 5, 0.003, 35, 15);
+  chassis.set_pid_constants(&chassis.headingPID, 0, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.forward_drivePID, 0, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.backward_drivePID, 0, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.turnPID, 0, 0, 0, 0);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
 }
 
@@ -72,7 +72,7 @@ void drive_example() {
   // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
   std::printf("called drive_example");
-  chassis.set_drive_pid(28, DRIVE_SPEED, false);
+  chassis.set_drive_pid(50, DRIVE_SPEED, false);
   chassis.wait_drive();
 
 

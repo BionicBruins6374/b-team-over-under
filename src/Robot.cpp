@@ -1,18 +1,23 @@
 #include "Robot.hpp"
 #include "main.h"
 
-Robot::Robot(Intake intake_in, Catapult cata_in, Wings wingin) :
+Robot::Robot(Intake intake_in, Matchloader matcher_in, Wings wingin) :
 intake {intake_in},
-cata { cata_in},
+matchloader { matcher_in },
 wings {wingin}
 {}; 
 
 // dampens turn speeds 
 std::vector<double> Robot::dampen_turns(int left_velocity, int right_velocity) {
-    double total_dampen = constants::DAMPENING; 
+    // double total_dampen = constants::DAMPENING;
+    double total_dampen = 1; 
+    double left_dampen = 1; 
+    double right_dampen = 1; 
     // if left and right velocity are 40% different (aka sharp turn, not just slight drift), dampen both sides by 0.85
-    if (std::abs(left_velocity - right_velocity) > (constants::DAMPENING * constants::MAX_DT_VELOCITY * 0.4)) {
+    if (std::abs(left_velocity - right_velocity) > (constants::MAX_DT_VELOCITY * 0.7)) {
         total_dampen *= constants::TURN_DAMPENING; 
+        right_dampen *= constants::TURN_DAMPENING;
+        left_dampen *= constants::TURN_DAMPENING;
     }
 
     // if (wings.get_state()) {
@@ -24,16 +29,36 @@ std::vector<double> Robot::dampen_turns(int left_velocity, int right_velocity) {
     // }
 
     return {left_velocity * total_dampen, right_velocity * total_dampen};
+    // return {left_velocity * left_dampen, right_velocity * right_dampen};
+
 }
 void Robot::update_drivetrain() {
+    int additive = 0;
     // scales joystick inputs for arcade drive 
-    int left_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
-    int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+    int left_velocity = (m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
+    int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+    std::printf("Left: %d\n", left_velocity);
+    std::printf("Right: %d\n\n", right_velocity); 
+    pros::Task::delay(50);
+
+
+    // std::printf("left y joystick: " + m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y));
+    // std::printf("left x joystick: " + m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
+
+    // std::printf("left motor: " + chassis.left_velocity());
+    // std::printf("right motor: " + chassis.right_velocity());
+
+
     // dampens raw speed 
     std::vector<double> dampened_velocities = this->dampen_turns(left_velocity, right_velocity);
     
     // sets left and right sides of the dt velocity 
+    // if (std::abs(right_velocity - left_velocity ) < 8) {
+    //     additive = 5; 
+    // }
+    // chassis.joy_thresh_opcontrol(left_velocity+ additive, right_velocity - additive);
     chassis.joy_thresh_opcontrol(dampened_velocities[0], dampened_velocities[1]);
+
 
 
 }
@@ -78,14 +103,26 @@ void Robot::update_intake() {
 
     }
 
-// updates all aspects of catapult
-void Robot::update_cata() {
+// updates all aspects of Matchloader
+
+
+void Robot::update_matchloader() {
     // if L1 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-        cata.toggle(); // toggle cata 
+        matchloader.toggle(); // toggle Matchloader 
     } 
 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+        matchloader.switch_polarity();
+    }
+    
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
+        matchloader.toggle_arm(); }
+
+    matchloader.bang_set_voltage(matchloader.get_state() * matchloader.get_polarity() * constants::HIGH_VOLTAGE_CATA);
+    
 }
+
 
 // updates all aspects of wings 
 void Robot::update_wings() {
@@ -99,7 +136,7 @@ void Robot::update_wings() {
 // updates all components 
 void Robot::update(std::string info) {
     update_intake();
-    update_cata(); 
+    update_matchloader(); 
     update_wings();
     update_drivetrain(); 
 }

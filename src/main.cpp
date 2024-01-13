@@ -60,17 +60,20 @@ void autonomous() {
 	// std::printf("right front: %f \n", right_front_encoder.get());
 
 
-	left_front_encoder.tare_position(); 
-	left_middle_encoder.tare_position(); 
-	left_back_encoder.tare_position(); 
-	right_front_encoder.tare_position(); 
-	right_middle_encoder.tare_position(); 
-	right_back_encoder.tare_position();
-  
+	// left_front_encoder.tare_position(); 
+	// left_middle_encoder.tare_position(); 
+	// left_back_encoder.tare_position(); 
+	// right_front_encoder.tare_position(); 
+	// right_middle_encoder.tare_position(); 
+	// right_back_encoder.tare_position();
+  std::printf("delaying..");
   pros::Task::delay(3000);
-  default_constants(); 
+  // default_constants(); 
+  // chassis.set_mode(ez::DRIVE); 
+
   drive_example(); 
-  
+  // chassis.set_mode(ez::DRIVE); 
+  // defensive_x2();
   // chassis.joy_thresh_opcontrol(-90, -90);
   // pros::Task::delay(1000);
   
@@ -96,8 +99,8 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  Catapult cata = Catapult {ports::SMALL_CATAPULT_MOTOR, ports::BIG_CATAPULT_MOTOR};
-  Wings wings = Wings {ports::WING_PORT};
+  Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR, ports::ARM_PORT};
+  Wings wings = Wings {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT};
   Robot robot = Robot {intake, cata, wings}; 
 
   while (true) {

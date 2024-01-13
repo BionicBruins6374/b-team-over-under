@@ -71,14 +71,60 @@ void drive_example() {
   // The second parameter is max speed the robot will drive at
   // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
-  std::printf("called drive_example");
-  chassis.set_drive_pid(50, DRIVE_SPEED, false);
+  chassis.set_mode(ez::DRIVE); // Drive
+  
+  std::printf("\ncalled drive_example\n");
+  chassis.set_drive_pid(-4, 90, false);
   chassis.wait_drive();
+
+  std::printf("\n12 drivespeed\n"); 
+  chassis.set_drive_pid(-12, DRIVE_SPEED);
+  chassis.wait_drive();
+
+
+  pros::Task::delay(1000);
+
+  chassis.set_tank(127, 127); // Run drive motors myself
+  pros::delay(2000);
+  chassis.set_tank(0, 0);
 
 
 }
 
 
+void defensive_x2() {
+
+  chassis.set_mode(ez::DRIVE); 
+
+  // chassis.set_mode(ez::DRIVE); 
+  chassis.set_drive_pid(4, 90);
+  chassis.wait_drive();
+
+
+  // chassis.set_mode(ez::TURN); // Drive
+  chassis.set_turn_pid(-68.2, TURN_SPEED);// negative = clockwise 
+  chassis.wait_drive();
+  
+  // chassis.set_mode(ez::DRIVE); // Drive
+  // init with bot angled at theta
+  chassis.set_drive_pid(2.6925 * constants::TILE_LENGTH, 90, false);
+  chassis.wait_drive();
+
+  // chassis.set_mode(ez::TURN); // Drive
+  chassis.set_turn_pid(-315, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_mode(ez::DISABLE); 
+
+
+  // chassis.set_drive_pid( 1.5 * constants::TILE_LENGTH, 90, false ); 
+  // chassis.wait_drive(); 
+
+  // chassis.set_drive_pid( -1 * constants::TILE_LENGTH, 90, false ); 
+  // chassis.wait_drive(); 
+
+
+}
 
 ///
 // Turn Example

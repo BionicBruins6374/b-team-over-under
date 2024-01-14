@@ -15,7 +15,7 @@ std::vector<double> Robot::dampen_turns(int left_velocity, int right_velocity) {
     double right_dampen = 1; 
     // if left and right velocity are 40% different (aka sharp turn, not just slight drift), dampen both sides by 0.85
     if (std::abs(left_velocity - right_velocity) > (constants::MAX_DT_VELOCITY * 0.7)) {
-        total_dampen *= constants::TURN_DAMPENING; 
+        // total_dampen *= constants::TURN_DAMPENING; 
         right_dampen *= constants::TURN_DAMPENING;
         left_dampen *= constants::TURN_DAMPENING;
     }
@@ -119,7 +119,7 @@ void Robot::update_matchloader() {
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
         matchloader.toggle_arm(); }
 
-    matchloader.bang_set_voltage(matchloader.get_state() * matchloader.get_polarity() * constants::HIGH_VOLTAGE_CATA);
+    matchloader.bang_set_voltage(matchloader.get_state() *1 * constants::HIGH_VOLTAGE_CATA);
     
 }
 

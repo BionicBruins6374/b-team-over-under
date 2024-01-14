@@ -1,4 +1,6 @@
 #include "main.h"
+#include "Robot.hpp"
+#include "ports.hpp"
 
 
 /////
@@ -55,9 +57,9 @@ void two_mogo_constants() {
 
 
 void modified_exit_condition() {
-  chassis.set_exit_condition(chassis.turn_exit, 100, 3, 500, 7, 500, 500);
+  chassis.set_exit_condition(chassis.turn_exit, 100, 10, 600, 7, 500, 600);
   chassis.set_exit_condition(chassis.swing_exit, 100, 3, 500, 7, 500, 500);
-  chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
+  chassis.set_exit_condition(chassis.drive_exit, 100, 60, 500, 150, 500, 600);
 }
 
 
@@ -74,19 +76,23 @@ void drive_example() {
   chassis.set_mode(ez::DRIVE); // Drive
   
   std::printf("\ncalled drive_example\n");
-  chassis.set_drive_pid(-4, 90, false);
+  chassis.set_drive_pid(4, 90, false);
   chassis.wait_drive();
 
   std::printf("\n12 drivespeed\n"); 
-  chassis.set_drive_pid(-12, DRIVE_SPEED);
+  chassis.set_drive_pid(-12, DRIVE_SPEED, false);
   chassis.wait_drive();
 
+  pros::delay(1000);
 
-  pros::Task::delay(1000);
+  chassis.set_drive_pid(8, 90, false);
+  chassis.wait_drive();
 
-  chassis.set_tank(127, 127); // Run drive motors myself
-  pros::delay(2000);
-  chassis.set_tank(0, 0);
+  chassis.set_mode(ez::DISABLE); 
+
+  // chassis.set_tank(127, 127); // Run drive motors myself
+  // pros::delay(2000);
+  // chassis.set_tank(0, 0);
 
 
 }
@@ -94,16 +100,15 @@ void drive_example() {
 
 void defensive_x2() {
 
-  chassis.set_mode(ez::DRIVE); 
+  chassis.set_angle(chassis.get_gyro()); 
 
+  chassis.set_mode(ez::DRIVE); 
   // chassis.set_mode(ez::DRIVE); 
   chassis.set_drive_pid(4, 90);
   chassis.wait_drive();
 
-
-  // chassis.set_mode(ez::TURN); // Drive
-  chassis.set_turn_pid(-68.2, TURN_SPEED);// negative = clockwise 
-  chassis.wait_drive();
+  // chassis.set_turn_pid(-68.2, TURN_SPEED);// negative = clockwise 
+  // chassis.wait_drive();
   
   // chassis.set_mode(ez::DRIVE); // Drive
   // init with bot angled at theta
@@ -125,6 +130,62 @@ void defensive_x2() {
 
 
 }
+
+void defensive_raw() {
+  Wings wings = Wings {ports::WING_PORT_LEFT, ports::WING_PORT_RIGHT };
+  chassis.joy_thresh_opcontrol(-100, -100);
+  pros::Task::delay(3500); //testing 
+   
+  chassis.joy_thresh_opcontrol(0,0);
+  pros::Task::delay(500); 
+
+  wings.toggle_piston();
+
+  chassis.joy_thresh_opcontrol(50, 0); 
+  pros::Task::delay(1000);
+
+  chassis.joy_thresh_opcontrol(0, 50);  
+  pros::Task::delay(375); // 135/360 
+
+  chassis.joy_thresh_opcontrol(90, 90); 
+  pros::Task::delay(1000); 
+
+  chassis.joy_thresh_opcontrol(-80, -80); 
+  pros::Task::delay(500); 
+
+  chassis.joy_thresh_opcontrol(80, 80); 
+  pros::Task::delay(500); 
+
+
+  
+
+
+
+  // chassis.joy_thresh_opcontrol(0,80);
+  // pros::Task::delay(500); 
+
+  // chassis.joy_thresh_opcontrol(-20,-20);
+  // pros::Task::delay();
+
+
+  // intake.switch_polarity();
+  // intake.toggle(); 
+  // pros::task::delay(1000);
+
+  // chassis.joy_thresh_opcontrol(90, 90);
+  // pros::Task::delay(400);
+
+  // chassis.joy_thresh_opcontrol(0,0);
+  // pros::Task::delay(100); 
+
+  // chassis.joy_thresh_opcontrol(-90, -90);
+  // pros::Task::delay(500);
+  // chassis.joy_thresh_opcontrol(0, 0);
+
+  //360 ccw
+  // 135 cw 
+}
+
 
 ///
 // Turn Example

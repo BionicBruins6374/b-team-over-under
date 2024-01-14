@@ -47,10 +47,10 @@ int Matchloader::get_state() {
 }
 
 void Matchloader::bang_set_voltage(int32_t voltage) {
-    if (m_big_motor.get_voltage() > voltage ) {
+    if (std::abs(m_big_motor.get_voltage()) > voltage ) {
         m_big_motor.move_voltage(0); 
     }
-    else if (m_big_motor.get_voltage() <= voltage) {
+    else if (std::abs(m_big_motor.get_voltage()) <= voltage) {
         m_big_motor.move_voltage(voltage); 
     }
 }

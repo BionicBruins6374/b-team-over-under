@@ -13,7 +13,7 @@ void Matchloader::set_voltage(int32_t voltage) {
     // max volt: 5.5W/ 2.5 A = 2.2 Volts = 2200 milivolts?? TODO: test
    
 //    m_small_motor.move_voltage(voltage); // max voltage will be half as much bc/ V = W/I (amps/watts), you half 
-   m_big_motor.move_voltage(voltage * direction);
+   m_big_motor.move_voltage(voltage);
 }
 
 void Matchloader::toggle() {
@@ -38,6 +38,10 @@ void Matchloader::switch_polarity() {
     direction *= -1; 
 }
 
+double Matchloader::get_temp() {
+    return m_big_motor.get_temperature(); 
+}
+
 int Matchloader::get_polarity() {
     return direction; 
 }
@@ -47,10 +51,10 @@ int Matchloader::get_state() {
 }
 
 void Matchloader::bang_set_voltage(int32_t voltage) {
-    if (std::abs(m_big_motor.get_voltage()) > voltage ) {
+    if (std::abs(m_big_motor.get_voltage()) > std::abs(voltage) ) {
         m_big_motor.move_voltage(0); 
     }
-    else if (std::abs(m_big_motor.get_voltage()) <= voltage) {
+    else if (std::abs(m_big_motor.get_voltage()) <= std::abs(voltage)) {
         m_big_motor.move_voltage(voltage); 
     }
 }

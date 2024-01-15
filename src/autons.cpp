@@ -3,6 +3,7 @@
 #include "ports.hpp"
 
 
+
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
 // https://ez-robotics.github.io/EZ-Template/
@@ -132,14 +133,14 @@ void defensive_x2() {
 }
 
 void defensive_raw() {
-  Wings wings = Wings {ports::WING_PORT_LEFT, ports::WING_PORT_RIGHT };
+  Wings wings = Wings {ports::WING_PORT_LEFT, ports::WING_PORT_RIGHT, ports::ARM_PORT};
   chassis.joy_thresh_opcontrol(-100, -100);
   pros::Task::delay(3500); //testing 
    
   chassis.joy_thresh_opcontrol(0,0);
   pros::Task::delay(500); 
 
-  wings.toggle_piston();
+  wings.toggle_wings();
 
   chassis.joy_thresh_opcontrol(50, 0); 
   pros::Task::delay(1000);
@@ -186,7 +187,32 @@ void defensive_raw() {
   // 135 cw 
 }
 
+void offensive_raw() {
+  Intake intake = Intake {ports::INTAKE_MOTOR};
+  intake.toggle(); 
 
+  chassis.joy_thresh_opcontrol(-90, -90);
+  pros::Task::delay(1000);
+  
+  chassis.joy_thresh_opcontrol(0,0);
+  pros::Task::delay(100); 
+
+  chassis.joy_thresh_opcontrol(90, 90);
+  pros::Task::delay(400);
+
+  // double ram??
+
+  chassis.joy_thresh_opcontrol(50, 0); 
+  pros::Task::delay(500);
+
+  chassis.joy_thresh_opcontrol(90, 90);
+  pros::Task::delay(200); 
+  intake.switch_polarity(); 
+  pros::Task::delay(200); 
+
+  chassis.joy_thresh_opcontrol(0,0);
+
+}
 ///
 // Turn Example
 ///

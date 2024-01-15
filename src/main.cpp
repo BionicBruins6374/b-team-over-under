@@ -46,7 +46,7 @@ void initialize() {
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
   // Configure your chassis controls
-  chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
+  chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
   chassis.set_active_brake(0.1); // Sets the active brake kP => magnitude of resistance to pushing
   chassis.set_curve_default(4.2, 6.3); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
@@ -82,7 +82,7 @@ void competition_initialize() {
 }
 
 void alliance_triball() {
-    chassis.joy_thresh_opcontrol(-90, -90);
+  chassis.joy_thresh_opcontrol(-90, -90);
   pros::Task::delay(1000);
   
   chassis.joy_thresh_opcontrol(0,0);
@@ -96,7 +96,12 @@ void alliance_triball() {
 
   chassis.joy_thresh_opcontrol(-90, -90);
   pros::Task::delay(500);
+
+  
   chassis.joy_thresh_opcontrol(0, 0);
+  pros::Task::delay(100); 
+  chassis.joy_thresh_opcontrol(90, 90); 
+  pros::Task::delay(300); 
 }
 
 void autonomous() {
@@ -128,8 +133,8 @@ void autonomous() {
   std::printf("delaying..");
   pros::Task::delay(1000);
 
-  defensive_raw(); 
-
+  // defensive_raw(); 
+  alliance_triball(); 
   // def.auton_call(); 
 
 
@@ -150,12 +155,21 @@ void test_motor(uint8_t port_num) {
     mot.move_voltage(12000);
 } 
 
+void timer() {
+  int count = 0; 
+  while (true) {
+  chassis.joy_thresh_opcontrol(50,0); 
+  pros::Task::delay(1);
+  master.print(0,0, "count: %d", count);
+  }
+}
+
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR, ports::ARM_PORT};
-  Wings wings = Wings {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT};
+  Wings wings = Wings {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
   Robot robot = Robot {intake, cata, wings}; 
 
   while (true) {

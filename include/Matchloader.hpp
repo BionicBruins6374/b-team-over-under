@@ -19,4 +19,5 @@ class Matchloader {
         int get_polarity(); 
         int get_state(); 
         void bang_set_voltage(int32_t voltage);
+        double get_temp(); 
 };

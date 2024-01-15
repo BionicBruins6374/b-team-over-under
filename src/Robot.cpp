@@ -116,10 +116,10 @@ void Robot::update_matchloader() {
         matchloader.switch_polarity();
     }
     
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
-        matchloader.toggle_arm(); }
+    // if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
+    //     matchloader.toggle_arm(); }
 
-    matchloader.bang_set_voltage(matchloader.get_state() *1 * constants::HIGH_VOLTAGE_CATA);
+    matchloader.bang_set_voltage(matchloader.get_state() * -1 * constants::HIGH_VOLTAGE_CATA);
     
 }
 
@@ -129,8 +129,11 @@ void Robot::update_wings() {
     // if X is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
         std::printf("update_wings");
-        wings.toggle_piston();
+        wings.toggle_wings();
     } 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+        wings.toggle_arm(); 
+    }
 }
 
 // updates all components 
@@ -139,4 +142,6 @@ void Robot::update(std::string info) {
     update_matchloader(); 
     update_wings();
     update_drivetrain(); 
+    // master.print(0,0, "loader temp: %f", matchloader.get_temp() );
+    master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
 }

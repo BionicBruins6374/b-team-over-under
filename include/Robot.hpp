@@ -14,6 +14,7 @@ class Robot {
         Matchloader matchloader;
         int8_t intake_pressed_count = 0;  // whether or not the intake button is currently being pressed
         Wings wings;
+        bool ram_lock = false;
         
         void update_intake();
         void update_matchloader(); // L1 toggles matchloader, L2 switches speed 

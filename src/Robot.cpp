@@ -52,6 +52,7 @@ void Robot::update_drivetrain() {
     // dampens raw speed 
     std::vector<double> dampened_velocities = this->dampen_turns(left_velocity, right_velocity);
     
+    Intake drivetrain; 
     // sets left and right sides of the dt velocity 
     // if (std::abs(right_velocity - left_velocity ) < 8) {
     //     additive = 5; 
@@ -59,7 +60,29 @@ void Robot::update_drivetrain() {
     // chassis.joy_thresh_opcontrol(left_velocity+ additive, right_velocity - additive);
     chassis.joy_thresh_opcontrol(dampened_velocities[0], dampened_velocities[1]);
 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+        ram_lock =  !ram_lock; 
+        // sets active braking to 0 (none) or 0.7 if (resistance to ramming) ram_lock mode is on
+        chassis.set_active_brake(ram_lock * 0.7); // ram_lock = false = 0
+    }
 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))  {
+        // toggles state of drivetrain motors being "locked"
+        ram_lock = !ram_lock; 
+        // gets current drivetrain velocity 
+        int dt_velocity = drivetrain.get_avg_velocity(); // returns value from -600 to 600
+        // if the bot is still moving and the button press toggled the drivetrain lock on
+        if (ram_lock) {
+            /* applies voltage in opposite direction of velocity to 
+            slow down bot + scales voltage to decrease chance of overshooting
+            */ 
+            drivetrain.set_voltage(dt_velocity /600 * 12000 * -1);  
+        }
+        // if the drivetrain motor lock is un-toggled, normal drivetrain control is applied. 
+        else {
+            update_drivetrain(); 
+        }
+}
 
 }
 

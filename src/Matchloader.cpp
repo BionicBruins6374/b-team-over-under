@@ -7,8 +7,6 @@ Matchloader::Matchloader(int8_t big_motor, uint8_t piston_port) :
     //   motors ({m_small_motor, m_big_motor})
     {};
 
-
-
 void Matchloader::set_voltage(int32_t voltage) {
     // max volt: 5.5W/ 2.5 A = 2.2 Volts = 2200 milivolts?? TODO: test
    
@@ -51,10 +49,15 @@ int Matchloader::get_state() {
 }
 
 void Matchloader::bang_set_voltage(int32_t voltage) {
+    // if the magnitude of the voltage is greater than the expected voltage (inputted)
     if (std::abs(m_big_motor.get_voltage()) > std::abs(voltage) ) {
+        // set the voltage to 0 
         m_big_motor.move_voltage(0); 
     }
+    // if the magnitude of the voltage is less than the expected voltage (inputted)
     else if (std::abs(m_big_motor.get_voltage()) <= std::abs(voltage)) {
+        // reset assert voltage to expected voltage
         m_big_motor.move_voltage(voltage); 
     }
 }
+

@@ -64,7 +64,7 @@ void Robot::update_drivetrain() {
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
         ram_lock =  !ram_lock; 
         // sets active braking to 0 (none) or 0.7 if (resistance to ramming) ram_lock mode is on
-        chassis.set_active_brake(ram_lock * 0.7); // ram_lock = false = 0
+        // chassis.set_active_brake(ram_lock * 0.7); // ram_lock = false = 0
     }
 
 

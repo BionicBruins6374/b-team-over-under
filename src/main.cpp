@@ -9,21 +9,21 @@ Drive chassis (
   // RED AND GREEN = LEFT 
   // front, back-bottom, back-top 
   //   the first port is the sensored port (when trackers are not used!)
-  {
-  ports::LEFT_FRONT_DT,
-  ports::LEFT_BACK_BOTTOM_DT,
-  ports::RIGHT_BACK_TOP_DT}
+  {  ports::RIGHT_FRONT_DT,
+  ports::RIGHT_BACK_BOTTOM_DT,
+  ports::RIGHT_BACK_TOP_DT
+  }
 
   // Right Chassis Ports (negative port = reversed) 
   // ALL RED = RIGHT  
   //   the first port is the sensored port (when trackers are not used!)
-  ,{
-  ports::RIGHT_FRONT_DT,
-  ports::RIGHT_BACK_BOTTOM_DT,
-  ports::RIGHT_BACK_TOP_DT}
+  ,{ ports::LEFT_FRONT_DT,
+  ports::LEFT_BACK_BOTTOM_DT,
+  ports::RIGHT_BACK_TOP_DT
+  }
 
   // IMU Port
-  ,ports::LEFT_BACK_BOTTOM_DT
+  ,16
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -131,11 +131,13 @@ void autonomous() {
   default_constants(); modified_exit_condition(); 
 
   std::printf("delaying..");
-  pros::Task::delay(1000);
+  pros::Task::delay(500);
 
   // defensive_raw(); 
-  alliance_triball(); 
+  // alliance_triball(); 
   // def.auton_call(); 
+  // turn_example(); 
+  // drive_example(); 
 
 
   // chassis.reset_drive_sensor(); 
@@ -143,6 +145,7 @@ void autonomous() {
   // chassis.reset_gyro(); 
 
   // drive_example(); 
+  offensive_x2();
 
 
 
@@ -166,7 +169,7 @@ void timer() {
 
 void opcontrol() {
   // This is preference to what you like to drive on.
-  chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+  chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR, ports::ARM_PORT};
   Wings wings = Wings {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
@@ -177,6 +180,8 @@ void opcontrol() {
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     robot.update("TESTING");
   }
+
+  
 
   // pros::Motor mot = pros::Motor{3}; 
   // mot.move_voltage(12000);

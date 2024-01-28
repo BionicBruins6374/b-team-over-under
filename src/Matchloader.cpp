@@ -2,7 +2,7 @@
 #include "constants.hpp"
 
 Matchloader::Matchloader(int8_t big_motor, uint8_t piston_port) :
-    m_big_motor {big_motor}, 
+    m_big_motor {big_motor, pros::E_MOTOR_GEAR_BLUE}, 
     arm_piston {piston_port}
     //   motors ({m_small_motor, m_big_motor})
     {};
@@ -14,23 +14,11 @@ void Matchloader::set_voltage(int32_t voltage) {
    m_big_motor.move_voltage(voltage);
 }
 
+// setter; changes state of matchloader 
 void Matchloader::toggle() {
     state = !state;
-//     if (state) {
-//         set_voltage(constants::HIGH_VOLTAGE_CATA);
-//     }
-//     else {
-//         set_voltage(0);
-//     }
 }
 
-// TODO: slip gear cycle + task
-
-
-void Matchloader::toggle_arm() {
-    arm_state != arm_state;
-    arm_piston.set_value(arm_state); 
-}
 
 void Matchloader::switch_polarity() {
     direction *= -1; 

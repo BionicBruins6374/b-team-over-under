@@ -15,7 +15,12 @@ class Robot {
         int8_t intake_pressed_count = 0;  // whether or not the intake button is currently being pressed
         Wings wings;
         bool ram_lock = false;
-        
+
+        // lost = a motor was lost 
+        bool right_lost = false;
+        bool left_lost = false; 
+
+        double dampen_mag = 0.8; 
         void update_intake();
         void update_matchloader(); // L1 toggles matchloader, L2 switches speed 
         void update_wings(); 

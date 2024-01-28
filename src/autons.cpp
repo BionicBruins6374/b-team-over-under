@@ -27,12 +27,12 @@ const int SWING_SPEED = 90;
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
 
 void default_constants() {
-  chassis.set_slew_min_power(80, 80);
+   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, 0, 0, 0, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0, 0, 0, 0);
-  chassis.set_pid_constants(&chassis.backward_drivePID, 0, 0, 0, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 0, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.headingPID, 11, 1, 20, 0);
+  chassis.set_pid_constants(&chassis.forward_drivePID, 4, 0, 5.5, 0); 
+  chassis.set_pid_constants(&chassis.backward_drivePID, 4, 0, 5.5, 0);
+  chassis.set_pid_constants(&chassis.turnPID, 5.25, 0.003, 35, 15);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
 }
 
@@ -58,9 +58,9 @@ void two_mogo_constants() {
 
 
 void modified_exit_condition() {
-  chassis.set_exit_condition(chassis.turn_exit, 100, 10, 600, 7, 500, 600);
+  chassis.set_exit_condition(chassis.turn_exit, 100, 3, 500, 7, 500, 500);
   chassis.set_exit_condition(chassis.swing_exit, 100, 3, 500, 7, 500, 500);
-  chassis.set_exit_condition(chassis.drive_exit, 100, 60, 500, 150, 500, 600);
+  chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
 
@@ -72,9 +72,9 @@ void modified_exit_condition() {
 void drive_example() {
   chassis.set_mode(ez::DRIVE); // Drive
   
-  std::printf("\ncalled drive_example\n");
-  chassis.set_drive_pid(4, 90, false);
-  chassis.wait_drive();
+  // std::printf("\ncalled drive_example\n");
+  // chassis.set_drive_pid(4, 90, false);
+  // chassis.wait_drive();
 
   std::printf("\n12 drivespeed\n"); 
   chassis.set_drive_pid(-12, DRIVE_SPEED, false);
@@ -82,14 +82,78 @@ void drive_example() {
 
   pros::delay(1000);
 
-  chassis.set_drive_pid(8, 90, false);
+  chassis.set_drive_pid(12, 90, false);
   chassis.wait_drive();
 
-  chassis.set_mode(ez::DISABLE); 
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.wait_drive();
+
+  // chassis.set_mode(ez::DISABLE); 
 
   // chassis.set_tank(127, 127); // Run drive motors myself
   // pros::delay(2000);
   // chassis.set_tank(0, 0);
+
+
+}
+
+// offensive simple, intakes triball at barrier, pushes 
+void offensive_x2() {
+
+  Intake intake = Intake {ports::INTAKE_MOTOR };
+  chassis.set_angle(chassis.get_gyro()); 
+  // turn on intake 
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE); 
+  chassis.set_drive_pid(6, DRIVE_SPEED, false); 
+
+  
+  // turn 90
+  // chassis.set_turn_pid(270, TURN_SPEED); // check if ccw or cw;;; 
+  // chassis.wait_drive();
+
+  chassis.set_drive_pid(-2 * constants::TILE_LENGTH, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  // set turn to 45 
+  chassis.set_turn_pid(-45, TURN_SPEED); // check if ccw or cw;;; 
+  chassis.wait_drive();
+
+  // drive -triangle 
+  chassis.set_drive_pid(-0.9013 * constants::TILE_LENGTH*constants::AUTON_MULTIPLIER, DRIVE_SPEED, false);  // sqrt(0.5^2 + 0.75^2)
+  chassis.wait_drive();
+
+  // set turn to 0
+  chassis.set_turn_pid(-90, TURN_SPEED); // check if ccw or cw;;; 
+  chassis.wait_drive();
+  // drive -t 
+  chassis.set_drive_pid(-constants::TILE_LENGTH*constants::AUTON_MULTIPLIER, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  // wait 
+  pros::Task::delay(1000); 
+
+  // drive 0.5t
+  chassis.set_drive_pid(0.5 * constants::TILE_LENGTH*constants::AUTON_MULTIPLIER, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  // set turn to 180
+  chassis.set_turn_pid(90, TURN_SPEED); // check if ccw or cw;;; 
+  chassis.wait_drive();
+
+  // drive 0.5 t
+  chassis.set_drive_pid(0.5 * constants::TILE_LENGTH*constants::AUTON_MULTIPLIER, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE); 
+  
+  pros::Task::delay(1000); 
+  chassis.set_drive_pid(-6, DRIVE_SPEED, false); 
+
+  intake.set_voltage(0); 
 
 
 }
@@ -99,17 +163,17 @@ void defensive_x2() {
 
   chassis.set_angle(chassis.get_gyro()); 
 
-  chassis.set_mode(ez::DRIVE); 
+  // chassis.set_mode(ez::DRIVE); 
   // chassis.set_mode(ez::DRIVE); 
   chassis.set_drive_pid(4, 90);
   chassis.wait_drive();
 
-  // chassis.set_turn_pid(-68.2, TURN_SPEED);// negative = clockwise 
-  // chassis.wait_drive();
+  chassis.set_turn_pid(-68.2, TURN_SPEED);// negative = clockwise 
+  chassis.wait_drive();
   
   // chassis.set_mode(ez::DRIVE); // Drive
   // init with bot angled at theta
-  chassis.set_drive_pid(2.6925 * constants::TILE_LENGTH, 90, false);
+  chassis.set_drive_pid(2.6925 * constants::TILE_LENGTH * 4, 90, false);
   chassis.wait_drive();
 
   // chassis.set_mode(ez::TURN); // Drive
@@ -185,7 +249,7 @@ void defensive_raw() {
 
 void offensive_raw() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  intake.toggle(); 
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE); 
 
   chassis.joy_thresh_opcontrol(-90, -90);
   pros::Task::delay(1000);
@@ -203,8 +267,9 @@ void offensive_raw() {
 
   chassis.joy_thresh_opcontrol(90, 90);
   pros::Task::delay(200); 
-  intake.switch_polarity(); 
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE); 
   pros::Task::delay(200); 
+  
 
   chassis.joy_thresh_opcontrol(0,0);
 

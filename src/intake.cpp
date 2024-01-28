@@ -4,7 +4,7 @@
 /* constructor 
 */
 Intake::Intake(int8_t port) 
-: intakeMotor{ port } 
+: intakeMotor{ port, pros::E_MOTOR_GEAR_BLUE } 
 {}; 
 
 /* sets voltage to the motor based on input and dampens the voltage if motor is at risk of overheating

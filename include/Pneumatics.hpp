@@ -1,7 +1,7 @@
 #pragma once
 #include "api.h"
 
-class Wings {
+class Pneumatics {
     private:
         pros::ADIDigitalOut right_wing; 
         pros::ADIDigitalOut left_wing;
@@ -10,7 +10,7 @@ class Wings {
         bool wing_state = false; 
         bool hang_state = true;
     public:
-        Wings(uint8_t port_right, uint8_t port_left, uint8_t hang_port);
+        Pneumatics(uint8_t port_right, uint8_t port_left, uint8_t hang_port);
         void toggle_piston();
         void toggle_wings();
         void toggle_hang(); 

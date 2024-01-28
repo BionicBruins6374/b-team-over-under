@@ -1,7 +1,7 @@
 #include "Robot.hpp"
 #include "main.h"
 
-Robot::Robot(Intake intake_in, Matchloader matcher_in, Wings wingin) :
+Robot::Robot(Intake intake_in, Matchloader matcher_in, Pneumatics wingin) :
 intake {intake_in},
 matchloader { matcher_in },
 wings {wingin}
@@ -13,29 +13,15 @@ std::vector<double> Robot::dampen_turns(int left_velocity, int right_velocity) {
     double total_dampen = 1; 
     double left_dampen = 1; 
     double right_dampen = 0.9; 
-    // if left and right velocity are 40% different (aka sharp turn, not just slight drift), dampen both sides by 0.85
-    // if (std::abs(left_velocity - right_velocity) > (constants::MAX_DT_VELOCITY * 0.7)) {
-    //     total_dampen *= constants::TURN_DAMPENING; 
-    //     // right_dampen *= constants::TURN_DAMPENING;
-    //     // left_dampen *= constants::TURN_DAMPENING;
-    // }
-
-    // switches direction when wings are expanded--defunct for now
-    /*
-    if (wings.get_state()) {
-        left_velocity *= -1;
-        right_velocity *= -1; 
-        int temp = left_velocity; 
-        left_velocity = right_velocity;
-        right_velocity = temp; 
-    }
-    */
+    
     return {left_velocity * left_dampen - left_lost * dampen_mag, right_velocity * right_dampen  - right_lost * dampen_mag };
-    // return {left_velocity * left_dampen, right_velocity * right_dampen};
 
 }
 void Robot::update_drivetrain() {
-    
+    /*
+    these two if statements allow to toggle dampening on either side of the drivetrain
+    if there's friction or a motor fallout, etc 
+    */
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
         left_lost = !left_lost;
     } 
@@ -46,21 +32,19 @@ void Robot::update_drivetrain() {
     // scales joystick inputs for arcade drive 
     int left_velocity = (m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
     int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-    // std::printf("Left: %d\n", left_velocity);
-    // std::printf("Right: %d\n\n", right_velocity); 
-    pros::Task::delay(50);
-
 
     // dampens raw speed 
     std::vector<double> dampened_velocities = this->dampen_turns(left_velocity, right_velocity);
     
+    // updates drivetrain (chassis) speed 
     chassis.joy_thresh_opcontrol(dampened_velocities[0], dampened_velocities[1]);
     // chassis.arcade_standard(ez::SPLIT);
 
+    // if up button is pressed, active braking is increased (basically an anti ram button for matchloading)
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
         ram_lock =  !ram_lock; 
         // sets active braking to 0 (none) or 0.7 if (resistance to ramming) ram_lock mode is on
-        chassis.set_active_brake(ram_lock * 0.7); // ram_lock = false = 0
+        chassis.set_active_brake(ram_lock * 5); // ram_lock = false = 0
     }
 
 
@@ -81,14 +65,13 @@ void Robot::update_intake() {
     int8_t A_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A);
 
 
- 
+    // sets intake direction to intake
     if (R1_pressed) {
-        // intake.toggle(); 
        intake.set_polarity(1); 
     }
-    // switches direction arm spins (intaking vs deintaking)
+
+    // sets intake to deintake
     if (R2_pressed) {
-    //    intake.switch_polarity(); 
         intake.set_polarity(-1);
     }
      
@@ -97,6 +80,7 @@ void Robot::update_intake() {
         intake.move_level();
     }
 
+    // toggles (on and off intake)
     if (A_press) {
         intake.toggle(); 
     }
@@ -116,14 +100,14 @@ void Robot::update_matchloader() {
     
     } 
 
+    // if L2 is pressed, direction is switched 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
         matchloader.switch_polarity();
+        // zoya note: technically this doesn't do anything rn lmfao
     }
     
-    // if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
-    //     matchloader.toggle_arm(); }
 
-    // matchloader.bang_set_voltage(matchloader.get_state() * -1 * constants::HIGH_VOLTAGE_CATA);
+    // sets voltage input for matchloader--
     matchloader.set_voltage(matchloader.get_state() * -1 * constants::HIGH_VOLTAGE_CATA);
     
 }
@@ -133,7 +117,6 @@ void Robot::update_matchloader() {
 void Robot::update_wings() {
     // if X is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-        std::printf("update_wings");
         wings.toggle_wings();
     } 
     // if Y is pressed 

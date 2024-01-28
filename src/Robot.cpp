@@ -46,8 +46,6 @@ void Robot::update_drivetrain() {
         // sets active braking to 0 (none) or 0.7 if (resistance to ramming) ram_lock mode is on
         chassis.set_active_brake(ram_lock * 5); // ram_lock = false = 0
     }
-
-
 }
 
 // updates all aspects of intake
@@ -132,5 +130,5 @@ void Robot::update(std::string info) {
     update_wings();
     update_drivetrain(); 
     // master.print(0,0, "loader temp: %f", matchloader.get_temp() );
-    // master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
+    master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
 }

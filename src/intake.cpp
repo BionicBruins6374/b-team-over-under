@@ -4,25 +4,8 @@
 /* constructor 
 */
 Intake::Intake(int8_t port) 
-: intakeMotor{ port } 
+: intakeMotor{ port, pros::E_MOTOR_GEAR_BLUE } 
 {}; 
-
-/* sets voltage to the motor based on input and dampens the voltage if motor is at risk of overheating
-*/
-// void Intake::set_voltage(int8_t voltage) {
-//     int32_t volt; 
-//     // TODO: change temperature--check motors during testing for ideal temp
-//     // temperature in Celsius 
-//     if (intakeMotor.get_temperature() < 50) {
-//     volt = voltage * polarity;
-//     }
-//     // dampens voltage supply if motor is near threshold of overheating
-//     else {
-//         volt = voltage * 0.90 * polarity; // TODO: change scaler amnt
-//     }
-//     intakeMotor.move_voltage(volt);
-//     current_ideal_voltage = volt;
-// }
 
 void Intake::set_voltage(int32_t voltage) {
     intakeMotor.move_voltage(voltage);

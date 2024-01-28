@@ -2,28 +2,27 @@
 #include "ports.hpp"
 
 
-Auton def = Auton("peepeepoopoo", defensive_x2);
 // Chassis constructor DIRECTIONS ARE FORM FRONT
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   // RED AND GREEN = LEFT 
   // front, back-bottom, back-top 
   //   the first port is the sensored port (when trackers are not used!)
-  {
-  ports::LEFT_FRONT_DT,
-  ports::LEFT_BACK_BOTTOM_DT,
-  ports::RIGHT_BACK_TOP_DT}
+  {  ports::RIGHT_FRONT_DT,
+  ports::RIGHT_BACK_BOTTOM_DT,
+  ports::RIGHT_BACK_TOP_DT
+  }
 
   // Right Chassis Ports (negative port = reversed) 
   // ALL RED = RIGHT  
   //   the first port is the sensored port (when trackers are not used!)
-  ,{
-  ports::RIGHT_FRONT_DT,
-  ports::RIGHT_BACK_BOTTOM_DT,
-  ports::RIGHT_BACK_TOP_DT}
+  ,{ ports::LEFT_FRONT_DT,
+  ports::LEFT_BACK_BOTTOM_DT,
+  ports::RIGHT_BACK_TOP_DT
+  }
 
   // IMU Port
-  ,ports::LEFT_BACK_BOTTOM_DT
+  ,16
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -63,8 +62,7 @@ void initialize() {
     Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
     Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
     Auton("Combine all 3 movements", combining_movements),
-    Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
-    def,
+    Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example)
   });
 
   // Initialize chassis and auton selector
@@ -81,28 +79,7 @@ void competition_initialize() {
   // . . .
 }
 
-void alliance_triball() {
-  chassis.joy_thresh_opcontrol(-90, -90);
-  pros::Task::delay(1000);
-  
-  chassis.joy_thresh_opcontrol(0,0);
-  pros::Task::delay(100); 
 
-  chassis.joy_thresh_opcontrol(90, 90);
-  pros::Task::delay(400);
-
-  chassis.joy_thresh_opcontrol(0,0);
-  pros::Task::delay(100); 
-
-  chassis.joy_thresh_opcontrol(-90, -90);
-  pros::Task::delay(500);
-
-  
-  chassis.joy_thresh_opcontrol(0, 0);
-  pros::Task::delay(100); 
-  chassis.joy_thresh_opcontrol(90, 90); 
-  pros::Task::delay(300); 
-}
 
 void autonomous() {
   chassis.reset_pid_targets(); // Resets PID targets to 0
@@ -111,6 +88,7 @@ void autonomous() {
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
   
   // encoders, middle = under
+  // defines and resets all encoders
 	pros::Motor left_front_encoder = pros::Motor(ports::LEFT_FRONT_DT);
 	pros::Motor left_middle_encoder = pros::Motor(ports::LEFT_BACK_BOTTOM_DT);
 	pros::Motor left_back_encoder = pros::Motor(ports::LEFT_BACK_TOP_DT);
@@ -118,10 +96,6 @@ void autonomous() {
 	pros::Motor right_middle_encoder = pros::Motor(ports::RIGHT_BACK_BOTTOM_DT);
 	pros::Motor right_back_encoder = pros::Motor(ports::RIGHT_BACK_TOP_DT);
 
-	// std::printf("left back: %f \n", left_back_encoder.get());
-	// std::printf("right back: %f \n", right_back_encoder.get());
-	// std::printf("left front: %f \n", left_front_encoder.get());
-	// std::printf("right front: %f \n", right_front_encoder.get());
 
 	left_front_encoder.tare_position(); left_middle_encoder.tare_position(); 
 	left_back_encoder.tare_position(); 
@@ -131,26 +105,15 @@ void autonomous() {
   default_constants(); modified_exit_condition(); 
 
   std::printf("delaying..");
-  pros::Task::delay(1000);
+  pros::Task::delay(500);
 
-  // defensive_raw(); 
-  alliance_triball(); 
-  // def.auton_call(); 
+  // TODO: call ur auton function here
+  offensive_x2();
 
-
-  // chassis.reset_drive_sensor(); 
-  // chassis.reset_pid_targets();
-  // chassis.reset_gyro(); 
-
-  // drive_example(); 
-
-
-
-  // ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
 }
 
 
-void test_motor(uint8_t port_num) {
+void test_motor(int8_t port_num) {
     pros::Motor mot = pros::Motor{port_num}; 
     mot.move_voltage(12000);
 } 
@@ -166,10 +129,11 @@ void timer() {
 
 void opcontrol() {
   // This is preference to what you like to drive on.
-  chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+  chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
+  // Defines components 
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR, ports::ARM_PORT};
-  Wings wings = Wings {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
   Robot robot = Robot {intake, cata, wings}; 
 
   while (true) {
@@ -178,6 +142,4 @@ void opcontrol() {
     robot.update("TESTING");
   }
 
-  // pros::Motor mot = pros::Motor{3}; 
-  // mot.move_voltage(12000);
 }

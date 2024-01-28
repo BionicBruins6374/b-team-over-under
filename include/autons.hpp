@@ -20,3 +20,5 @@ void two_mogo_constants();
 void modified_exit_condition(); 
 
 void defensive_raw(); 
+void offensive_x2();
+void alliance_triball(); 

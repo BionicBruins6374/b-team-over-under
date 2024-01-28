@@ -4,7 +4,6 @@
 class Matchloader {
     private:
         pros::Motor m_big_motor; // 11W
-        pros::ADIDigitalOut arm_piston; 
         int8_t direction = 1; 
         // std::vector<pros::Motor> motor_list {m_small_motor, m_big_motor}; 
         // pros::Motor_Group motors {motor_list}; 

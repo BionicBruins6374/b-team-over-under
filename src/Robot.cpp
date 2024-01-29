@@ -110,6 +110,17 @@ void Robot::update_matchloader() {
     
 }
 
+void Robot::update_matchloader_temp() {
+
+    if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+        matchloader.set_voltage(constants::HIGH_VOLTAGE_CATA);
+    } 
+    else {
+        matchloader.set_voltage(0);
+    }
+
+}
+
 
 // updates all aspects of wings 
 void Robot::update_wings() {
@@ -126,7 +137,8 @@ void Robot::update_wings() {
 // updates all components 
 void Robot::update(std::string info) {
     update_intake();
-    update_matchloader(); 
+    // update_matchloader(); 
+    update_matchloader_temp(); 
     update_wings();
     update_drivetrain(); 
     // master.print(0,0, "loader temp: %f", matchloader.get_temp() );

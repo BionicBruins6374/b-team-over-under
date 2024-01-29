@@ -132,7 +132,7 @@ void opcontrol() {
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
   // Defines components 
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR, ports::ARM_PORT};
+  Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
   Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
   Robot robot = Robot {intake, cata, wings}; 
 

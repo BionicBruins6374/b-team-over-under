@@ -1,12 +1,15 @@
 #include "Matchloader.hpp"
 #include "constants.hpp"
 
-Matchloader::Matchloader(int8_t big_motor, uint8_t piston_port) :
-    m_big_motor {big_motor, pros::E_MOTOR_GEAR_BLUE}
+Matchloader::Matchloader(int8_t big_motor, int8_t small_motor) :
+    m_big_motor {big_motor, pros::E_MOTOR_GEAR_BLUE},
+    m_small_motor {small_motor, pros::E_MOTOR_GEAR_BLUE}
+
     {};
 
 void Matchloader::set_voltage(int32_t voltage) {
     m_big_motor.move_voltage(voltage);
+    m_small_motor.move_velocity(voltage);
 }
 
 // setter; changes state of matchloader 

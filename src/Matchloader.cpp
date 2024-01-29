@@ -2,8 +2,8 @@
 #include "constants.hpp"
 
 Matchloader::Matchloader(int8_t big_motor, int8_t small_motor) :
-    m_big_motor {big_motor, pros::E_MOTOR_GEAR_BLUE},
-    m_small_motor {small_motor, pros::E_MOTOR_GEAR_BLUE}
+    m_big_motor {big_motor},
+    m_small_motor {small_motor}
 
     {};
 

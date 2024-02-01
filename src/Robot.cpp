@@ -12,7 +12,7 @@ std::vector<double> Robot::dampen_turns(int left_velocity, int right_velocity) {
     // double total_dampen = constants::DAMPENING;
     double total_dampen = 1; 
     double left_dampen = 1; 
-    double right_dampen = 0.9; 
+    double right_dampen = 1; 
     
     return {left_velocity * left_dampen - left_lost * dampen_mag, right_velocity * right_dampen  - right_lost * dampen_mag };
 

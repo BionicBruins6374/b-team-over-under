@@ -1,5 +1,6 @@
 #include "Robot.hpp"
 #include "main.h"
+#include "constants.hpp"
 
 Robot::Robot(Intake intake_in, Matchloader matcher_in, Pneumatics wingin) :
 intake {intake_in},
@@ -99,9 +100,10 @@ void Robot::update_matchloader() {
     } 
 
     // if L2 is pressed, direction is switched 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-        matchloader.switch_polarity();
-        // zoya note: technically this doesn't do anything rn lmfao
+    if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        matchloader.set_voltage(constants::LOW_VOLTAGE_CATA)
+        
+        
     }
     
 

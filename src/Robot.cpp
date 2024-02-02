@@ -125,12 +125,12 @@ void Robot::update_matchloader_temp() {
 // updates all aspects of wings 
 void Robot::update_wings() {
     // if X is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-        wings.toggle_wings();
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+        wings.toggle_back_wings();
     } 
     // if Y is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        wings.toggle_hang(); 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+        wings.toggle_front_wings(); 
     }
 }
 

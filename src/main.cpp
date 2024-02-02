@@ -8,17 +8,18 @@ Drive chassis (
   // RED AND GREEN = LEFT 
   // front, back-bottom, back-top 
   //   the first port is the sensored port (when trackers are not used!)
-  {  ports::RIGHT_FRONT_DT,
-  ports::RIGHT_BACK_BOTTOM_DT,
-  ports::RIGHT_BACK_TOP_DT
+  {  ports::LEFT_BACK_DT,
+  ports::LEFT_FRONT_BOTTOM_DT,
+  ports::RIGHT_FRONT_TOP_DT
   }
-
+ 
   // Right Chassis Ports (negative port = reversed) 
   // ALL RED = RIGHT  
   //   the first port is the sensored port (when trackers are not used!)
-  ,{ ports::LEFT_FRONT_DT,
-  ports::LEFT_BACK_BOTTOM_DT,
-  ports::RIGHT_BACK_TOP_DT
+  ,{ 
+     ports::RIGHT_BACK_DT,
+    ports::RIGHT_FRONT_BOTTOM_DT,
+    ports::RIGHT_FRONT_TOP_DT
   }
 
   // IMU Port
@@ -84,20 +85,20 @@ void autonomous() {
   
   // encoders, middle = under
   // defines and resets all encoders
-	pros::Motor left_front_encoder = pros::Motor(ports::LEFT_FRONT_DT);
-	pros::Motor left_middle_encoder = pros::Motor(ports::LEFT_BACK_BOTTOM_DT);
-	pros::Motor left_back_encoder = pros::Motor(ports::LEFT_BACK_TOP_DT);
-	pros::Motor right_front_encoder = pros::Motor(ports::RIGHT_FRONT_DT);
-	pros::Motor right_middle_encoder = pros::Motor(ports::RIGHT_BACK_BOTTOM_DT);
-	pros::Motor right_back_encoder = pros::Motor(ports::RIGHT_BACK_TOP_DT);
+	// pros::Motor left_front_encoder = pros::Motor(ports::LEFT_FRONT_DT);
+	// pros::Motor left_middle_encoder = pros::Motor(ports::LEFT_BACK_BOTTOM_DT);
+	// pros::Motor left_back_encoder = pros::Motor(ports::LEFT_BACK_TOP_DT);
+	// pros::Motor right_front_encoder = pros::Motor(ports::RIGHT_FRONT_DT);
+	// pros::Motor right_middle_encoder = pros::Motor(ports::RIGHT_BACK_BOTTOM_DT);
+	// pros::Motor right_back_encoder = pros::Motor(ports::RIGHT_BACK_TOP_DT);
 
 
-	left_front_encoder.tare_position(); left_middle_encoder.tare_position(); 
-	left_back_encoder.tare_position(); 
-	right_front_encoder.tare_position(); 
-	right_middle_encoder.tare_position(); 
-	right_back_encoder.tare_position();
-  default_constants(); modified_exit_condition(); 
+	// left_front_encoder.tare_position(); left_middle_encoder.tare_position(); 
+	// left_back_encoder.tare_position(); 
+	// right_front_encoder.tare_position(); 
+	// right_middle_encoder.tare_position(); 
+	// right_back_encoder.tare_position();
+  // default_constants(); modified_exit_condition(); 
 
   std::printf("delaying..");
   pros::Task::delay(500);

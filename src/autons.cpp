@@ -96,7 +96,7 @@ void drive_example() {
   chassis.set_turn_pid(0, TURN_SPEED);
   chassis.wait_drive();
 }
-
+//note for self :  use as auton example
 // offensive simple, intakes triball at barrier, pushes 
 void offensive_x2() {
 
@@ -271,7 +271,7 @@ void alliance_triball() {
   pros::Task::delay(1000);
   
   chassis.joy_thresh_opcontrol(0,0);
-  pros::Task::delay(100); 
+  pros::Task::delay(100);
 
   chassis.joy_thresh_opcontrol(90, 90);
   pros::Task::delay(400);
@@ -287,4 +287,18 @@ void alliance_triball() {
   pros::Task::delay(100); 
   chassis.joy_thresh_opcontrol(90, 90); 
   pros::Task::delay(300); 
+}
+
+//OMG MY FIRST REAL CODE THING (not including the other function that zoya used as a test) -- sahil
+
+void defence_auton(){
+  //move bot forward sqrt(3) tiles
+  chassis.set_drive_pid(24 * sqrt(3), DRIVE_SPEED, true );
+  //move bot back to starting location 
+  chassis.set_drive_pid(-24 * sqrt(3), DRIVE_SPEED, true);
+  //turn some degrees
+  chassis.set_turn_pid(110, DRIVE_SPEED);
+  //move bot forward 2 tiles to push middle tribal
+  chassis.set_drive_pid(24 * 1.85);
+
 }

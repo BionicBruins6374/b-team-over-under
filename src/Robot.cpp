@@ -92,26 +92,20 @@ void Robot::update_intake() {
 
 
 void Robot::update_matchloader() {
-    // if L1 is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-        matchloader.toggle(); // toggle Matchloader 
-    
-    } 
-
-    // if L2 is pressed, direction is switched 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-        matchloader.switch_polarity();
-        // zoya note: technically this doesn't do anything rn lmfao
+    //if someone hits L1 toggle the cata either on or off
+    if(m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1) ){
+        matchloader.toggle();
+        if(matchloader.get_state()){
+            matchloader.set_voltage(constants::HIGH_VOLTAGE_CATA);
+        }
+        else{
+            matchloader.set_voltage(0);
+        }
     }
-    
 
-    // sets voltage input for matchloader--
-    matchloader.set_voltage(matchloader.get_state() * -1 * constants::HIGH_VOLTAGE_CATA);
-    
 }
-
+//while someone holds l1 keep the cata on 
 void Robot::update_matchloader_temp() {
-
     if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
         matchloader.set_voltage(constants::HIGH_VOLTAGE_CATA);
     } 
@@ -137,8 +131,8 @@ void Robot::update_wings() {
 // updates all components 
 void Robot::update(std::string info) {
     update_intake();
-    // update_matchloader(); 
-    update_matchloader_temp(); 
+    update_matchloader(); 
+    // update_matchloader_temp(); 
     update_wings();
     update_drivetrain(); 
     // master.print(0,0, "loader temp: %f", matchloader.get_temp() );

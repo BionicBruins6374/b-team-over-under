@@ -132,6 +132,10 @@ void Robot::update_wings() {
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
         wings.toggle_front_wings(); 
     }
+    // hang = X
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+        wings.toggle_hang();
+    }
 }
 
 // updates all components 

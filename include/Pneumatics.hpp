@@ -15,7 +15,9 @@ class Pneumatics {
         void toggle_back_wings();
         void toggle_front_wings(); 
         void toggle_hang(); 
-        bool get_state_wings();
+
+        bool get_state_back_wings();
+        bool get_state_front_wings(); 
         bool get_state_hang(); 
     
 };

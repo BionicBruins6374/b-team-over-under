@@ -26,11 +26,15 @@ void Pneumatics::toggle_hang() {
 }
 
 // returns wing state
-bool Pneumatics::get_state_wings() {
+bool Pneumatics::get_state_back_wings() {
     return back_wings_state; 
 }
 
 
 bool Pneumatics::get_state_hang() {
     return hang_state; 
+}
+
+bool Pneumatics::get_state_front_wings() {
+    return front_wings_state; 
 }

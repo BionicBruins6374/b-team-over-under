@@ -58,29 +58,23 @@ void Robot::update_intake() {
     int8_t R2_pressed = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2);
     int8_t R2_pressing = m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-    int8_t B_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B);
 
-    int8_t A_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A);
 
 
     // sets intake direction to intake
-    if (R1_pressed) {
-       intake.set_polarity(1); 
+    if (R1_pressing) {
+        intake.set_state(true);
+        intake.set_polarity(1); 
     }
 
     // sets intake to deintake
-    if (R2_pressed) {
+    else if (R2_pressing) {
+        intake.set_state(true);
         intake.set_polarity(-1);
     }
-     
-    // change speed
-    if (B_press) {
-        intake.move_level();
-    }
-
-    // toggles (on and off intake)
-    if (A_press) {
-        intake.toggle(); 
+    
+    else {
+        intake.set_state(false);
     }
     
     // sets the voltage to 0 if state = 0 (off), else sets voltage to the speed dictated by level * polarity (direction)
@@ -92,21 +86,29 @@ void Robot::update_intake() {
 
 
 void Robot::update_matchloader() {
-    // if L1 is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+    // if A is pressed 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
         matchloader.toggle(); // toggle Matchloader 
+        matchloader.set_speed(constants::HIGH_VOLTAGE_CATA); 
     
     } 
-
-    // if L2 is pressed, direction is switched 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-        matchloader.switch_polarity();
-        // zoya note: technically this doesn't do anything rn lmfao
+    // if B is pressed
+    else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+        // if (!matchloader.get_state() && (matchloader.get_speed() == constants::HIGH_VOLTAGE_CATA)) {
+        //     matchloader.toggle(); 
+        // }
+        matchloader.set_state(true);
+        matchloader.set_speed(constants::LOW_VOLTAGE_CATA);
+     
     }
-    
+    if(matchloader.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
+        matchloader.set_state(false);
 
-    // sets voltage input for matchloader--
-    matchloader.set_voltage(matchloader.get_state() * -1 * constants::HIGH_VOLTAGE_CATA);
+    }
+
+
+    // sets voltage input for matchloader
+    matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
     
 }
 
@@ -124,11 +126,11 @@ void Robot::update_matchloader_temp() {
 
 // updates all aspects of wings 
 void Robot::update_wings() {
-    // if X is pressed 
+    // if L1 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
         wings.toggle_back_wings();
     } 
-    // if Y is pressed 
+    // if L2 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
         wings.toggle_front_wings(); 
     }
@@ -142,7 +144,7 @@ void Robot::update_wings() {
 void Robot::update(std::string info) {
     update_intake();
     // update_matchloader(); 
-    update_matchloader_temp(); 
+    update_matchloader(); 
     update_wings();
     update_drivetrain(); 
     // master.print(0,0, "loader temp: %f", matchloader.get_temp() );

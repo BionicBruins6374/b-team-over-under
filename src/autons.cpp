@@ -30,7 +30,7 @@ const double AM = constants::AUTON_MULTIPLIER;
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
 
 void default_constants() {
-   chassis.set_slew_min_power(80, 80);
+  chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
   chassis.set_pid_constants(&chassis.headingPID, 0, 0, 0, 0); // setting first param to 11 would make it spin 
   chassis.set_pid_constants(&chassis.forward_drivePID, 4.1, 0, 4, 0); 
@@ -325,4 +325,37 @@ void alliance_triball() {
   pros::Task::delay(100); 
   chassis.joy_thresh_opcontrol(90, 90); 
   pros::Task::delay(300); 
+}
+
+//defensive 
+void defensive_triball(Intake intake, Pneumatics wings)
+{
+  //go straight
+  chassis.set_angle(chassis.get_gyro());
+  chassis.set_drive_pid(T*sqrt(5), DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //intake triball
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
+
+  //go backwards
+  chassis.set_drive_pid(T*0.5, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //turn to face straight
+  chassis.set_turn_pid(63.43, TURN_SPEED);
+  chassis.wait_drive();
+  
+  //open wings
+  wings.toggle_front_wings();
+  pros::Task::delay(500);
+
+  //go to barrier
+  chassis.set_drive_pid(T*1.25, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //outake triball
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
 }

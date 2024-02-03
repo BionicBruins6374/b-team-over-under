@@ -47,3 +47,16 @@ void Matchloader::bang_set_voltage(int32_t voltage) {
     }
 }
 
+void Matchloader::set_speed(int32_t speed_inp) {
+    speed = speed_inp;
+}
+
+int32_t Matchloader::get_speed() {
+    return speed; 
+
+}
+
+void Matchloader::set_state (bool state_input){
+    state = state_input;
+}
+

@@ -32,31 +32,12 @@ const double AM = constants::AUTON_MULTIPLIER;
 void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, 11, 1, 20, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 4, 0, 5.5, 0); 
-  chassis.set_pid_constants(&chassis.backward_drivePID, 4, 0, 5.5, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 5.25, 0.003, 35, 15);
-  chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
-}
+  chassis.set_pid_constants(&chassis.headingPID, 0, 0, 0, 0); // setting first param to 11 would make it spin 
+  chassis.set_pid_constants(&chassis.forward_drivePID, 4.1, 0, 4, 0); 
+  chassis.set_pid_constants(&chassis.backward_drivePID, 4.1, 0, 4.2, 0);
+  chassis.set_pid_constants(&chassis.turnPID, 3, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.swingPID, 0, 0, 0, 0);
 
-void one_mogo_constants() {
-  chassis.set_slew_min_power(80, 80);
-  chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, 11, 0, 20, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 5, 0.003, 35, 15);
-  chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
-}
-
-void two_mogo_constants() {
-  chassis.set_slew_min_power(80, 80);
-  chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, 11, 0, 20, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 5, 0.003, 35, 15);
-  chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
 }
 
 
@@ -73,28 +54,85 @@ void modified_exit_condition() {
 // Drive Example
 ///
 void drive_example() {
-  chassis.set_mode(ez::DRIVE); // Drive
-  
   // std::printf("\ncalled drive_example\n");
   // chassis.set_drive_pid(4, 90, false);
   // chassis.wait_drive();
 
-  chassis.set_drive_pid(-12, DRIVE_SPEED, false);
+  chassis.set_drive_pid(-T, DRIVE_SPEED, false);
   chassis.wait_drive();
 
   pros::delay(1000);
 
-  chassis.set_drive_pid(12, 90, false);
+  chassis.set_drive_pid(T, 90, false);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(90, TURN_SPEED);
+  // chassis.set_turn_pid(90, TURN_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_turn_pid(45, TURN_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_turn_pid(0, TURN_SPEED);
+  // chassis.wait_drive();
+}
+
+void offensive_new(Intake intake, Pneumatics pneumatics) {
+  chassis.set_angle(chassis.get_gyro()); 
+
+  chassis.set_turn_pid(45, TURN_SPEED); 
   chassis.wait_drive();
 
-  chassis.set_turn_pid(45, TURN_SPEED);
+
+  double diag1 = sqrt(5 * T*T ); 
+  // intake on
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+  chassis.set_drive_pid(diag1, DRIVE_SPEED, false);
+  chassis.wait_drive(); 
+
+  pros::Task::delay(1000); 
+
+  chassis.set_drive_pid(-diag1/4, DRIVE_SPEED, false); 
+  chassis.wait_drive(); 
+
+
+  // flips around to shoot triball 
+  chassis.set_turn_pid(-45, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(0, TURN_SPEED);
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
+
+  chassis.set_turn_pid(25, TURN_SPEED);  // TODO 
+  chassis.wait_drive(); 
+
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+
+  double diag2  = 1.25 * T * T;
+  // turn on intake
+  chassis.set_drive_pid(diag2, DRIVE_SPEED, false); // sqrt((0.5T)^2 + T^2)
+  chassis.wait_drive(); 
+
+  intake.set_voltage(0); // TODO
+
+  chassis.set_drive_pid (-diag2/4, DRIVE_SPEED, false);
   chassis.wait_drive();
+
+  // turn on wings and approach from an angle 
+  pneumatics.toggle_front_wings(); 
+  chassis.set_turn_pid(-45 , TURN_SPEED); // TODO
+  chassis.wait_drive(); 
+  pros::Task::delay(400);
+  // move forward tiny bit 
+  chassis.set_drive_pid(2, DRIVE_SPEED, false);
+  // angle towards goal 
+  chassis.set_turn_pid(90, TURN_SPEED);   
+  chassis.wait_drive(); 
+
+  // drive to goal
+  chassis.set_drive_pid(T/2, DRIVE_SPEED, false); 
+  chassis.wait_drive(); 
+  
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE); 
 }
 
 // offensive simple, intakes triball at barrier, pushes 

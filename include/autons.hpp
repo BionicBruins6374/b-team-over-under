@@ -21,4 +21,5 @@ void modified_exit_condition();
 
 void defensive_raw(); 
 void offensive_x2();
+void offensive_new(); 
 void alliance_triball(); 

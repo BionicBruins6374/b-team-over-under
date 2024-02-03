@@ -99,10 +99,11 @@ void Robot::update_matchloader() {
         // }
         matchloader.set_state(true);
         matchloader.set_speed(constants::LOW_VOLTAGE_CATA);
-;       
+     
     }
     if(matchloader.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
         matchloader.set_state(false);
+
     }
 
 
@@ -132,6 +133,10 @@ void Robot::update_wings() {
     // if L2 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
         wings.toggle_front_wings(); 
+    }
+    // hang = X
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+        wings.toggle_hang();    
     }
 }
 

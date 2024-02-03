@@ -23,7 +23,7 @@ Drive chassis (
   }
 
   // IMU Port
-  ,16
+  ,11
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -35,7 +35,7 @@ Drive chassis (
 
   // External Gear Ratio (MUST BE DECIMAL)
   //    (or gear ratio of tracking wheel)
-  ,0.36 // 325/600 TODO
+  ,0.66 // 325/600 TODO
 );
 
 
@@ -82,7 +82,7 @@ void autonomous() {
   chassis.reset_gyro(); // Reset gyro position to 0
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
-  
+  default_constants();
   // encoders, middle = under
   // defines and resets all encoders
 	// pros::Motor left_front_encoder = pros::Motor(ports::LEFT_FRONT_DT);
@@ -104,7 +104,10 @@ void autonomous() {
   pros::Task::delay(500);
 
   // TODO: call ur auton function here
-  offensive_x2();
+  // offensive_x2();
+  // drive_example(); 
+  modified_exit_condition(); 
+  offensive_new(); 
 
 }
 
@@ -132,7 +135,7 @@ void opcontrol() {
   Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
   Robot robot = Robot {intake, cata, wings}; 
 
-  while (true) {
+  while (true) { 
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     robot.update("TESTING");

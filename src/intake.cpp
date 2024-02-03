@@ -57,3 +57,7 @@ void Intake::toggle() {
 void Intake::toggle(bool state) {
     intake_on = state;
 }
+
+void Intake::set_state(bool state) {
+    intake_on = state;
+}

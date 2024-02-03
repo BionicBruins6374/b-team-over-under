@@ -31,6 +31,7 @@ public:
     void set_polarity(int polar);
 
     int get_avg_velocity();
-
+    
+    void set_state(bool state);
 
 };

@@ -10,6 +10,7 @@ class Matchloader {
         // pros::Motor_Group motors {motor_list}; 
         bool state = false; // true = on
         bool arm_state = false;
+        int32_t speed = 0; 
     public:
         Matchloader(int8_t big_motor_port, int8_t small_motor_port);
         void set_voltage(int32_t voltage);
@@ -20,6 +21,9 @@ class Matchloader {
         int get_state(); 
         void bang_set_voltage(int32_t voltage);
         double get_temp(); 
+
+        void set_speed(int32_t speed); 
+        int32_t get_speed(); 
 
         
 };

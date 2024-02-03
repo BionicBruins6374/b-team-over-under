@@ -1,6 +1,5 @@
 #include "Robot.hpp"
 #include "main.h"
-#include "constants.hpp"
 
 Robot::Robot(Intake intake_in, Matchloader matcher_in, Pneumatics wingin) :
 intake {intake_in},
@@ -59,9 +58,7 @@ void Robot::update_intake() {
     int8_t R2_pressed = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2);
     int8_t R2_pressing = m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-    int8_t B_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B);
 
-    int8_t A_press = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A);
 
 
     // sets intake direction to intake
@@ -92,18 +89,22 @@ void Robot::update_matchloader() {
     // if A is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
         matchloader.toggle(); // toggle Matchloader 
+        matchloader.set_speed(constants::HIGH_VOLTAGE_CATA); 
     
     } 
-    // if B is pressed, direction is switched 
-    if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-        matchloader.set_voltage(constants::LOW_VOLTAGE_CATA)
+    // if B is pressed
+    else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+        // if (!matchloader.get_state() && (matchloader.get_speed() == constants::HIGH_VOLTAGE_CATA)) {
+        //     matchloader.toggle(); 
+        // }
+        matchloader.toggle(); 
+        matchloader.set_speed(constants::LOW_VOLTAGE_CATA);
 ;        
-        
     }
     
 
-    // sets voltage input for matchloader--
-    matchloader.set_voltage(matchloader.get_state() * -1 * constants::HIGH_VOLTAGE_CATA);
+    // sets voltage input for matchloader
+    matchloader.set_voltage(matchloader.get_state() * -1 * matchloader.get_speed()); 
     
 }
 

@@ -30,7 +30,7 @@ const double AM = constants::AUTON_MULTIPLIER;
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
 
 void default_constants() {
-   chassis.set_slew_min_power(80, 80);
+  chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
   chassis.set_pid_constants(&chassis.headingPID, 11, 1, 20, 0);
   chassis.set_pid_constants(&chassis.forward_drivePID, 4, 0, 5.5, 0); 
@@ -287,4 +287,10 @@ void alliance_triball() {
   pros::Task::delay(100); 
   chassis.joy_thresh_opcontrol(90, 90); 
   pros::Task::delay(300); 
+}
+
+//defensive 
+void defensive_triball()
+{
+  
 }

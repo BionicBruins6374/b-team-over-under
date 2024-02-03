@@ -290,7 +290,15 @@ void alliance_triball() {
 }
 
 //defensive 
-void defensive_triball()
+void defensive_triball(Intake intake)
 {
-  
+  //go straight
+  chassis.set_drive_pid(T*sqrt(5), DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //intake triball
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+
+
+
 }

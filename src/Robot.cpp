@@ -97,14 +97,17 @@ void Robot::update_matchloader() {
         // if (!matchloader.get_state() && (matchloader.get_speed() == constants::HIGH_VOLTAGE_CATA)) {
         //     matchloader.toggle(); 
         // }
-        matchloader.toggle(); 
+        matchloader.set_state(true);
         matchloader.set_speed(constants::LOW_VOLTAGE_CATA);
-;        
+;       
     }
-    
+    if(matchloader.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
+        matchloader.set_state(false);
+    }
+
 
     // sets voltage input for matchloader
-    matchloader.set_voltage(matchloader.get_state() * -1 * matchloader.get_speed()); 
+    matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
     
 }
 
@@ -136,7 +139,7 @@ void Robot::update_wings() {
 void Robot::update(std::string info) {
     update_intake();
     // update_matchloader(); 
-    update_matchloader_temp(); 
+    update_matchloader(); 
     update_wings();
     update_drivetrain(); 
     // master.print(0,0, "loader temp: %f", matchloader.get_temp() );

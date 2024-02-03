@@ -56,3 +56,7 @@ int32_t Matchloader::get_speed() {
 
 }
 
+void Matchloader::set_state (bool state_input){
+    state = state_input;
+}
+

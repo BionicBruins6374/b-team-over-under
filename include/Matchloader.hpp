@@ -24,6 +24,7 @@ class Matchloader {
 
         void set_speed(int32_t speed); 
         int32_t get_speed(); 
+        void set_state(bool state);
 
         
 };

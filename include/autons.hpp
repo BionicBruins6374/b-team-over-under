@@ -1,4 +1,5 @@
 #pragma once
+#include "Robot.hpp"
 
 #include "EZ-Template/drive/drive.hpp"
 
@@ -21,5 +22,8 @@ void modified_exit_condition();
 
 void defensive_raw(); 
 void offensive_x2();
-void offensive_new(); 
+void offensive_new(Intake intake, Pneumatics pneumatics); 
 void alliance_triball(); 
+void skills_ez(Matchloader match, Pneumatics pneumatics); 
+void defensive_triball(Intake intake, Pneumatics pneumais);
+void defence_auton(Pneumatics wings);

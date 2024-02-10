@@ -8,18 +8,22 @@ Drive chassis (
   // RED AND GREEN = LEFT 
   // front, back-bottom, back-top 
   //   the first port is the sensored port (when trackers are not used!)
-  {  ports::LEFT_BACK_DT,
-  ports::LEFT_FRONT_BOTTOM_DT,
-  ports::RIGHT_FRONT_TOP_DT
+  {  
+   -ports::LEFT_BACK_DT,
+  -ports::LEFT_FRONT_BOTTOM_DT,
+  -ports::RIGHT_FRONT_TOP_DT
   }
  
   // Right Chassis Ports (negative port = reversed) 
   // ALL RED = RIGHT  
   //   the first port is the sensored port (when trackers are not used!)
   ,{ 
-     ports::RIGHT_BACK_DT,
-    ports::RIGHT_FRONT_BOTTOM_DT,
-    ports::RIGHT_FRONT_TOP_DT
+    -ports::RIGHT_FRONT_TOP_DT,
+    -ports::RIGHT_FRONT_BOTTOM_DT,
+    -ports::RIGHT_BACK_DT
+    
+  
+     
   }
 
   // IMU Port
@@ -83,6 +87,11 @@ void autonomous() {
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
   default_constants();
+
+  Intake intake = Intake {ports::INTAKE_MOTOR};
+  Pneumatics pneumatics = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+  Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
+
   // encoders, middle = under
   // defines and resets all encoders
 	// pros::Motor left_front_encoder = pros::Motor(ports::LEFT_FRONT_DT);
@@ -105,25 +114,15 @@ void autonomous() {
 
   // TODO: call ur auton function here
   // offensive_x2();
-  // drive_example(); 
   modified_exit_condition(); 
-  offensive_new(); 
+  // offensive_new(intake, pneumatics ); 
+  // drive_example(); 
+  // skills_ez(matchloader, pneumatics);
+  // defensive_triball(intake, pneumatics);
+  // alliance_triball();
+  defence_auton(pneumatics);
 
-}
 
-
-void test_motor(int8_t port_num) {
-    pros::Motor mot = pros::Motor{port_num}; 
-    mot.move_voltage(12000);
-} 
-
-void timer() {
-  int count = 0; 
-  while (true) {
-  chassis.joy_thresh_opcontrol(50,0); 
-  pros::Task::delay(1);
-  master.print(0,0, "count: %d", count);
-  }
 }
 
 void opcontrol() {
@@ -141,4 +140,31 @@ void opcontrol() {
     robot.update("TESTING");
   }
 
+}
+void skills () {
+  chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
+  // Defines components 
+  Intake intake = Intake {ports::INTAKE_MOTOR};
+  Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
+  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+  Robot robot = Robot {intake, cata, wings}; 
+  // skills_triball();
+  while (true) { 
+
+  pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+  robot.update("TESTING");
+  }
+}
+void test_motor(int8_t port_num) {
+    pros::Motor mot = pros::Motor{port_num}; 
+    mot.move_voltage(12000);
+} 
+
+void timer() {
+  int count = 0; 
+  while (true) {
+  chassis.joy_thresh_opcontrol(50,0); 
+  pros::Task::delay(1);
+  master.print(0,0, "count: %d", count);
+  }
 }

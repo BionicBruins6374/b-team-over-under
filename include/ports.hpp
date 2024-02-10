@@ -16,7 +16,7 @@ namespace ports {
     constexpr int8_t SMALL_CATAPULT_MOTOR = -13;
 
     constexpr uint8_t WING_PORT_RIGHT = 'A'; 
-    constexpr uint8_t WING_PORT_LEFT = 'H'; 
-    constexpr uint8_t ARM_PORT = 'D';
+    constexpr uint8_t WING_PORT_LEFT = 'E'; 
+    constexpr uint8_t ARM_PORT = 'C';
 };
 

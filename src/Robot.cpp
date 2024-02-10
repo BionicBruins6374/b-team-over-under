@@ -37,7 +37,7 @@ void Robot::update_drivetrain() {
     std::vector<double> dampened_velocities = this->dampen_turns(left_velocity, right_velocity);
     
     // updates drivetrain (chassis) speed 
-    chassis.joy_thresh_opcontrol(dampened_velocities[0], dampened_velocities[1]);
+    chassis.joy_thresh_opcontrol(-dampened_velocities[0], -dampened_velocities[1]);
     // chassis.arcade_standard(ez::SPLIT);
 
     // if up button is pressed, active braking is increased (basically an anti ram button for matchloading)

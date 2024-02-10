@@ -34,8 +34,8 @@ void default_constants() {
   chassis.set_slew_distance(7, 7);
   chassis.set_pid_constants(&chassis.headingPID, 0, 0, 0, 0); // setting first param to 11 would make it spin 
   chassis.set_pid_constants(&chassis.forward_drivePID, 4.1, 0, 4, 0); 
-  chassis.set_pid_constants(&chassis.backward_drivePID, 4.1, 0, 4.2, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 3, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.backward_drivePID, 4.1, 0, 4, 0);
+  chassis.set_pid_constants(&chassis.turnPID, 7.8, 0, 8, 0);
   chassis.set_pid_constants(&chassis.swingPID, 0, 0, 0, 0);
 
 }
@@ -57,26 +57,28 @@ void drive_example() {
   // std::printf("\ncalled drive_example\n");
   // chassis.set_drive_pid(4, 90, false);
   // chassis.wait_drive();
+  // chassis.set_angle(chassis.get_gyro()); 
 
-  chassis.set_drive_pid(-T, DRIVE_SPEED, false);
+  // chassis.set_drive_pid(-T, DRIVE_SPEED, false);
+  // chassis.wait_drive();
+
+  // pros::delay(1000);
+
+  // chassis.set_drive_pid(T, 90, false);
+  // chassis.wait_drive();
+
+  chassis.set_turn_pid(90, TURN_SPEED);
   chassis.wait_drive();
 
-  pros::delay(1000);
-
-  chassis.set_drive_pid(T, 90, false);
+  chassis.set_turn_pid(45, TURN_SPEED);
   chassis.wait_drive();
 
-  // chassis.set_turn_pid(90, TURN_SPEED);
-  // chassis.wait_drive();
-
-  // chassis.set_turn_pid(45, TURN_SPEED);
-  // chassis.wait_drive();
-
-  // chassis.set_turn_pid(0, TURN_SPEED);
-  // chassis.wait_drive();
+  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.wait_drive();
 }
 
 void offensive_new(Intake intake, Pneumatics pneumatics) {
+  // init facing front, parallel with goal
   chassis.set_angle(chassis.get_gyro()); 
 
   chassis.set_turn_pid(45, TURN_SPEED); 
@@ -224,6 +226,27 @@ void defensive_x2() {
 
 }
 
+void offensive_ez(Pneumatics pneumatics){
+  // reset angle
+  pneumatics.toggle_front_wings(); 
+  chassis.set_drive_pid(1.5 * T, DRIVE_SPEED, false); 
+  chassis.wait_drive(); 
+
+  // go -0.75T
+
+  // set angle to 0
+
+  // 0.75T 
+
+  // -0.75T 
+  
+  // set angle 0
+
+  // -0.75t
+
+
+}
+
 
 
 ///
@@ -243,6 +266,32 @@ void turn_example() {
 }
 
 
+void skills_ez(Matchloader matchloader, Pneumatics pneumatics) {
+// init angle 
+  chassis.set_angle(chassis.get_gyro());
+  // init = 65 deg
+  matchloader.set_voltage(-10000);
+  pros::Task::delay(45000);
+  matchloader.set_voltage(0); 
+
+  // move 3.5 tiles 
+  chassis.set_drive_pid(-3.5 * T, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(25 + 90, TURN_SPEED);
+  chassis.wait_drive();
+
+
+  // turn 25 deg ( or more so we overshoot) (so we face goal directly)
+  // turn on wings
+  pneumatics.toggle_front_wings();
+  // drive forward 4 tiles
+  chassis.set_drive_pid(4* T, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+
+
+}
 
 ///
 // Combining Turn + Drive
@@ -304,6 +353,50 @@ void wait_until_change_speed() {
 // Make your own autonomous functions here!
 // . . .
 
+
+// DADELLE AUTON 
+void defensive_triball(Intake intake, Pneumatics wings)
+{
+  //jam triball
+  chassis.set_angle(chassis.get_gyro());
+
+  chassis.set_drive_pid(-T * 2, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_drive_pid(T, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_turn_pid(-135
+  , TURN_SPEED);
+
+  
+  //go straight
+  chassis.set_drive_pid(T*sqrt(5), DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //intake triball
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
+
+  //go backwards
+  chassis.set_drive_pid(T*0.5, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //turn to face straight
+  chassis.set_turn_pid(-90, TURN_SPEED);
+  chassis.wait_drive();
+  
+  //open wings
+  wings.toggle_front_wings();
+  pros::Task::delay(500);
+
+  //go to barrier
+  chassis.set_drive_pid(T*1.25, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //outake triball
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
+}
+
 void alliance_triball() {
   chassis.joy_thresh_opcontrol(-90, -90);
   pros::Task::delay(1000);
@@ -327,35 +420,57 @@ void alliance_triball() {
   pros::Task::delay(300); 
 }
 
-//defensive 
-void defensive_triball(Intake intake, Pneumatics wings)
-{
-  //go straight
+
+//OMG MY FIRST REAL CODE THING (not including the other function that zoya used as a test) -- sahil
+
+void defence_auton(Pneumatics wings){
   chassis.set_angle(chassis.get_gyro());
-  chassis.set_drive_pid(T*sqrt(5), DRIVE_SPEED, false);
-  chassis.wait_drive();
 
-  //intake triball
-  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
-  pros::Task::delay(500);
-
-  //go backwards
-  chassis.set_drive_pid(T*0.5, DRIVE_SPEED, false);
+  //move bot forward sqrt(3) tiles
+  chassis.set_drive_pid(T * 3, DRIVE_SPEED, true );
   chassis.wait_drive();
-
-  //turn to face straight
-  chassis.set_turn_pid(63.43, TURN_SPEED);
+  //move bot back to starting location 
+  chassis.set_drive_pid(- T * 3, 50 , true);
   chassis.wait_drive();
+  //turn some degrees
+  chassis.set_turn_pid(-135, DRIVE_SPEED);
+  chassis.wait_drive();
+  //pop wings to touch side bar
+  wings.toggle_back_wings();
   
-  //open wings
-  wings.toggle_front_wings();
-  pros::Task::delay(500);
-
-  //go to barrier
-  chassis.set_drive_pid(T*1.25, DRIVE_SPEED, false);
+  //move bot forward 2 tiles to push middle tribal
+  //moves 1.85 so it doesnt go past middle bar
+  chassis.set_drive_pid(-1 * T * 3, DRIVE_SPEED, false);
   chassis.wait_drive();
 
-  //outake triball
-  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
-  pros::Task::delay(500);
+  //moves robot backwards so its ready to matchload
+
+  // chassis.set_drive_pid(-1 * T * 2, DRIVE_SPEED, true);
+  // chassis.wait_drive();
+
+
+}
+//beggining seconds for skills
+
+void skills_triball(Pneumatics wings, Matchloader cata) {
+  // make it a task so can op control override it?? 
+  //move bot forward sqrt(3) tiles
+  chassis.set_drive_pid(T * 5, DRIVE_SPEED, true );
+  chassis.wait_drive();
+
+  //move back slightly 
+  //7.5 INCHES
+  chassis.set_drive_pid(7.5 * -1, DRIVE_SPEED , false);
+  chassis.wait_drive();
+
+  //after tribal is in spin bot to ideal angle for matchloading
+  //while spinning start matchload so matchloaders can start counting
+  chassis.set_turn_pid(-45, TURN_SPEED);
+   chassis.wait_drive();
+
+  //pop wings to touch loading bar 
+  wings.toggle_front_wings();
+  //move back VERY LITTLE so the bot is touching the bar
+  chassis.set_drive_pid(T * 0.3 * -1, DRIVE_SPEED, false);
+
 }

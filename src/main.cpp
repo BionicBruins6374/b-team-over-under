@@ -89,7 +89,7 @@ void autonomous() {
   default_constants();
 
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  Pneumatics pneumatics = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+  // Pneumatics pneumatics = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
   Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
 
   // encoders, middle = under
@@ -120,7 +120,7 @@ void autonomous() {
   // skills_ez(matchloader, pneumatics);
   // defensive_triball(intake, pneumatics);
   // alliance_triball();
-  defence_auton(pneumatics);
+  // defence_auton(pneumatics);
 
 
 }
@@ -131,7 +131,7 @@ void opcontrol() {
   // Defines components 
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
   Robot robot = Robot {intake, cata, wings}; 
 
   while (true) { 
@@ -141,20 +141,20 @@ void opcontrol() {
   }
 
 }
-void skills () {
-  chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
-  // Defines components 
-  Intake intake = Intake {ports::INTAKE_MOTOR};
-  Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
-  Robot robot = Robot {intake, cata, wings}; 
-  // skills_triball();
-  while (true) { 
+// void skills () {
+//   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
+//   // Defines components 
+//   Intake intake = Intake {ports::INTAKE_MOTOR};
+//   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
+//   // Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+//   // Robot robot = Robot {intake, cata, wings}; 
+//   // skills_triball();
+//   while (true) { 
 
-  pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-  robot.update("TESTING");
-  }
-}
+//   pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+//   robot.update("TESTING");
+//   }
+// }
 void test_motor(int8_t port_num) {
     pros::Motor mot = pros::Motor{port_num}; 
     mot.move_voltage(12000);

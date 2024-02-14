@@ -327,7 +327,7 @@ void alliance_triball() {
   pros::Task::delay(300); 
 }
 
-//defensive 
+//adelle defensive (1 alliance in)(2 over the barrier)
 void defensive_triball(Intake intake, Pneumatics wings)
 {
   //go straight

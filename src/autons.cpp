@@ -18,7 +18,8 @@ const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
 const double T= constants::TILE_LENGTH; 
-const double AM = constants::AUTON_MULTIPLIER;
+// const double AM = constants::AUTON_MULTIPLIER;
+const double AM = 2 - master.get_battery_level() /100 ;
 
 
 

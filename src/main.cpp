@@ -39,7 +39,7 @@ Drive chassis (
 
   // External Gear Ratio (MUST BE DECIMAL)
   //    (or gear ratio of tracking wheel)
-  ,0.66 // 325/600 TODO
+  ,0.66 
 );
 
 
@@ -128,7 +128,10 @@ void autonomous() {
 
 void opcontrol() {
   // This is preference to what you like to drive on.
+
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
+  chassis.arcade_standard(ez::SPLIT); 
+
   // Defines components 
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };

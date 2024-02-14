@@ -359,3 +359,38 @@ void defensive_triball(Intake intake, Pneumatics wings)
   intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
   pros::Task::delay(500);
 }
+
+//adelle offensive (1 alliance in)(2 triballs in)
+void offensive_x3(Intake intake, Pneumatics wings) {
+  //set angle
+  chassis.set_angle(chassis.get_gyro());
+
+  //face the goal and score
+  chassis.set_turn_pid(40, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(T*2, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-T*0.75, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  
+  //turn for triball
+  chassis.set_turn_pid(-45, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(2.83*T, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //turn on intake
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
+  
+  //go back
+  chassis.set_drive_pid(-0.5*T, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(2.4*T, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_drive_pid(T, DRIVE_SPEED, false);
+
+}
+//adelle offensive wp(1 alliance in)(2 triballs in)(barrier touch)

@@ -60,3 +60,9 @@ void Matchloader::set_state (bool state_input){
     state = state_input;
 }
 
+
+void Matchloader::move_position(int position) {
+    m_big_motor.move_absolute(position, 127);
+    m_small_motor.move_absolute(position, 127);
+    
+}

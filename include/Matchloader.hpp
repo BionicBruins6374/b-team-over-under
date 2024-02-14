@@ -26,5 +26,7 @@ class Matchloader {
         int32_t get_speed(); 
         void set_state(bool state);
 
+        void move_position(int pos);
+
         
 };

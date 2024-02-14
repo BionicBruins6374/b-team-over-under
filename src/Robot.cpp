@@ -106,6 +106,10 @@ void Robot::update_matchloader() {
 
     }
 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+        matchloader.move_position(150);
+    }
+
 
     // sets voltage input for matchloader
     matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 

@@ -89,7 +89,7 @@ void autonomous() {
   default_constants();
 
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  // Pneumatics pneumatics = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
   Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
 
   // encoders, middle = under
@@ -115,6 +115,7 @@ void autonomous() {
   // TODO: call ur auton function here
   // offensive_x2();
   modified_exit_condition(); 
+  offensive_x3(intake, wings);
   // offensive_new(intake, pneumatics ); 
   // drive_example(); 
   // skills_ez(matchloader, pneumatics);

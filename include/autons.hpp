@@ -27,3 +27,5 @@ void alliance_triball();
 void skills_ez(Matchloader match, Pneumatics pneumatics); 
 void defensive_triball(Intake intake, Pneumatics pneumais);
 void defence_auton(Pneumatics wings);
+void offensive_x3(Intake intake, Pneumatics wings);
+void defensive_triball(Intake intake, Pneumatics wings);

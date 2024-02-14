@@ -474,3 +474,70 @@ void skills_triball(Pneumatics wings, Matchloader cata) {
   chassis.set_drive_pid(T * 0.3 * -1, DRIVE_SPEED, false);
 
 }
+
+//adelle defensive (1 alliance in)(2 over the barrier)
+void defensive_triball(Intake intake, Pneumatics wings)
+{
+  //go straight
+  chassis.set_angle(chassis.get_gyro());
+  chassis.set_drive_pid(T*sqrt(5), DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //intake triball
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
+
+  //go backwards
+  chassis.set_drive_pid(T*0.5, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //turn to face straight
+  chassis.set_turn_pid(63.43, TURN_SPEED);
+  chassis.wait_drive();
+  
+  //open wings
+  wings.toggle_front_wings();
+  pros::Task::delay(500);
+
+  //go to barrier
+  chassis.set_drive_pid(T*1.25, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //outake triball
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
+}
+
+//adelle offensive (1 alliance in)(2 triballs in)
+void offensive_x3(Intake intake, Pneumatics wings) {
+  //set angle
+  chassis.set_angle(chassis.get_gyro());
+
+  //face the goal and score
+  chassis.set_turn_pid(40, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(T*2, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-T*0.75, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  
+  //turn for triball
+  chassis.set_turn_pid(-45, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(2.83*T, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //turn on intake
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(500);
+  
+  //go back
+  chassis.set_drive_pid(-0.5*T, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(2.4*T, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_drive_pid(T, DRIVE_SPEED, false);
+
+}

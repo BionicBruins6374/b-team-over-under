@@ -617,7 +617,7 @@ void awp_diff(Pneumatics wings, Intake intake ) {
   
   
   // 45 ccw
-  chassis.set_turn_pid(90, TURN_SPEED/2);
+  chassis.set_turn_pid(105-45, TURN_SPEED/2);
   chassis.wait_drive(); 
   // wings
   wings.toggle_front_wings(); 

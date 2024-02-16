@@ -11,7 +11,7 @@ class Pneumatics {
         pros::ADIDigitalOut hang_right_2; 
 
         bool back_wings_state = false; 
-        bool front_wings_state = true; 
+        bool front_wings_state = false; 
         bool hang_state = true;
     public:
         Pneumatics(uint8_t port_back, uint8_t port_front, uint8_t hang_port_L1, 

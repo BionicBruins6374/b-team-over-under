@@ -66,3 +66,12 @@ void Matchloader::move_position(int position) {
     m_small_motor.move_absolute(position, 127);
     
 }
+
+void Matchloader::move_rel(int position) {
+    m_big_motor.move_relative(position, 127);
+    m_small_motor.move_relative(position, 127);
+}
+
+int Matchloader::get_pos() {
+    return m_big_motor.get_position(); 
+}

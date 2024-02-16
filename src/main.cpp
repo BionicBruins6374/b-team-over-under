@@ -1,4 +1,5 @@
 #include "main.h"
+#include "autons.hpp"
 #include "ports.hpp"
 
 
@@ -27,7 +28,7 @@ Drive chassis (
   }
 
   // IMU Port
-  ,11
+  ,12
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -91,37 +92,34 @@ void autonomous() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
   Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-
-  // encoders, middle = under
-  // defines and resets all encoders
-	// pros::Motor left_front_encoder = pros::Motor(ports::LEFT_FRONT_DT);
-	// pros::Motor left_middle_encoder = pros::Motor(ports::LEFT_BACK_BOTTOM_DT);
-	// pros::Motor left_back_encoder = pros::Motor(ports::LEFT_BACK_TOP_DT);
-	// pros::Motor right_front_encoder = pros::Motor(ports::RIGHT_FRONT_DT);
-	// pros::Motor right_middle_encoder = pros::Motor(ports::RIGHT_BACK_BOTTOM_DT);
-	// pros::Motor right_back_encoder = pros::Motor(ports::RIGHT_BACK_TOP_DT);
-
-
-	// left_front_encoder.tare_position(); left_middle_encoder.tare_position(); 
-	// left_back_encoder.tare_position(); 
-	// right_front_encoder.tare_position(); 
-	// right_middle_encoder.tare_position(); 
-	// right_back_encoder.tare_position();
-  // default_constants(); modified_exit_condition(); 
+ 
 
   std::printf("delaying..");
   pros::Task::delay(500);
 
   // TODO: call ur auton function here
   // offensive_x2();
-  modified_exit_condition(); 
-  offensive_x3(intake, wings);
-  // offensive_new(intake, pneumatics ); 
+  // wings.toggle_front_wings(); 
+  // wings.toggle_front_wings(); 
+
+  // wings.toggle_back_wings();
+  // wings.toggle_hang();
+  // modified_exit_condition(); 
+
+  // pros::Task::delay(1000); 
+  // offensive_x3(intake, wings);
+  // offensive_new(intake, pneumatics );
+  // intake.set_voltage(12000); 
   // drive_example(); 
   // skills_ez(matchloader, pneumatics);
   // defensive_triball(intake, pneumatics);
   // alliance_triball();
   // defence_auton(pneumatics);
+  // skills_triball(wings, matchloader); 
+  // matchloader.set_voltage(12000);
+  // matchloader.move_position(-1200);  // * 6
+  awp_diff(wings, intake); 
+
 
 
 }
@@ -138,6 +136,7 @@ void opcontrol() {
   Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
   Robot robot = Robot {intake, cata, wings}; 
 
+  // reset matchloader encoders with matchloader up
   while (true) { 
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

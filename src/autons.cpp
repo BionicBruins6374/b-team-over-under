@@ -17,9 +17,9 @@ const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We d
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
-const double T= constants::TILE_LENGTH; 
+double T= constants::TILE_LENGTH; 
 // const double AM = constants::AUTON_MULTIPLIER;
-const double AM = 2 - master.get_battery_level() /100 ;
+const double AM = 2.0 - master.get_battery_level() /100 ;
 
 
 
@@ -33,11 +33,11 @@ const double AM = 2 - master.get_battery_level() /100 ;
 void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, 0, 0, 0, 0); // setting first param to 11 would make it spin 
+  chassis.set_pid_constants(&chassis.headingPID, 4, 0, 4, 0); // setting first param to 11 would make it spin 
   chassis.set_pid_constants(&chassis.forward_drivePID, 4.1, 0, 4, 0); 
   chassis.set_pid_constants(&chassis.backward_drivePID, 4.1, 0, 4, 0);
   chassis.set_pid_constants(&chassis.turnPID, 7.8, 0, 8, 0);
-  chassis.set_pid_constants(&chassis.swingPID, 0, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.swingPID, 7, 0, 0, 0);
 
 }
 
@@ -48,7 +48,9 @@ void modified_exit_condition() {
   chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
-
+double pt(int x, int y){
+  return(sqrt(x * x + y * y));
+}
 
 
 ///
@@ -58,7 +60,7 @@ void drive_example() {
   // std::printf("\ncalled drive_example\n");
   // chassis.set_drive_pid(4, 90, false);
   // chassis.wait_drive();
-  // chassis.set_angle(chassis.get_gyro()); 
+  chassis.set_angle(chassis.get_gyro()); 
 
   // chassis.set_drive_pid(-T, DRIVE_SPEED, false);
   // chassis.wait_drive();
@@ -68,14 +70,25 @@ void drive_example() {
   // chassis.set_drive_pid(T, 90, false);
   // chassis.wait_drive();
 
-  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.set_drive_pid(T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  // chassis.set_swing_pid
+
+  chassis.set_drive_pid(-T * AM, DRIVE_SPEED, false);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.set_swing_pid(ez::LEFT_SWING, 90, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.set_swing_pid(ez::LEFT_SWING, 45, TURN_SPEED);
   chassis.wait_drive();
+
+  chassis.set_swing_pid(ez::LEFT_SWING, 0, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_swing_pid(ez::LEFT_SWING, -45, TURN_SPEED);
+  chassis.wait_drive();
+
 }
 
 void offensive_new(Intake intake, Pneumatics pneumatics) {
@@ -132,7 +145,7 @@ void offensive_new(Intake intake, Pneumatics pneumatics) {
   chassis.wait_drive(); 
 
   // drive to goal
-  chassis.set_drive_pid(T/2, DRIVE_SPEED, false); 
+  chassis.set_drive_pid(T/2 * AM, DRIVE_SPEED, false); 
   chassis.wait_drive(); 
   
   intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE); 
@@ -271,7 +284,7 @@ void skills_ez(Matchloader matchloader, Pneumatics pneumatics) {
 // init angle 
   chassis.set_angle(chassis.get_gyro());
   // init = 65 deg
-  matchloader.set_voltage(-10000);
+  matchloader.move_position(-10000);
   pros::Task::delay(45000);
   matchloader.set_voltage(0); 
 
@@ -355,48 +368,7 @@ void wait_until_change_speed() {
 // . . .
 
 
-// DADELLE AUTON 
-void defensive_triball(Intake intake, Pneumatics wings)
-{
-  //jam triball
-  chassis.set_angle(chassis.get_gyro());
 
-  chassis.set_drive_pid(-T * 2, DRIVE_SPEED, false);
-  chassis.wait_drive();
-  chassis.set_drive_pid(T, DRIVE_SPEED, false);
-  chassis.wait_drive();
-  chassis.set_turn_pid(-135
-  , TURN_SPEED);
-
-  
-  //go straight
-  chassis.set_drive_pid(T*sqrt(5), DRIVE_SPEED, false);
-  chassis.wait_drive();
-
-  //intake triball
-  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
-  pros::Task::delay(500);
-
-  //go backwards
-  chassis.set_drive_pid(T*0.5, DRIVE_SPEED, false);
-  chassis.wait_drive();
-
-  //turn to face straight
-  chassis.set_turn_pid(-90, TURN_SPEED);
-  chassis.wait_drive();
-  
-  //open wings
-  wings.toggle_front_wings();
-  pros::Task::delay(500);
-
-  //go to barrier
-  chassis.set_drive_pid(T*1.25, DRIVE_SPEED, false);
-  chassis.wait_drive();
-
-  //outake triball
-  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
-  pros::Task::delay(500);
-}
 
 void alliance_triball() {
   chassis.joy_thresh_opcontrol(-90, -90);
@@ -456,24 +428,46 @@ void defence_auton(Pneumatics wings){
 void skills_triball(Pneumatics wings, Matchloader cata) {
   // make it a task so can op control override it?? 
   //move bot forward sqrt(3) tiles
-  chassis.set_drive_pid(T * 5, DRIVE_SPEED, true );
+
+  //maybe add the reset angle 
+  // 28 = length of bot in holes
+  chassis.set_drive_pid((25 + 7) * AM, DRIVE_SPEED, true );
   chassis.wait_drive();
 
   //move back slightly 
-  //7.5 INCHES
-  chassis.set_drive_pid(7.5 * -1, DRIVE_SPEED , false);
+  //10.5 INCHES
+  chassis.set_drive_pid(-3 * AM , DRIVE_SPEED * 0.7 , false);
+  chassis.wait_drive(); 
+
+  chassis.set_turn_pid(-25, TURN_SPEED);
+   chassis.wait_drive();
+
+  chassis.set_drive_pid(-8 * AM , DRIVE_SPEED * 0.7 , false);
   chassis.wait_drive();
 
   //after tribal is in spin bot to ideal angle for matchloading
   //while spinning start matchload so matchloaders can start counting
-  chassis.set_turn_pid(-45, TURN_SPEED);
-   chassis.wait_drive();
+  chassis.set_turn_pid(-100, TURN_SPEED);
+  chassis.wait_drive();
 
   //pop wings to touch loading bar 
   wings.toggle_front_wings();
   //move back VERY LITTLE so the bot is touching the bar
-  chassis.set_drive_pid(T * 0.3 * -1, DRIVE_SPEED, false);
+  chassis.set_drive_pid(T * 0.55 * -1, DRIVE_SPEED, false);
 
+}
+
+void skills_noah(Pneumatics wings, Matchloader match) {
+  // skills_triball(); 
+  chassis.set_drive_pid( -T* AM , DRIVE_SPEED * 0.7 , false);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(200, TURN_SPEED);
+  chassis.wait_drive();
+
+
+
+  
 }
 
 //adelle defensive (1 alliance in)(2 over the barrier)
@@ -541,4 +535,99 @@ void offensive_x3(Intake intake, Pneumatics wings) {
   chassis.wait_drive();
   chassis.set_drive_pid(T, DRIVE_SPEED, false);
 
+}
+
+
+void awp_diff(Pneumatics wings, Intake intake ) {
+  int T_L = -T;
+  chassis.set_angle(chassis.get_gyro());
+
+  pros::Task::delay(50);
+  wings.toggle_front_wings(); 
+   pros::Task::delay(100);
+  wings.toggle_front_wings(); 
+  // pros::Task::delay(100);
+
+  // wings.toggle_back_wings();
+  // wings.toggle_back_wings();
+  // wings.toggle_hang();
+  // wings.toggle_hang(); 
+
+
+  double mid_fwd = pt(0.5, 2); 
+
+  intake.set_voltage(12000);
+
+  chassis.set_drive_pid((1.0655 +0.2 + 1)* T_L * AM, DRIVE_SPEED, false);
+  chassis.wait_drive(); 
+  // chassis.set_turn_pid(0, TURN_SPEED);
+  // chassis.wait_drive(); 
+  // chassis.set_drive_pid((1.0655 +0.5)* T_L * AM, DRIVE_SPEED, false); 
+  // chassis.wait_drive();
+
+  // chassis.set_turn_pid(0, TURN_SPEED);
+  // chassis.wait_drive(); 
+
+  pros::Task::delay(500);
+  // intake.set_voltage(0); 
+
+  chassis.set_turn_pid(15, TURN_SPEED);
+  chassis.wait_drive(); 
+
+  // chassis.set_drive_pid(-1* T_L * AM, DRIVE_SPEED, false);
+  // chassis.wait_drive(); 
+
+  // chassis.set_turn_pid(15, TURN_SPEED);
+  // chassis.wait_drive(); 
+  
+
+  chassis.set_drive_pid((-2.2 * T_L)* AM , DRIVE_SPEED, false); 
+  chassis.wait_drive();
+  
+  
+  
+  // chassis.set_swing_pid(ez::RIGHT_SWING, 170, TURN_SPEED);
+  // chassis.wait_drive(); 
+  
+  chassis.set_turn_pid(145-10, TURN_SPEED);
+  chassis.wait_drive(); 
+
+  // ram
+  chassis.set_drive_pid(AM * (26 * 0.5 + 0.7*T), DRIVE_SPEED, false );
+  chassis.wait_drive(); 
+
+  // 180
+  chassis.set_turn_pid(150, TURN_SPEED);
+  chassis.wait_drive(); 
+  // T
+  chassis.set_drive_pid(T_L* AM, DRIVE_SPEED/2, false); 
+  chassis.wait_drive(); 
+  wings.toggle_front_wings();
+  // 180-35
+  chassis.set_turn_pid(150-45, TURN_SPEED/2);
+  chassis.wait_drive(); 
+  
+  
+  // 0.6t
+  chassis.set_drive_pid(T_L* AM * 0.4, DRIVE_SPEED/2, false); 
+  chassis.wait_drive(); 
+
+  //wings
+  wings.toggle_front_wings();
+  
+  
+  // 45 ccw
+  chassis.set_turn_pid(90, TURN_SPEED/2);
+  chassis.wait_drive(); 
+  // wings
+  wings.toggle_front_wings(); 
+  // 1.75
+  chassis.set_drive_pid(T_L* AM * 1.75, DRIVE_SPEED/2, false); 
+  chassis.wait_drive(); 
+  // outtake
+  intake.set_voltage(-12000); 
+
+  // chassis.set_drive_pid((T_L - 28* 0.5) * AM, DRIVE_SPEED, false); 
+  // chassis.wait_drive(); 
+  
 }

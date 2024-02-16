@@ -107,13 +107,14 @@ void Robot::update_matchloader() {
     }
 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        matchloader.move_position(150);
+        matchloader.move_rel(-200);
     }
 
-
-    // sets voltage input for matchloader
-    matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
-    
+    master.print(0, 0, "ML: %d", matchloader.get_pos()); 
+    // else {
+    // // sets voltage input for matchloader
+    // matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
+    // }
 }
 
 void Robot::update_matchloader_temp() {
@@ -152,5 +153,5 @@ void Robot::update(std::string info) {
     update_wings();
     update_drivetrain(); 
     // master.print(0,0, "loader temp: %f", matchloader.get_temp() );
-    master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
+    // master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
 }

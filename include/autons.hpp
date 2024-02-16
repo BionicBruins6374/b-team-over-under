@@ -29,3 +29,6 @@ void defensive_triball(Intake intake, Pneumatics pneumais);
 void defence_auton(Pneumatics wings);
 void offensive_x3(Intake intake, Pneumatics wings);
 void defensive_triball(Intake intake, Pneumatics wings);
+
+void skills_triball(Pneumatics wings, Matchloader cata);
+void awp_diff(Pneumatics wings, Intake intake); 

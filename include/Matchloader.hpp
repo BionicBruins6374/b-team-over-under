@@ -27,6 +27,8 @@ class Matchloader {
         void set_state(bool state);
 
         void move_position(int pos);
+        void move_rel(int post);
+        int get_pos();  
 
         
 };

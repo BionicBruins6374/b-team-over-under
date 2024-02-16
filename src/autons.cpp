@@ -537,6 +537,106 @@ void offensive_x3(Intake intake, Pneumatics wings) {
 
 }
 
+void awp_diff(Pneumatics wings, Intake intake ) {
+  int T_L = -T;
+  chassis.set_angle(chassis.get_gyro());
+
+  pros::Task::delay(50);
+  wings.toggle_front_wings(); 
+   pros::Task::delay(100);
+  wings.toggle_front_wings(); 
+  // pros::Task::delay(100);
+
+  // wings.toggle_back_wings();
+  // wings.toggle_back_wings();
+  // wings.toggle_hang();
+  // wings.toggle_hang(); 
+
+
+  double mid_fwd = pt(0.5, 2); 
+
+  intake.set_voltage(12000);
+
+  chassis.set_drive_pid((1.0655 +0.2 + 1)* T_L * AM, DRIVE_SPEED, false);
+  chassis.wait_drive(); 
+  // chassis.set_turn_pid(0, TURN_SPEED);
+  // chassis.wait_drive(); 
+  // chassis.set_drive_pid((1.0655 +0.5)* T_L * AM, DRIVE_SPEED, false); 
+  // chassis.wait_drive();
+
+  // chassis.set_turn_pid(0, TURN_SPEED);
+  // chassis.wait_drive(); 
+
+  pros::Task::delay(500);
+  // intake.set_voltage(0); 
+
+  chassis.set_turn_pid(15, TURN_SPEED);
+  chassis.wait_drive(); 
+
+  // chassis.set_drive_pid(-1* T_L * AM, DRIVE_SPEED, false);
+  // chassis.wait_drive(); 
+
+  // chassis.set_turn_pid(15, TURN_SPEED);
+  // chassis.wait_drive(); 
+  
+
+  chassis.set_drive_pid((-2.2 * T_L)* AM , DRIVE_SPEED, false); 
+  chassis.wait_drive();
+  
+  
+  
+  // chassis.set_swing_pid(ez::RIGHT_SWING, 170, TURN_SPEED);
+  // chassis.wait_drive(); 
+  
+  chassis.set_turn_pid(145-10, TURN_SPEED);
+  chassis.wait_drive(); 
+
+  // ram
+  chassis.set_drive_pid(AM * (26 * 0.5 + 0.7*T), DRIVE_SPEED, false );
+  chassis.wait_drive(); 
+
+  // 180
+  chassis.set_turn_pid(150, TURN_SPEED);
+  chassis.wait_drive(); 
+  // T 
+  chassis.set_drive_pid(T_L* AM, DRIVE_SPEED/2.5, false); 
+  chassis.wait_drive(); 
+  wings.toggle_front_wings();
+  // 180-35
+  chassis.set_turn_pid(150-45, TURN_SPEED/2);
+  chassis.wait_drive(); 
+
+  //little bit
+  chassis.set_drive_pid(T_L* AM * 0.2, DRIVE_SPEED/2, false);
+  chassis.wait_drive();
+  
+  
+  // 0.6t
+  chassis.set_drive_pid(T_L* AM * 0.4, DRIVE_SPEED/2, false); 
+  chassis.wait_drive(); 
+
+  //wings
+  
+  
+  
+  // 35 ccw
+  chassis.set_turn_pid(105-35, TURN_SPEED/2);
+  chassis.wait_drive(); 
+  
+
+
+  // 1.75
+  chassis.set_drive_pid(T_L* AM * 1.75, DRIVE_SPEED/2, false); 
+  chassis.wait_drive(); 
+  // outtake
+  intake.set_voltage(-12000); 
+
+  // chassis.set_drive_pid((T_L - 28* 0.5) * AM, DRIVE_SPEED, false); 
+  // chassis.wait_drive(); 
+  
+}
+
+
 void drive_to_angle(double angle) {
   chassis.set_turn_pid(angle, TURN_SPEED/2);
   chassis.wait_drive(); 

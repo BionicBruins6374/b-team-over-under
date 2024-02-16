@@ -637,10 +637,6 @@ void offensive_4ball(Pneumatics wings, Intake intake) {
   wings.toggle_front_wings();
   wings.toggle_front_wings(); 
   intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE); 
-  // hwanseo redo code
-  chassis.set_drive_pid(3 * T * AM, DRIVE_SPEED, false );
-  chassis.wait_drive();
-
 
   // step 1
   chassis.set_drive_pid(pt(2.333, 2.5) * T * AM, DRIVE_SPEED, false); 

@@ -115,6 +115,7 @@ void autonomous() {
 
   chassis.set_angle(45);
 
+  offensive_4ball(wings, intake);
 
 }
 

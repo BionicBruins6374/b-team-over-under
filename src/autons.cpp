@@ -638,7 +638,7 @@ void drive_to_angle(double angle) {
   chassis.wait_drive(); 
 }
 
-void offensive_(Pneumatics wings, Intake intake) {
+void offensive_4ball(Pneumatics wings, Intake intake) {
 
   // shoots preload
   wings.toggle_front_wings();

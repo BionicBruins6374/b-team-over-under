@@ -35,4 +35,4 @@ void awp_diff(Pneumatics wings, Intake intake);
 
 void drive_to_angle(double angle);
 
-void defensive_515(Pneumatics pneumatics, Intake intake);
+void offensive_4ball(Pneumatics pneumatics, Intake intake);

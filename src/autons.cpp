@@ -17,7 +17,7 @@ const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We d
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
-double T= constants::TILE_LENGTH; 
+double T= -constants::TILE_LENGTH; 
 // const double AM = constants::AUTON_MULTIPLIER;
 const double AM = 2.0 - master.get_battery_level() /100 ;
 
@@ -455,9 +455,10 @@ void skills_triball(Pneumatics wings, Matchloader cata) {
   //move back VERY LITTLE so the bot is touching the bar
   chassis.set_drive_pid(T * 0.55 * -1, DRIVE_SPEED, false);
 
+}
+
 //adelle defensive (1 alliance in)(2 over the barrier)
-void defensive_triballA(Intake intake, Pneumatics wings)
-{
+void defensive_triballA(Intake intake, Pneumatics wings){
   //go straight
   chassis.set_angle(chassis.get_gyro());
   chassis.set_drive_pid(T*sqrt(5), DRIVE_SPEED, false);
@@ -490,11 +491,14 @@ void defensive_triballA(Intake intake, Pneumatics wings)
 
 //adelle offensive (1 alliance in)(2 triballs in)
 void offensive_x3(Intake intake, Pneumatics wings) {
+
+  //TEMP
+  T = T*2;  
   //set angle
   chassis.set_angle(chassis.get_gyro());
 
   //face the goal and score
-  chassis.set_turn_pid(40, TURN_SPEED);
+  chassis.set_turn_pid(30, TURN_SPEED);
   chassis.wait_drive();
   chassis.set_drive_pid(T*2, DRIVE_SPEED, false);
   chassis.wait_drive();
@@ -523,7 +527,7 @@ void offensive_x3(Intake intake, Pneumatics wings) {
 }
 
 void awp_diff(Pneumatics wings, Intake intake ) {
-  int T_L = -T;
+  int T_L = T;
   chassis.set_angle(chassis.get_gyro());
 
   pros::Task::delay(50);
@@ -633,6 +637,10 @@ void offensive_4ball(Pneumatics wings, Intake intake) {
   wings.toggle_front_wings();
   wings.toggle_front_wings(); 
   intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE); 
+  // hwanseo redo code
+  chassis.set_drive_pid(3 * T * AM, DRIVE_SPEED, false );
+  chassis.wait_drive();
+
 
   // step 1
   chassis.set_drive_pid(pt(2.333, 2.5) * T * AM, DRIVE_SPEED, false); 

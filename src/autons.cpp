@@ -455,23 +455,8 @@ void skills_triball(Pneumatics wings, Matchloader cata) {
   //move back VERY LITTLE so the bot is touching the bar
   chassis.set_drive_pid(T * 0.55 * -1, DRIVE_SPEED, false);
 
-}
-
-void skills_noah(Pneumatics wings, Matchloader match) {
-  // skills_triball(); 
-  chassis.set_drive_pid( -T* AM , DRIVE_SPEED * 0.7 , false);
-  chassis.wait_drive();
-
-  chassis.set_turn_pid(200, TURN_SPEED);
-  chassis.wait_drive();
-
-
-
-  
-}
-
 //adelle defensive (1 alliance in)(2 over the barrier)
-void defensive_triball(Intake intake, Pneumatics wings)
+void defensive_triballA(Intake intake, Pneumatics wings)
 {
   //go straight
   chassis.set_angle(chassis.get_gyro());

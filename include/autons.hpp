@@ -32,3 +32,7 @@ void defensive_triball(Intake intake, Pneumatics wings);
 
 void skills_triball(Pneumatics wings, Matchloader cata);
 void awp_diff(Pneumatics wings, Intake intake); 
+
+void drive_to_angle(double angle);
+
+void defensive_515(Pneumatics pneumatics, Intake intake);

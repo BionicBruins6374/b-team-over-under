@@ -97,16 +97,7 @@ void autonomous() {
   std::printf("delaying..");
   pros::Task::delay(500);
 
-  // TODO: call ur auton function here
-  // offensive_x2();
-  // wings.toggle_front_wings(); 
-  // wings.toggle_front_wings(); 
-
-  // wings.toggle_back_wings();
-  // wings.toggle_hang();
-  // modified_exit_condition(); 
-
-  // pros::Task::delay(1000); 
+  
   // offensive_x3(intake, wings);
   // offensive_new(intake, pneumatics );
   // intake.set_voltage(12000); 
@@ -118,8 +109,11 @@ void autonomous() {
   // skills_triball(wings, matchloader); 
   // matchloader.set_voltage(12000);
   // matchloader.move_position(-1200);  // * 6
-  awp_diff(wings, intake); 
 
+
+  // awp_diff(wings, intake); 
+
+  chassis.set_angle(45);
 
 
 }

@@ -48,7 +48,7 @@ void modified_exit_condition() {
   chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
-double pt(int x, int y){
+double pt(double x, double y){
   return(sqrt(x * x + y * y));
 }
 
@@ -631,3 +631,91 @@ void awp_diff(Pneumatics wings, Intake intake ) {
   // chassis.wait_drive(); 
   
 }
+
+
+void drive_to_angle(double angle) {
+  chassis.set_turn_pid(angle, TURN_SPEED/2);
+  chassis.wait_drive(); 
+}
+
+void offensive_(Pneumatics wings, Intake intake) {
+
+  // shoots preload
+  wings.toggle_front_wings();
+  wings.toggle_front_wings(); 
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE); 
+
+  // step 1
+  chassis.set_drive_pid(pt(2.333, 2.5) * T * AM, DRIVE_SPEED, false); 
+  chassis.wait_drive();
+  // turn to 135
+  chassis.set_turn_pid(135, TURN_SPEED);
+  chassis.wait_drive();
+
+  // step 2
+  chassis.set_drive_pid(2 * T * AM, DRIVE_SPEED, false); 
+  chassis.wait_drive();
+
+  // deintake and then reintake
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE); 
+  pros::Task::delay(1000);
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE); 
+
+  // step 3
+  chassis.set_drive_pid(-T * AM, DRIVE_SPEED, false); 
+  chassis.wait_drive();
+
+  // turn to (135 + 135) = 270
+  chassis.set_turn_pid(270, TURN_SPEED);
+  chassis.wait_drive();
+
+  double d = pt(T, T); 
+
+  // step 4
+  chassis.set_drive_pid(d * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  pros::Task::delay(1000); 
+
+  // step 5
+  chassis.set_drive_pid(-d/2  * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  // turn to 180
+  chassis.set_turn_pid(180, TURN_SPEED);
+  chassis.wait_drive();
+
+  // step 6
+  chassis.set_drive_pid(pt(2.5, 2.5) * T  * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  // turn to 90
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+
+  // step 7
+  chassis.set_drive_pid(d/2  * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  // turn to 45
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+
+  // step 8
+  chassis.set_drive_pid(T  * AM, DRIVE_SPEED, false); 
+  chassis.wait_drive();
+
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE); 
+  pros::Task::delay(1000);
+  intake.set_voltage(0);
+
+  // backs out
+  chassis.set_drive_pid(0.5 * T * AM, DRIVE_SPEED, false); 
+  chassis.wait_drive(); 
+
+
+
+
+  
+}
+

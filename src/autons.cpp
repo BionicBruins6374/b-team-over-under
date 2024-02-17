@@ -17,7 +17,7 @@ const int DRIVE_SPEED = 120; // This is 110/127 (around 87% of max speed).  We d
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
-double T= constants::TILE_LENGTH; 
+double T= -constants::TILE_LENGTH; 
 // const double AM = constants::AUTON_MULTIPLIER;
 const double AM = 2.0 - master.get_battery_level() /100 ;
 
@@ -527,7 +527,7 @@ void offensive_x3(Intake intake, Pneumatics wings) {
 }
 
 void awp_diff(Pneumatics wings, Intake intake ) {
-  int T_L = -T;
+  int T_L = T;
   chassis.set_angle(chassis.get_gyro());
 
   pros::Task::delay(50);
@@ -589,7 +589,7 @@ void awp_diff(Pneumatics wings, Intake intake ) {
 
 
  // ram
- chassis.set_drive_pid(AM * (26 * 0.5 + 0.7*T), DRIVE_SPEED, false );
+ chassis.set_drive_pid(AM * (26 * 0.5  -0.7*T_L), DRIVE_SPEED, false );
  chassis.wait_drive();
 
 
@@ -771,13 +771,19 @@ void hwanseo_offensive(Intake intake, Pneumatics wings){
 
   chassis.set_drive_pid(0.5 * T * AM, DRIVE_SPEED/3, false);
   chassis.wait_drive();
-
+  // take out triball
   wings.toggle_front_wings();
+  // turn to goal
   chassis.set_turn_pid(50, TURN_SPEED);
   chassis.wait_drive();
+  // drive to goal
   chassis.set_drive_pid(0.8* T * AM, DRIVE_SPEED, false);
   chassis.wait_drive();
+  // deintake
   intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
+  
+  wings.toggle_front_wings();
+
   chassis.set_drive_pid(-0.3 * T * AM, DRIVE_SPEED, false);
   chassis.wait_drive();
   chassis.set_drive_pid(0.5 * T * AM, DRIVE_SPEED, false);

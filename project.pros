@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "awp_auton",
+    "project_name": "awp ",
     "target": "v5",
     "templates": {
       "EZ-Template": {

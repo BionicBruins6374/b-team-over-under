@@ -10,7 +10,7 @@
 /////
 
 
-const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
+const int DRIVE_SPEED = 120; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
                              // If this is 127 and the robot tries to heading correct, it's only correcting by
                              // making one side slower.  When this is 87%, it's correcting by making one side
                              // faster and one side slower, giving better heading correction.
@@ -34,8 +34,8 @@ void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
   chassis.set_pid_constants(&chassis.headingPID, 4, 0, 4, 0); // setting first param to 11 would make it spin 
-  chassis.set_pid_constants(&chassis.forward_drivePID, 4.1, 0, 4, 0); 
-  chassis.set_pid_constants(&chassis.backward_drivePID, 4.1, 0, 4, 0);
+  chassis.set_pid_constants(&chassis.forward_drivePID, 4.2, 0, 4.1, 0); 
+  chassis.set_pid_constants(&chassis.backward_drivePID, 4.2, 0, 4.1, 0);
   chassis.set_pid_constants(&chassis.turnPID, 7.8, 0, 8, 0);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 0, 0);
 
@@ -45,7 +45,7 @@ void default_constants() {
 void modified_exit_condition() {
   chassis.set_exit_condition(chassis.turn_exit, 100, 3, 500, 7, 500, 500);
   chassis.set_exit_condition(chassis.swing_exit, 100, 3, 500, 7, 500, 500);
-  chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
+  chassis.set_exit_condition(chassis.drive_exit, 75, 50, 250, 150, 500, 450);
 }
 
 double pt(double x, double y){
@@ -637,7 +637,6 @@ void offensive_4ball(Pneumatics wings, Intake intake) {
   wings.toggle_front_wings();
   wings.toggle_front_wings(); 
   intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE); 
-
   // step 1
   chassis.set_drive_pid(pt(2.333, 2.5) * T * AM, DRIVE_SPEED, false); 
   chassis.wait_drive();
@@ -706,9 +705,180 @@ void offensive_4ball(Pneumatics wings, Intake intake) {
   chassis.set_drive_pid(0.5 * T * AM, DRIVE_SPEED, false); 
   chassis.wait_drive(); 
 
-
-
-
-  
 }
 
+void hwanseo_offensive(Intake intake, Pneumatics wings){
+  //enter code here
+  chassis.set_angle(chassis.get_gyro());
+
+  //wings out for alliance triball
+  pros::Task::delay(50);
+  wings.toggle_front_wings(); 
+  pros::Task::delay(100);
+  wings.toggle_front_wings();  
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE); 
+
+  //drive to center triball
+  chassis.set_drive_pid(3 * T * AM, DRIVE_SPEED*0.9, true);
+  chassis.wait_drive();
+  
+
+  //turn toward goal
+  chassis.set_turn_pid(135, TURN_SPEED*0.9);
+  chassis.wait_drive();
+  
+  //open wings
+  wings.toggle_front_wings();
+  
+  //push in to goal
+  chassis.set_drive_pid(1.5 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
+  wings.toggle_front_wings();
+  
+  //move back
+  chassis.set_drive_pid(-1 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  
+  //turn to other triball
+  chassis.set_turn_pid(270, TURN_SPEED);
+  chassis.wait_drive();
+
+  //intake on + drive to triball
+  intake.set_voltage(constants::HIGH_VOLTAGE_INTAKE);
+  chassis.set_drive_pid(0.7 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //turn to bar 
+  chassis.set_turn_pid(162, TURN_SPEED);
+  chassis.wait_drive();
+
+  // drive to matchload 
+  chassis.set_drive_pid(2.403* T * AM, DRIVE_SPEED*0.85, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(70, TURN_SPEED);
+  chassis.wait_drive();
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
+  pros::Task::delay(200);
+  wings.toggle_front_wings();
+  chassis.set_turn_pid(-150, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-1* T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_drive_pid(0.5 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-1 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.set_drive_pid(0.5* T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(230, TURN_SPEED);
+  chassis.wait_drive();
+//from here?
+  chassis.set_drive_pid(0.7 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  intake.set_voltage(-constants::HIGH_VOLTAGE_INTAKE);
+  chassis.set_turn_pid(280, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-2 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  
+  chassis.set_turn_pid(40, TURN_SPEED);
+  chassis.wait_drive();
+  
+  chassis.set_drive_pid(-1 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  
+  chassis.set_drive_pid(1.5 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  
+
+
+}
+
+
+void auton_skills(Matchloader cata, Pneumatics wings){
+  chassis.set_angle(chassis.get_gyro());
+
+  // push alliance 1.5 tiles
+  chassis.set_drive_pid(T * AM * 1.5, false);
+  chassis.wait_drive();
+  // go back 
+  chassis.set_drive_pid(T * AM * -1.5, false);
+  chassis.wait_drive();
+  // go to matchload 
+  chassis.set_turn_pid(-10, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(T * 0.10 * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(90, false);
+  chassis.wait_drive();
+
+  //actuall matchload code goes in this line
+  cata.bang_set_voltage(constants::HIGH_VOLTAGE_CATA); 
+  //wait for cata then uncata the cata
+  //wait
+  cata.bang_set_voltage(0);
+  // forward little
+  chassis.set_drive_pid(T * 3.5 * -1, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  // now under barier  (UNDER??? OMG IS THAT AN OVER UNDER REFRENCE )
+  
+  //turn left 
+  chassis.set_turn_pid(-45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(T * sqrt(2), DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //face goal
+  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.wait_drive();
+
+  //pop wings 
+  wings.toggle_front_wings();
+  
+
+  //push tribals into side goal
+  chassis.set_drive_pid(T, false);
+  chassis.wait_drive();
+
+  wings.toggle_front_wings();
+
+  //reverse last step **
+  chassis.set_drive_pid(T * -1, false);
+  chassis.wait_drive();
+
+  //turn into middle
+  chassis.set_turn_pid(-80, TURN_SPEED);
+  chassis.wait_drive();
+
+  //forward
+  chassis.set_drive_pid(T * 2 * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  //turn to forward goal 
+  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.wait_drive();
+
+  //pop wings
+  wings.toggle_front_wings();
+
+  //push tribals into front goal
+  // chassis.
+
+
+  //unpop wings
+
+  //** loop once
+
+  //*
+  //*
+
+  //do the last part 
+
+}

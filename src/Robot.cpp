@@ -110,11 +110,9 @@ void Robot::update_matchloader() {
         matchloader.move_rel(-200);
     }
 
-    master.print(0, 0, "ML: %d", matchloader.get_pos()); 
-    // else {
-    // // sets voltage input for matchloader
-    // matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
-    // }
+
+    matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
+    
 }
 
 void Robot::update_matchloader_temp() {

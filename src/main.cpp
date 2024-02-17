@@ -98,7 +98,7 @@ void autonomous() {
   pros::Task::delay(500);
 
   
-  offensive_x3(intake, wings);
+  //offensive_x3(intake, wings);
   // defensive_triballA(intake, pneumatics)
   // offensive_new(intake, pneumatics );
   // intake.set_voltage(12000); 
@@ -110,9 +110,11 @@ void autonomous() {
   // skills_triball(wings, matchloader); 
   // matchloader.set_voltage(12000);
   // matchloader.move_position(-1200);  // * 6
+  modified_exit_condition(); 
+  // hwanseo_offensive(intake, wings);
+  // auton_skills(matchloader, wings); 
 
-
-  //awp_diff(wings, intake); 
+  awp_diff(wings, intake); 
 
   //chassis.set_angle(45);
 

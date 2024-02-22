@@ -39,3 +39,5 @@ void offensive_4ball(Pneumatics pneumatics, Intake intake);
 void hwanseo_offensive(Intake intake, Pneumatics pneumatics);
 
 void auton_skills(Matchloader cata, Pneumatics wings); 
+
+void awp_short(Pneumatics wings, Intake intake); 

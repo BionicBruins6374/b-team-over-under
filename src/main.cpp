@@ -9,6 +9,13 @@ Drive chassis (
   // RED AND GREEN = LEFT 
   // front, back-bottom, back-top 
   //   the first port is the sensored port (when trackers are not used!)
+ 
+ 
+  // Right Chassis Ports (negative port = reversed) 
+  // ALL RED = RIGHT  
+  //   the first port is the sensored port (when trackers are not used!)
+ 
+
   {  
    -ports::LEFT_BACK_DT,
   -ports::LEFT_FRONT_BOTTOM_DT,
@@ -22,11 +29,9 @@ Drive chassis (
     -ports::RIGHT_FRONT_TOP_DT,
     -ports::RIGHT_FRONT_BOTTOM_DT,
     -ports::RIGHT_BACK_DT
-    
-  
-     
+   
   }
-
+  
   // IMU Port
   ,12
 
@@ -40,7 +45,7 @@ Drive chassis (
 
   // External Gear Ratio (MUST BE DECIMAL)
   //    (or gear ratio of tracking wheel)
-  ,0.66 
+  ,1 
 );
 
 
@@ -97,26 +102,26 @@ void autonomous() {
   std::printf("delaying..");
   pros::Task::delay(500);
 
-  
+  modified_exit_condition(); 
+
   //offensive_x3(intake, wings);
   // defensive_triballA(intake, pneumatics)
   // offensive_new(intake, pneumatics );
   // intake.set_voltage(12000); 
   // drive_example(); 
-  // skills_ez(matchloader, pneumatics);
+  // skills_ez(matchloader, wings);
   // defensive_triball(intake, pneumatics);
   // alliance_triball();
   // defence_auton(pneumatics);
   // skills_triball(wings, matchloader); 
   // matchloader.set_voltage(12000);
   // matchloader.move_position(-1200);  // * 6
-  modified_exit_condition(); 
   // hwanseo_offensive(intake, wings);
   // auton_skills(matchloader, wings); 
 
-  awp_diff(wings, intake); 
+  // awp_diff(wings, intake); 
 
-  //chassis.set_angle(45);
+  awp_short(wings, intake); 
 
   //offensive_4ball(wings, intake);
 
@@ -132,7 +137,15 @@ void opcontrol() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
   Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
-  Robot robot = Robot {intake, cata, wings}; 
+  Drivetrain dt = Drivetrain {
+  -ports::LEFT_BACK_DT,
+  -ports::LEFT_FRONT_BOTTOM_DT, 
+  -ports::RIGHT_FRONT_TOP_DT,  
+  -ports::RIGHT_FRONT_TOP_DT,
+  -ports::RIGHT_FRONT_BOTTOM_DT,
+  -ports::RIGHT_BACK_DT};
+
+  Robot robot = Robot {dt, intake, cata, wings}; 
 
   // reset matchloader encoders with matchloader up
   while (true) { 

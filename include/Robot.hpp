@@ -4,6 +4,7 @@
 #include "Intake.hpp"
 #include "Pneumatics.hpp"
 #include "constants.hpp"
+#include "Drivetrain.hpp"
 #include <vector>
 
 class Robot {
@@ -13,6 +14,7 @@ class Robot {
         Intake intake; 
         Matchloader matchloader;
         Pneumatics wings;
+        Drivetrain dt; 
 
         // drivetrain state trackers
         bool ram_lock = false;
@@ -37,5 +39,5 @@ class Robot {
         void update(std::string info); 
 
         // constructor 
-        Robot(Intake intake, Matchloader matchloader, Pneumatics wingin);        
+        Robot(Drivetrain drive, Intake intake, Matchloader matchloader, Pneumatics wingin);        
 };

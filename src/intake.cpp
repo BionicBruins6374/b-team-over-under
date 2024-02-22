@@ -4,7 +4,7 @@
 /* constructor 
 */
 Intake::Intake(int8_t port) 
-: intakeMotor{ port, pros::E_MOTOR_GEAR_BLUE } 
+: intakeMotor{ port} 
 {}; 
 
 void Intake::set_voltage(int32_t voltage) {

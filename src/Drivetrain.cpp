@@ -45,8 +45,8 @@ std::vector<double> Drivetrain::curvature(
     double xSpeed, double zRotation, bool allowTurnInPlace) {
 
     // scales everything to a -1 to 1 range
-    xSpeed = std::clamp(xSpeed, -1.0, 1.0);
-    zRotation = std::clamp(zRotation, -1.0, 1.0);
+    xSpeed = xSpeed/127;
+    zRotation = zRotation/127;
 
     double leftSpeed = 0.0;
     double rightSpeed = 0.0;
@@ -70,10 +70,29 @@ std::vector<double> Drivetrain::curvature(
     if (maxMagnitude > 1.0) {
     leftSpeed /= maxMagnitude;
     rightSpeed /= maxMagnitude;
-    }
 
     return {leftSpeed * 12000, rightSpeed* 12000};
 }
+
+void curvature(int throttle, int turn, double curveGain) {
+    if (throttle == 0) {
+        arcade(throttle, turn, curveGain);
+        return;
+    }
+
+    float leftPower = throttle + (std::abs(throttle) * turn) / 127.0;
+    float rightPower = throttle - (std::abs(throttle) * turn) / 127.0;
+
+    leftPower = driveCurve(leftPower, curveGain);
+    rightPower = driveCurve(rightPower, curveGain);
+
+    drivetrain.leftMotors->move(leftPower);
+    drivetrain.rightMotors->move(rightPower);
+    }
+}
+
+ // If we're not moving forwards change to arcade drive
+  
 
 /* 
 overall driver command code, adjusts for friction and selects 
@@ -83,10 +102,9 @@ drive type
 
 left input = input from left joystick
 right input = input from right joystick 
-
 */ 
 void Drivetrain::op_control(int drive_type, double left_input, 
-    double right_input, double left_dampen =1, double right_dampen =1 ) {
+    double right_input, double left_dampen, double right_dampen ) {
     std::vector<double> raw_volt;
 
     if (drive_type ==0) {
@@ -101,3 +119,9 @@ void Drivetrain::op_control(int drive_type, double left_input,
     move_voltage(dampened_velocities[0],dampened_velocities[1]);
 
 }
+
+auto Drivetrain::get_left_motor_group() {
+    return leftMotors[0];
+}
+
+

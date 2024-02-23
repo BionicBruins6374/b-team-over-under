@@ -534,16 +534,6 @@ void awp_diff(Pneumatics wings, Intake intake ) {
  wings.toggle_front_wings();
   pros::Task::delay(100);
  wings.toggle_front_wings();
- // pros::Task::delay(100);
-
-
- // wings.toggle_back_wings();
- // wings.toggle_back_wings();
- // wings.toggle_hang();
- // wings.toggle_hang();
-
-
-
 
  double mid_fwd = pt(0.5, 2);
 
@@ -553,31 +543,12 @@ void awp_diff(Pneumatics wings, Intake intake ) {
 
  chassis.set_drive_pid((1.0655 +0.2 + 1)* T_L * AM, DRIVE_SPEED, false);
  chassis.wait_drive();
- // chassis.set_turn_pid(0, TURN_SPEED);
- // chassis.wait_drive();
- // chassis.set_drive_pid((1.0655 +0.5)* T_L * AM, DRIVE_SPEED, false);
- // chassis.wait_drive();
-
-
- // chassis.set_turn_pid(0, TURN_SPEED);
- // chassis.wait_drive();
-
-
+ 
  pros::Task::delay(500);
- // intake.set_voltage(0);
 
 
  chassis.set_turn_pid(7, TURN_SPEED);
  chassis.wait_drive();
-
-
- // chassis.set_drive_pid(-1* T_L * AM, DRIVE_SPEED, false);
- // chassis.wait_drive();
-
-
- // chassis.set_turn_pid(15, TURN_SPEED);
- // chassis.wait_drive();
-
 
  chassis.set_drive_pid((-2.2 * T_L)* AM , DRIVE_SPEED, false);
  chassis.wait_drive();
@@ -616,26 +587,19 @@ void awp_diff(Pneumatics wings, Intake intake ) {
  // 0.6t
  chassis.set_drive_pid(T_L* AM * 0.2, DRIVE_SPEED/2, false);
  chassis.wait_drive();
-
-
- //wings
  
   // 35 ccw
  chassis.set_turn_pid(105-35, TURN_SPEED/2);
  chassis.wait_drive();
 
-
-
   wings.toggle_front_wings();
+
  // 1.75
  chassis.set_drive_pid(T_L* AM * 1.26, DRIVE_SPEED/1.5, false);
  chassis.wait_drive();
  // outtake
  intake.set_voltage(-12000);
 
-
- // chassis.set_drive_pid((T_L - 28* 0.5) * AM, DRIVE_SPEED, false);
- // chassis.wait_drive();
  }
 
 

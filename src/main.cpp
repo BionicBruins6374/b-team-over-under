@@ -137,13 +137,15 @@ void opcontrol() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
   Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
-  Drivetrain dt = Drivetrain {
-  -ports::LEFT_BACK_DT,
-  -ports::LEFT_FRONT_BOTTOM_DT, 
-  -ports::RIGHT_FRONT_TOP_DT,  
-  -ports::RIGHT_FRONT_TOP_DT,
-  -ports::RIGHT_FRONT_BOTTOM_DT,
-  -ports::RIGHT_BACK_DT};
+    Drivetrain dt = Drivetrain {
+ 
+  ports::RIGHT_FRONT_TOP_DT,
+  ports::RIGHT_FRONT_BOTTOM_DT,
+  ports::RIGHT_BACK_DT,
+
+   ports::LEFT_BACK_DT,
+  ports::LEFT_FRONT_BOTTOM_DT, 
+  ports::LEFT_FRONT_TOP_DT  };
 
   Robot robot = Robot {dt, intake, cata, wings}; 
 

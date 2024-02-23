@@ -10,9 +10,11 @@ wings {wingin}
 
 
 void Robot::update_drivetrain() {
-    dt.op_control(0, 
-    m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), 
-    m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
+    dt.op_control(1, 
+    m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), 
+    m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y),
+    1,
+    1);
 }
 
 // updates all aspects of intake
@@ -45,7 +47,7 @@ void Robot::update_intake() {
     }
     
     // sets the voltage to 0 if state = 0 (off), else sets voltage to the speed dictated by level * polarity (direction)
-    intake.set_voltage(intake.get_state() * intake.get_level() * intake.get_polarity()); 
+    intake.set_voltage(intake.get_state() * constants::HIGH_VOLTAGE_INTAKE * intake.get_polarity()); 
 
     }
 
@@ -117,6 +119,8 @@ void Robot::update(std::string info) {
     update_matchloader(); 
     update_wings();
     update_drivetrain(); 
-    // master.print(0,0, "loader temp: %f", matchloader.get_temp() );
+    
+    // printf("motor: %s", dt.get_left_motor_group());
+    // master.print(0,0, "loader temp: %f", dt.get_left_motor_group() );
     // master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
 }

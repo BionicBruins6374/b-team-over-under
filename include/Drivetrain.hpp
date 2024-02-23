@@ -11,6 +11,6 @@ class Drivetrain {
         std::vector<double> curvature(double xSpeed, double zRotation, bool allowTurnInPlace);
         std::vector<double> arcade(double left_y_input, double right_x_input);  
         void move_voltage(double left_voltage, double right_voltage);
-        void op_control(int drive_type, double left_input, double right_input, double left_dampen=1, double right_dampen=1 );
-
+        void op_control(int drive_type, double left_input, double right_input, double left_dampen, double right_dampen );
+        auto get_left_motor_group(); 
 };

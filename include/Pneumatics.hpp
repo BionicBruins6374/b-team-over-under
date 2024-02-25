@@ -6,16 +6,12 @@ class Pneumatics {
         pros::ADIDigitalOut front_wing; 
         pros::ADIDigitalOut back_wing;
         pros::ADIDigitalOut hang_left_1; 
-        pros::ADIDigitalOut hang_left_2; 
-        pros::ADIDigitalOut hang_right_1; 
-        pros::ADIDigitalOut hang_right_2; 
-
+    
         bool back_wings_state = false; 
         bool front_wings_state = false; 
-        bool hang_state = true;
+        bool hang_state = false;
     public:
-        Pneumatics(uint8_t port_back, uint8_t port_front, uint8_t hang_port_L1, 
-        uint8_t hang_port_L2, uint8_t hang_port_R1, uint8_t hang_port_R2);
+        Pneumatics(uint8_t port_back, uint8_t port_front, uint8_t hang_port_L1);
         void toggle_back_wings();
         void toggle_front_wings(); 
         void toggle_hang(); 

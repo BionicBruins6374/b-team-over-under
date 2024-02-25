@@ -1,22 +1,19 @@
 #pragma once
 #include "api.h"
 
-class Matchloader {
+class Climb {
     private:
         pros::Motor m_big_motor; // 11W
-        pros::Motor m_small_motor; 
+        pros::Motor m_small_motor; //5.5W
         int8_t direction = 1; 
-        // std::vector<pros::Motor> motor_list {m_small_motor, m_big_motor}; 
-        // pros::Motor_Group motors {motor_list}; 
         bool state = false; // true = on
         bool arm_state = false;
         int32_t speed = 0; 
     public:
-        Matchloader(int8_t big_motor_port, int8_t small_motor_port);
+        Climb(int8_t big_motor_port, int8_t small_motor_port);
         void set_voltage(int32_t voltage);
         void toggle(); 
         void switch_polarity(); 
-        void toggle_arm(); 
         int get_polarity(); 
         int get_state(); 
         void bang_set_voltage(int32_t voltage);
@@ -29,7 +26,6 @@ class Matchloader {
         void move_position(int pos);
         void move_rel(int post);
         int get_pos();  
-        void set_polarity(int polar); 
 
         
 };

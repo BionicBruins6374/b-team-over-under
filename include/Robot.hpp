@@ -5,6 +5,7 @@
 #include "Pneumatics.hpp"
 #include "constants.hpp"
 #include "Drivetrain.hpp"
+#include "Climb.hpp"
 #include <vector>
 
 class Robot {
@@ -15,6 +16,7 @@ class Robot {
         Matchloader matchloader;
         Pneumatics wings;
         Drivetrain dt; 
+        Climb climb;
 
         // drivetrain state trackers
         bool ram_lock = false;
@@ -28,8 +30,9 @@ class Robot {
         void update_intake();
         void update_matchloader(); // L1 toggles matchloader, L2 switches speed 
         void update_matchloader_temp(); 
-        void update_wings(); 
-        void update_drivetrain(); 
+        void update_wings();
+        void update_drivetrain();
+        void update_climb();
 
         // dampen turns function 
         std::vector<double> dampen_turns(int left_velocity, int right_velocity); 
@@ -39,5 +42,5 @@ class Robot {
         void update(std::string info); 
 
         // constructor 
-        Robot(Drivetrain drive, Intake intake, Matchloader matchloader, Pneumatics wingin);        
+        Robot(Drivetrain drive, Intake intake, Matchloader matchloader, Pneumatics wingin, Climb climb_in);        
 };

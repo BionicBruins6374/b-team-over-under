@@ -1,21 +1,35 @@
 #include "Robot.hpp"
 #include "main.h"
 
-Robot::Robot(Drivetrain drive, Intake intake_in, Matchloader matcher_in, Pneumatics wingin) :
+Robot::Robot(Drivetrain drive, Intake intake_in, Matchloader matcher_in, Pneumatics wingin, Climb climb_in) :
 dt {drive},
 intake {intake_in},
 matchloader { matcher_in },
-wings {wingin}
+wings {wingin},
+climb {climb_in}
 {}; 
 
 
 void Robot::update_drivetrain() {
-    dt.op_control(1, 
-    m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), 
-    m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y),
-    1,
-    1);
+    // dt.op_control(0, 
+    // m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y),
+    // m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X),
+    // 1,
+    // 1,
+    // 1);
+
+     // scales joystick inputs for arcade drive 
+    int left_velocity = (m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
+    int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+
+    // dampens raw speed 
+    std::vector<double> dampened_velocities = {left_velocity * 200.0/127.0, right_velocity * 200.0/127.0};
+    
+    // updates drivetrain (chassis) speed 
+    chassis.joy_thresh_opcontrol(-dampened_velocities[0], -dampened_velocities[1]);
+    // chassis.arcade_standard(ez::SPLIT);
 }
+
 
 // updates all aspects of intake
 void Robot::update_intake() {   
@@ -54,33 +68,30 @@ void Robot::update_intake() {
 // updates all aspects of Matchloader
 
 
-void Robot::update_matchloader() {
-    // if A is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        matchloader.toggle(); // toggle Matchloader 
-        matchloader.set_speed(constants::HIGH_VOLTAGE_CATA); 
+void Robot::update_climb() {
+    // if up is pressed 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+        climb.toggle(); // toggle Matchloader 
+        climb.set_speed(constants::HIGH_VOLTAGE_CATA); 
     
     } 
-    // if B is pressed
-    else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-        // if (!matchloader.get_state() && (matchloader.get_speed() == constants::HIGH_VOLTAGE_CATA)) {
-        //     matchloader.toggle(); 
-        // }
-        matchloader.set_state(true);
-        matchloader.set_speed(constants::LOW_VOLTAGE_CATA);
+    // if down is pressed
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+
+        climb.toggle();
+        climb.set_speed(-1 * constants::LOW_VOLTAGE_CATA);
      
     }
-    if(matchloader.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
-        matchloader.set_state(false);
+    if(climb.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+        climb.set_state(false);
+
+    }
+      if(climb.get_speed() == constants::HIGH_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+        climb.set_state(false);
 
     }
 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        matchloader.move_rel(-200);
-    }
-
-
-    matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
+    climb.set_voltage(climb.get_state() * climb.get_speed()); 
     
 }
 
@@ -100,11 +111,11 @@ void Robot::update_matchloader_temp() {
 void Robot::update_wings() {
     // if L1 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-        wings.toggle_back_wings();
-    } 
+        wings.toggle_front_wings();
+    }  
     // if L2 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-        wings.toggle_front_wings(); 
+        wings.toggle_back_wings(); 
     }
     // hang = X
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
@@ -112,13 +123,25 @@ void Robot::update_wings() {
     }
 }
 
+// void Robot::update_climb(){
+//     if(m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+//         climb.toggle();
+//         climb.set_speed(constants::HIGH_VOLTAGE_CATA);
+//     }
+//     else if(m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+//         climb.toggle();
+//         climb.set_speed(constants::HIGH_VOLTAGE_CATA);
+//     }
+
+// }
+
 // updates all components 
 void Robot::update(std::string info) {
     update_intake();
     // update_matchloader(); 
-    update_matchloader(); 
     update_wings();
-    update_drivetrain(); 
+    // update_drivetrain(); 
+    update_climb();
     
     // printf("motor: %s", dt.get_left_motor_group());
     // master.print(0,0, "loader temp: %f", dt.get_left_motor_group() );

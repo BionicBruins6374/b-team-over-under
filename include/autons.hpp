@@ -41,3 +41,5 @@ void hwanseo_offensive(Intake intake, Pneumatics pneumatics);
 void auton_skills(Matchloader cata, Pneumatics wings); 
 
 void awp_short(Pneumatics wings, Intake intake); 
+
+void beginning_match(Climb climb); 

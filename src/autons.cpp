@@ -10,16 +10,16 @@
 /////
 
 
-const int DRIVE_SPEED = 120; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
+const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
                              // If this is 127 and the robot tries to heading correct, it's only correcting by
                              // making one side slower.  When this is 87%, it's correcting by making one side
                              // faster and one side slower, giving better heading correction.
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
-double T= -constants::TILE_LENGTH; 
+double T= constants::TILE_LENGTH *0.8; 
 // const double AM = constants::AUTON_MULTIPLIER;
-const double AM = 2.0 - master.get_battery_level() /100 ;
+const double AM = 1.9 - master.get_battery_level() /100 ;
 
 
 
@@ -33,10 +33,10 @@ const double AM = 2.0 - master.get_battery_level() /100 ;
 void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, 4, 0, 4, 0); // setting first param to 11 would make it spin 
-  chassis.set_pid_constants(&chassis.forward_drivePID, 4.2, 0, 4.1, 0); 
-  chassis.set_pid_constants(&chassis.backward_drivePID, 4.2, 0, 4.1, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 7.8, 0, 8, 0);
+  chassis.set_pid_constants(&chassis.headingPID, 5.2, 0, 5, 0); // setting first param to 11 would make it spin 
+  chassis.set_pid_constants(&chassis.forward_drivePID, 8, 0, 0, 0); 
+  chassis.set_pid_constants(&chassis.backward_drivePID, 8, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.turnPID, 8.05, 0, 24, 0);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 0, 0);
 
 }
@@ -70,24 +70,39 @@ void drive_example() {
   // chassis.set_drive_pid(T, 90, false);
   // chassis.wait_drive();
 
-  chassis.set_drive_pid(T * AM, DRIVE_SPEED, false);
+  chassis.set_drive_pid(T * AM, DRIVE_SPEED * 0.8, false);
   chassis.wait_drive();
   // chassis.set_swing_pid
 
-  chassis.set_drive_pid(-T * AM, DRIVE_SPEED, false);
+  chassis.set_drive_pid(-T * AM, DRIVE_SPEED  * 0.8, false);
   chassis.wait_drive();
 
-  chassis.set_swing_pid(ez::LEFT_SWING, 90, TURN_SPEED);
+  // chassis.set_swing_pid(ez::LEFT_SWING, 90, TURN_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_swing_pid(ez::LEFT_SWING, 45, TURN_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_swing_pid(ez::LEFT_SWING, 0, TURN_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_swing_pid(ez::LEFT_SWING, -45, TURN_SPEED);
+  // chassis.wait_drive();
+
+   chassis.set_turn_pid(90, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_swing_pid(ez::LEFT_SWING, 45, TURN_SPEED);
+  chassis.set_turn_pid(45, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_swing_pid(ez::LEFT_SWING, 0, TURN_SPEED);
+  chassis.set_turn_pid(0, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_swing_pid(ez::LEFT_SWING, -45, TURN_SPEED);
+  chassis.set_turn_pid(-45, TURN_SPEED);
   chassis.wait_drive();
+
+  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.wait_drive(); 
 
 }
 
@@ -614,13 +629,16 @@ void drive_to_angle(double angle) {
 void awp_short(Pneumatics wings, Intake intake) {
   chassis.set_angle(chassis.get_gyro());
 
- 
-  intake.set_voltage(12000); 
-  chassis.set_drive_pid(-0.5 * T * AM, DRIVE_SPEED, false );
+  wings.toggle_front_wings();
+  wings.toggle_front_wings();
+
+  intake.set_voltage(12000);
+  // todo--siwtch to 0.42  
+  chassis.set_drive_pid(-0.42 * T * AM, DRIVE_SPEED * 0.7, false );
   chassis.wait_drive();
   wings.toggle_front_wings();
 
-  chassis.set_drive_pid(0.42 * T * AM, DRIVE_SPEED, false);
+  chassis.set_drive_pid(0.42 * T * AM, DRIVE_SPEED * 0.7, false);
   chassis.wait_drive();
   chassis.set_turn_pid(-45, TURN_SPEED);
   chassis.wait_drive();
@@ -633,27 +651,25 @@ void awp_short(Pneumatics wings, Intake intake) {
   chassis.set_turn_pid(0, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(0.2 * T * AM, DRIVE_SPEED, false);
+  chassis.set_drive_pid(0.15 * T * AM, DRIVE_SPEED, false);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-45, TURN_SPEED); 
   chassis.wait_drive();
 
-  chassis.set_drive_pid(1.5 * T * AM, DRIVE_SPEED, false); 
+  chassis.set_drive_pid(1.3 * T * AM, DRIVE_SPEED, false); 
   chassis.wait_drive();
 
-  
+  // chassis.set_turn_pid(135, TURN_SPEED);   
   intake.set_voltage(-12000);
 
-
-  
-  
   // // set angle 45
   // chassis.set_turn_pid(45, TURN_SPEED); 
   // // drive 1.5 T 
   // chassis.set_drive_pid(1.5 * T * AM );
 
 }
+
 
 void offensive_4ball(Pneumatics wings, Intake intake) {
 
@@ -1076,3 +1092,8 @@ void hwanseo_offensive(Intake intake, Pneumatics wings){
 
 // }
 
+void beginning_match(Climb climb) {
+  climb.set_voltage(10000); 
+  pros::Task::delay(100); 
+  climb.set_voltage(0); 
+}

@@ -2,14 +2,10 @@
 
 
 // Constructor 
-Pneumatics::Pneumatics(uint8_t port_right, uint8_t port_left, uint8_t hang_port_L1, 
-uint8_t hang_port_L2, uint8_t hang_port_R1, uint8_t hang_port_R2) : 
+Pneumatics::Pneumatics(uint8_t port_right, uint8_t port_left, uint8_t hang_port_L1) : 
     front_wing {port_right},
     back_wing {port_left},
-    hang_left_1 {hang_port_L1},
-    hang_left_2 {hang_port_L2},
-    hang_right_1 {hang_port_R1},
-    hang_right_2 {hang_port_R2}
+    hang_left_1 {hang_port_L1}
     {};
 
 
@@ -27,9 +23,6 @@ void Pneumatics::toggle_front_wings() {
 void Pneumatics::toggle_hang() {
     hang_state = !hang_state; // switches hang piston state 
     hang_left_1.set_value(hang_state);
-    hang_left_2.set_value(hang_state);
-    hang_right_1.set_value(hang_state);
-    hang_right_2.set_value(hang_state);
     
 }
 

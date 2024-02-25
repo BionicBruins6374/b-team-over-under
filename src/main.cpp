@@ -15,25 +15,31 @@ Drive chassis (
   // ALL RED = RIGHT  
   //   the first port is the sensored port (when trackers are not used!)
  
+  // { 
+  //   ports::RIGHT_FRONT_TOP_DT,
+  //   ports::RIGHT_FRONT_BOTTOM_DT,
+  //   ports::RIGHT_BACK_DT
+   
+  // },
 
   {  
-   -ports::LEFT_BACK_DT,
-  -ports::LEFT_FRONT_BOTTOM_DT,
-  -ports::RIGHT_FRONT_TOP_DT
+  ports::LEFT_BACK_DT,
+  ports::LEFT_FRONT_BOTTOM_DT,
+  ports::LEFT_FRONT_TOP_DT
   }
  
   // Right Chassis Ports (negative port = reversed) 
   // ALL RED = RIGHT  
   //   the first port is the sensored port (when trackers are not used!)
   ,{ 
-    -ports::RIGHT_FRONT_TOP_DT,
-    -ports::RIGHT_FRONT_BOTTOM_DT,
-    -ports::RIGHT_BACK_DT
+    ports::RIGHT_FRONT_TOP_DT,
+    ports::RIGHT_FRONT_BOTTOM_DT,
+    ports::RIGHT_BACK_DT
    
   }
   
   // IMU Port
-  ,12
+  ,11
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -41,11 +47,11 @@ Drive chassis (
 
   // Cartridge RPM
   //   (or tick per rotation if using tracking wheels)
-  ,600
+  ,600 
 
   // External Gear Ratio (MUST BE DECIMAL)
   //    (or gear ratio of tracking wheel)
-  ,1 
+  ,0.75 //36/48 * 600
 );
 
 
@@ -58,7 +64,7 @@ void initialize() {
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
   chassis.set_active_brake(0); // Sets the active brake kP => magnitude of resistance to pushing
-  chassis.set_curve_default(4.2, 6.3); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+  // chassis.set_curve_default(4.2, 6.3); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
@@ -95,9 +101,9 @@ void autonomous() {
   default_constants();
 
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
+  Pneumatics wings = Pneumatics {ports::WING_PORT_BACK, ports::WING_PORT_FRONT, ports::RATCHET};
   Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
- 
+  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
 
   std::printf("delaying..");
   pros::Task::delay(500);
@@ -108,7 +114,7 @@ void autonomous() {
   // defensive_triballA(intake, pneumatics)
   // offensive_new(intake, pneumatics );
   // intake.set_voltage(12000); 
-  // drive_example(); 
+  drive_example(); 
   // skills_ez(matchloader, wings);
   // defensive_triball(intake, pneumatics);
   // alliance_triball();
@@ -120,8 +126,8 @@ void autonomous() {
   // auton_skills(matchloader, wings); 
 
   // awp_diff(wings, intake); 
-
-  awp_short(wings, intake); 
+  // beginning_match(climb); 
+  // awp_short(wings, intake); 
 
   //offensive_4ball(wings, intake);
 
@@ -130,14 +136,14 @@ void autonomous() {
 void opcontrol() {
   // This is preference to what you like to drive on.
 
-  chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
-  chassis.arcade_standard(ez::SPLIT); 
+  // chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
+  // chassis.arcade_standard(ez::SPLIT); 
 
   // Defines components 
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
-    Drivetrain dt = Drivetrain {
+  Pneumatics wings = Pneumatics {ports::WING_PORT_BACK, ports::WING_PORT_FRONT, ports::RATCHET};
+  Drivetrain dt = Drivetrain {
  
   ports::RIGHT_FRONT_TOP_DT,
   ports::RIGHT_FRONT_BOTTOM_DT,
@@ -147,30 +153,20 @@ void opcontrol() {
   ports::LEFT_FRONT_BOTTOM_DT, 
   ports::LEFT_FRONT_TOP_DT  };
 
-  Robot robot = Robot {dt, intake, cata, wings}; 
+  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
 
+  Robot robot = Robot {dt, intake, cata, wings, climb}; 
+  chassis.set_drive_brake(MOTOR_BRAKE_BRAKE); //NEW
   // reset matchloader encoders with matchloader up
   while (true) { 
 
+    chassis.arcade_standard(ez::SPLIT); // NEW
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     robot.update("TESTING");
   }
 
 }
-// void skills () {
-//   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
-//   // Defines components 
-//   Intake intake = Intake {ports::INTAKE_MOTOR};
-//   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-//   // Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
-//   // Robot robot = Robot {intake, cata, wings}; 
-//   // skills_triball();
-//   while (true) { 
 
-//   pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-//   robot.update("TESTING");
-//   }
-// }
 void test_motor(int8_t port_num) {
     pros::Motor mot = pros::Motor{port_num}; 
     mot.move_voltage(12000);

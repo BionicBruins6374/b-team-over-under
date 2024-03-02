@@ -3,7 +3,6 @@
 
 #include "EZ-Template/drive/drive.hpp"
 
-extern Drive chassis;
 
 void drive_example();
 void defensive_x2(); 
@@ -43,3 +42,5 @@ void auton_skills(Matchloader cata, Pneumatics wings);
 void awp_short(Pneumatics wings, Intake intake); 
 
 void beginning_match(Climb climb); 
+
+void close_disrupt(Pneumatics wings); 

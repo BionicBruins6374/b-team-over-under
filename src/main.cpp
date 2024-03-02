@@ -1,85 +1,83 @@
 #include "main.h"
 #include "autons.hpp"
 #include "ports.hpp"
+#include "lemlib/api.hpp"
 
 
-// Chassis constructor DIRECTIONS ARE FORM FRONT
-Drive chassis (
-  // Left Chassis Ports (negative port will reverse it!)
-  // RED AND GREEN = LEFT 
-  // front, back-bottom, back-top 
-  //   the first port is the sensored port (when trackers are not used!)
+
+pros::Motor left_front_motor(1, pros::E_MOTOR_GEARSET_06, false); // port 1, blue gearbox, not reversed
+pros::Motor left_back_motor(2, pros::E_MOTOR_GEARSET_18, false); // port 2, green gearbox, not reversed
+pros::Motor right_front_motor(3, pros::E_MOTOR_GEARSET_36, true); // port 3, red gearbox, reversed
+pros::Motor right_back_motor(4, pros::E_MOTOR_GEARSET_36, true); // port 4, red gearbox, reversed
+
+pros::MotorGroup left_side_motors({left_front_motor, left_back_motor});
+pros::MotorGroup right_side_motors({right_front_motor, right_back_motor});
+
+lemlib::Drivetrain_t drivetrain {
+    &left_side_motors, // left drivetrain motors
+    &right_side_motors, // right drivetrain motors
+    11, // track 
+    3.25, // wheel diameter
+    450 // wheel rpm
+};
+
+// inertial sensor
+pros::Imu inertial_sensor(2); // port 2
  
+// odometry struct
+lemlib::OdomSensors_t sensors {
+    nullptr, // vertical tracking wheel 1
+    nullptr, // vertical tracking wheel 2
+    nullptr, // horizontal tracking wheel 1
+    nullptr, // we don't have a second tracking wheel, so we set it to nullptr
+    &inertial_sensor // inertial sensor
+};
+
+// forward/backward PID
+lemlib::ChassisController_t lateralController {
+    8, // kP
+    30, // kD
+    1, // smallErrorRange
+    100, // smallErrorTimeout
+    3, // largeErrorRange
+    500, // largeErrorTimeout
+    5 // slew rate
+};
  
-  // Right Chassis Ports (negative port = reversed) 
-  // ALL RED = RIGHT  
-  //   the first port is the sensored port (when trackers are not used!)
- 
-  // { 
-  //   ports::RIGHT_FRONT_TOP_DT,
-  //   ports::RIGHT_FRONT_BOTTOM_DT,
-  //   ports::RIGHT_BACK_DT
-   
-  // },
+// turning PID
+lemlib::ChassisController_t angularController {
+    4, // kP
+    40, // kD
+    1, // smallErrorRange
+    100, // smallErrorTimeout
+    3, // largeErrorRange
+    500, // largeErrorTimeout
+    0 // slew rate
+};
 
-  {  
-  ports::LEFT_BACK_DT,
-  ports::LEFT_FRONT_BOTTOM_DT,
-  ports::LEFT_FRONT_TOP_DT
-  }
- 
-  // Right Chassis Ports (negative port = reversed) 
-  // ALL RED = RIGHT  
-  //   the first port is the sensored port (when trackers are not used!)
-  ,{ 
-    ports::RIGHT_FRONT_TOP_DT,
-    ports::RIGHT_FRONT_BOTTOM_DT,
-    ports::RIGHT_BACK_DT
-   
-  }
-  
-  // IMU Port
-  ,11
+lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);
 
-  // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
-  //    (or tracking wheel diameter)
-  ,3.25
-
-  // Cartridge RPM
-  //   (or tick per rotation if using tracking wheels)
-  ,600 
-
-  // External Gear Ratio (MUST BE DECIMAL)
-  //    (or gear ratio of tracking wheel)
-  ,0.75 //36/48 * 600
-);
-
+void screen() {
+    // loop forever
+    while (true) {
+        lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
+        pros::lcd::print(0, "x: %f", pose.x); // print the x position
+        pros::lcd::print(1, "y: %f", pose.y); // print the y position
+        pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
+        pros::delay(10);
+    }
+}
 
 void initialize() {
   // Print our branding over your terminal :D
-  ez::print_ez_template();
   
-  pros::delay(500); // Stop the user from doing anything while legacy ports configure.
-
-  // Configure your chassis controls
-  chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
-  chassis.set_active_brake(0); // Sets the active brake kP => magnitude of resistance to pushing
-  // chassis.set_curve_default(4.2, 6.3); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
-  default_constants(); // Set the drive to your own constants from autons.cpp!
-
-  // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
-  // chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used. 
-  // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
-   
-  // Autonomous Selector using LLEMU
-  ez::as::auton_selector.add_autons({
-    Auton("Example Drive\n\nDrive forward and come back.", drive_example),
-    Auton("Example Turn\n\nTurn 3 times.", turn_example),
-    Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn)
-  });
-  // Initialize chassis and auton selector
-  chassis.initialize();
-  ez::as::initialize();
+  pros::lcd::initialize(); // initialize brain screen
+  chassis.calibrate(); // calibrate the chassis
+  pros::Task screenTask(screen); // create a task to print the position to the screen
+  
+  chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
+  // chassis.setPose(5.2, 10.333, 87); // X: 5.2, Y: 10.333, Heading: 87
+  
 }
 
 
@@ -94,11 +92,7 @@ void competition_initialize() {
 
 
 void autonomous() {
-  chassis.reset_pid_targets(); // Resets PID targets to 0
-  chassis.reset_gyro(); // Reset gyro position to 0
-  chassis.reset_drive_sensor(); // Reset drive sensors to 0
-  chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
-  default_constants();
+  
 
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Pneumatics wings = Pneumatics {ports::WING_PORT_BACK, ports::WING_PORT_FRONT, ports::RATCHET};
@@ -108,13 +102,13 @@ void autonomous() {
   std::printf("delaying..");
   pros::Task::delay(500);
 
-  modified_exit_condition(); 
+  // modified_exit_condition(); 
 
   //offensive_x3(intake, wings);
   // defensive_triballA(intake, pneumatics)
   // offensive_new(intake, pneumatics );
   // intake.set_voltage(12000); 
-  drive_example(); 
+  // drive_example(); 
   // skills_ez(matchloader, wings);
   // defensive_triball(intake, pneumatics);
   // alliance_triball();
@@ -128,6 +122,8 @@ void autonomous() {
   // awp_diff(wings, intake); 
   // beginning_match(climb); 
   // awp_short(wings, intake); 
+  // close_disrupt(wings);
+  // alliance_triball(); 
 
   //offensive_4ball(wings, intake);
 
@@ -156,14 +152,20 @@ void opcontrol() {
   Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
 
   Robot robot = Robot {dt, intake, cata, wings, climb}; 
-  chassis.set_drive_brake(MOTOR_BRAKE_BRAKE); //NEW
-  // reset matchloader encoders with matchloader up
+  int time = 0;
   while (true) { 
 
-    chassis.arcade_standard(ez::SPLIT); // NEW
-    pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+
     robot.update("TESTING");
-  }
+
+    if(time == 129.5 * 100) //when one second is left
+    {
+      wings.toggle_hang();
+    }
+
+    time++;
+
+}
 
 }
 
@@ -175,8 +177,6 @@ void test_motor(int8_t port_num) {
 void timer() {
   int count = 0; 
   while (true) {
-  chassis.joy_thresh_opcontrol(50,0); 
   pros::Task::delay(1);
-  master.print(0,0, "count: %d", count);
   }
 }

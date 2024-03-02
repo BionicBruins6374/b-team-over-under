@@ -19,14 +19,7 @@ void Robot::update_drivetrain() {
     // 1);
 
      // scales joystick inputs for arcade drive 
-    int left_velocity = (m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
-    int right_velocity = m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) +  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-
-    // dampens raw speed 
-    std::vector<double> dampened_velocities = {left_velocity * 200.0/127.0, right_velocity * 200.0/127.0};
     
-    // updates drivetrain (chassis) speed 
-    chassis.joy_thresh_opcontrol(-dampened_velocities[0], -dampened_velocities[1]);
     // chassis.arcade_standard(ez::SPLIT);
 }
 

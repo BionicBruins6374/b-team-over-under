@@ -23,9 +23,9 @@ Drive chassis (
   // },
 
   {  
-  ports::LEFT_BACK_DT,
-  ports::LEFT_FRONT_BOTTOM_DT,
-  ports::LEFT_FRONT_TOP_DT
+  -ports::LEFT_BACK_DT,
+  -ports::LEFT_FRONT_BOTTOM_DT,
+  -ports::LEFT_FRONT_TOP_DT
   }
  
   // Right Chassis Ports (negative port = reversed) 
@@ -126,7 +126,7 @@ void autonomous() {
   // auton_skills(matchloader, wings); 
 
   // awp_diff(wings, intake); 
-  beginning_match(climb); 
+  //beginning_match(climb); 
   // awp_short(wings, intake); 
   // close_disrupt(wings);
   // alliance_triball(); 
@@ -145,7 +145,7 @@ void opcontrol() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
   Pneumatics wings = Pneumatics {ports::WING_PORT_BACK, ports::WING_PORT_FRONT, ports::RATCHET};
-  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
+  Climb climb = Climb { 14, 15}; 
   Drivetrain dt = Drivetrain {
  
   ports::RIGHT_FRONT_TOP_DT,
@@ -156,41 +156,14 @@ void opcontrol() {
   ports::LEFT_FRONT_BOTTOM_DT, 
   ports::LEFT_FRONT_TOP_DT  };
 
-  
-
   Robot robot = Robot {dt, intake, cata, wings, climb}; 
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE); //NEW
   // reset matchloader encoders with matchloader up
   int time = 0;
-//   while (true) { 
-
-//     chassis.arcade_standard(ez::SPLIT); // NEW
-//     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-
-//     robot.update("hi");
-
-//     if(time == 129.5 * 100) //when one second is left
-//     {
-//       wings.toggle_hang();
-//     }
-
-//     time++;
-
-// }
-  robot.update("hi");
-
-}
-
-void test_motor(int8_t port_num) {
-    pros::Motor mot = pros::Motor{port_num}; 
-    mot.move_voltage(12000);
-} 
-
-void timer() {
-  int count = 0; 
-  while (true) {
-  chassis.joy_thresh_opcontrol(50,0); 
-  pros::Task::delay(1);
-  master.print(0,0, "count: %d", count);
+  while (true) { 
+    pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+    robot.update("hi");
   }
+
 }
+

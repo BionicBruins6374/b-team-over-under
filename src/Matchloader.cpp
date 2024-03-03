@@ -10,6 +10,7 @@ Matchloader::Matchloader(int8_t big_motor, int8_t small_motor) :
 void Matchloader::set_voltage(int32_t voltage) {
     m_big_motor.move_voltage(voltage);
     m_small_motor.move_voltage(voltage);
+
 }
 
 // setter; changes state of matchloader 

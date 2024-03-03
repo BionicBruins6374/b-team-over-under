@@ -26,7 +26,7 @@ void Robot::update_drivetrain() {
     std::vector<double> dampened_velocities = {left_velocity * 200.0/127.0, right_velocity * 200.0/127.0};
     
     // updates drivetrain (chassis) speed 
-    chassis.joy_thresh_opcontrol(-dampened_velocities[0], -dampened_velocities[1]);
+    chassis.joy_thresh_opcontrol(dampened_velocities[1], dampened_velocities[0]);
     // chassis.arcade_standard(ez::SPLIT);
 }
 
@@ -96,11 +96,18 @@ void Robot::update_climb() {
 }
 
 void Robot::update_matchloader() {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+        matchloader.toggle(); // toggle Matchloader 
+        if (matchloader.get_state()) {
+            matchloader.set_voltage( constants::HIGH_VOLTAGE_CATA); 
+        }
 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-        matchloader.toggle();
-    } 
-    matchloader.set_voltage(12000 * matchloader.get_state());
+        if (!matchloader.get_state()) {
+            matchloader.set_voltage( 0); 
+        }
+
+    }
+    
 }
 
 
@@ -137,10 +144,11 @@ void Robot::update(std::string info) {
     update_intake();
     update_matchloader(); 
     update_wings();
-    // update_drivetrain(); 
-    update_climb();
+    update_drivetrain(); 
+    // update_climb();
+
     
     // printf("motor: %s", dt.get_left_motor_group());
     // master.print(0,0, "loader temp: %f", dt.get_left_motor_group() );
-    // master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
+    master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
 }

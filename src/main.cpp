@@ -114,7 +114,7 @@ void autonomous() {
   // defensive_triballA(intake, pneumatics)
   // offensive_new(intake, pneumatics );
   // intake.set_voltage(12000); 
-  drive_example(); 
+  // drive_example(); 
   // skills_ez(matchloader, wings);
   // defensive_triball(intake, pneumatics);
   // alliance_triball();
@@ -126,8 +126,10 @@ void autonomous() {
   // auton_skills(matchloader, wings); 
 
   // awp_diff(wings, intake); 
-  // beginning_match(climb); 
+  beginning_match(climb); 
   // awp_short(wings, intake); 
+  // close_disrupt(wings);
+  // alliance_triball(); 
 
   //offensive_4ball(wings, intake);
 
@@ -143,6 +145,7 @@ void opcontrol() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
   Pneumatics wings = Pneumatics {ports::WING_PORT_BACK, ports::WING_PORT_FRONT, ports::RATCHET};
+  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
   Drivetrain dt = Drivetrain {
  
   ports::RIGHT_FRONT_TOP_DT,
@@ -153,17 +156,28 @@ void opcontrol() {
   ports::LEFT_FRONT_BOTTOM_DT, 
   ports::LEFT_FRONT_TOP_DT  };
 
-  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
+  
 
   Robot robot = Robot {dt, intake, cata, wings, climb}; 
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE); //NEW
   // reset matchloader encoders with matchloader up
-  while (true) { 
+  int time = 0;
+//   while (true) { 
 
-    chassis.arcade_standard(ez::SPLIT); // NEW
-    pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-    robot.update("TESTING");
-  }
+//     chassis.arcade_standard(ez::SPLIT); // NEW
+//     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+
+//     robot.update("hi");
+
+//     if(time == 129.5 * 100) //when one second is left
+//     {
+//       wings.toggle_hang();
+//     }
+
+//     time++;
+
+// }
+  robot.update("hi");
 
 }
 

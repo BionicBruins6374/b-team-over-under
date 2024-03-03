@@ -95,15 +95,12 @@ void Robot::update_climb() {
     
 }
 
-void Robot::update_matchloader_temp() {
+void Robot::update_matchloader() {
 
-    if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-        matchloader.set_voltage(constants::HIGH_VOLTAGE_CATA);
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+        matchloader.toggle();
     } 
-    else {
-        matchloader.set_voltage(0);
-    }
-
+    matchloader.set_voltage(12000 * matchloader.get_state());
 }
 
 
@@ -138,7 +135,7 @@ void Robot::update_wings() {
 // updates all components 
 void Robot::update(std::string info) {
     update_intake();
-    // update_matchloader(); 
+    update_matchloader(); 
     update_wings();
     // update_drivetrain(); 
     update_climb();

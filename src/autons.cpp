@@ -34,8 +34,8 @@ void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
   chassis.set_pid_constants(&chassis.headingPID, 5.2, 0, 5, 0); // setting first param to 11 would make it spin 
-  chassis.set_pid_constants(&chassis.forward_drivePID, 8, 0, 0, 0); 
-  chassis.set_pid_constants(&chassis.backward_drivePID, 8, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.forward_drivePID, 35, 0, 25, 0); 
+  chassis.set_pid_constants(&chassis.backward_drivePID, 35, 0, 25, 0);
   chassis.set_pid_constants(&chassis.turnPID, 8.05, 0, 24, 0);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 0, 0);
 
@@ -651,17 +651,23 @@ void awp_short(Pneumatics wings, Intake intake) {
   chassis.set_turn_pid(0, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(0.15 * T * AM, DRIVE_SPEED, false);
+  chassis.set_drive_pid(0.3 * T * AM, DRIVE_SPEED, false);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-45, TURN_SPEED); 
   chassis.wait_drive();
 
-  chassis.set_drive_pid(1.3 * T * AM, DRIVE_SPEED, false); 
+  chassis.set_drive_pid(1.23 * T * AM, DRIVE_SPEED, false); 
   chassis.wait_drive();
 
+   chassis.set_turn_pid(-45, TURN_SPEED); 
+  chassis.wait_drive();
   // chassis.set_turn_pid(135, TURN_SPEED);   
   intake.set_voltage(-12000);
+  // pros::Task::delay(5);
+  // intake.set_voltage(0);
+
+
 
   // // set angle 45
   // chassis.set_turn_pid(45, TURN_SPEED); 
@@ -1096,4 +1102,48 @@ void beginning_match(Climb climb) {
   climb.set_voltage(10000); 
   pros::Task::delay(100); 
   climb.set_voltage(0); 
+}
+
+
+void close_disrupt(Pneumatics wings){
+  chassis.set_angle(chassis.get_gyro());
+
+  // wings.toggle_front_wings();
+  // pros::Task::delay(500);
+  // wings.toggle_front_wings();
+
+
+  chassis.set_drive_pid(T * 2.45 * AM, DRIVE_SPEED * 1.1, true);
+  chassis.wait_drive();
+
+  wings.toggle_front_wings();
+
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+
+  
+
+  chassis.set_drive_pid(1 * T * AM, DRIVE_SPEED, false);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+
+  pros::Task::delay(500);
+  wings.toggle_front_wings();
+
+
+//   chassis.set_drive_pid(-0.8 * T * AM, DRIVE_SPEED, false); 
+//   chassis.wait_drive(); 
+
+//   chassis.set_turn_pid(45, TURN_SPEED);
+//   chassis.wait_drive();
+
+//   chassis.set_drive_pid(-2.5 * T * AM, DRIVE_SPEED, true);
+//   chassis.wait_drive(); 
+
+//   chassis.set_turn_pid(45, TURN_SPEED);
+//   chassis.wait_drive(); 
+
+// }
 }

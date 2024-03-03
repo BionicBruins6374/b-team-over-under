@@ -37,5 +37,5 @@ class Robot {
         void update(std::string info); 
 
         // constructor 
-        Robot(Intake intake, Matchloader matchloader, Pneumatics wingin);        
+        Robot(Intake intake, Matchloader matchloader, Pneumatics wingin);
 };

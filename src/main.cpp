@@ -1,5 +1,4 @@
 #include "main.h"
-#include "autons.hpp"
 #include "ports.hpp"
 
 
@@ -28,7 +27,7 @@ Drive chassis (
   }
 
   // IMU Port
-  ,12
+  ,11
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -40,7 +39,7 @@ Drive chassis (
 
   // External Gear Ratio (MUST BE DECIMAL)
   //    (or gear ratio of tracking wheel)
-  ,0.66 
+  ,0.66 // 325/600 TODO
 );
 
 
@@ -90,72 +89,80 @@ void autonomous() {
   default_constants();
 
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
+  Pneumatics pneumatics = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
   Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
- 
 
-  std::printf("delaying..");
-  pros::Task::delay(500);
+  // encoders, middle = under
+  // defines and resets all encoders
+	// pros::Motor left_front_encoder = pros::Motor(ports::LEFT_FRONT_DT);
+	// pros::Motor left_middle_encoder = pros::Motor(ports::LEFT_BACK_BOTTOM_DT);
+	// pros::Motor left_back_encoder = pros::Motor(ports::LEFT_BACK_TOP_DT);
+	// pros::Motor right_front_encoder = pros::Motor(ports::RIGHT_FRONT_DT);
+	// pros::Motor right_middle_encoder = pros::Motor(ports::RIGHT_BACK_BOTTOM_DT);
+	// pros::Motor right_back_encoder = pros::Motor(ports::RIGHT_BACK_TOP_DT);
 
-  
-  //offensive_x3(intake, wings);
-  // defensive_triballA(intake, pneumatics)
-  // offensive_new(intake, pneumatics );
-  // intake.set_voltage(12000); 
+
+	// left_front_encoder.tare_position(); left_middle_encoder.tare_position(); 
+	// left_back_encoder.tare_position(); 
+	// right_front_encoder.tare_position(); 
+	// right_middle_encoder.tare_position(); 
+	// right_back_encoder.tare_position();
+  // default_constants(); modified_exit_condition(); 
+
+  // std::printf("delaying..");
+  // pros::Task::delay(500);
+
+  // TODO: call ur auton function here
+  // offensive_x2();
+  // modified_exit_condition(); 
+  // offensive_new(intake, pneumatics ); 
   // drive_example(); 
   // skills_ez(matchloader, pneumatics);
   // defensive_triball(intake, pneumatics);
   // alliance_triball();
   // defence_auton(pneumatics);
-  // skills_triball(wings, matchloader); 
-  // matchloader.set_voltage(12000);
-  // matchloader.move_position(-1200);  // * 6
-  modified_exit_condition(); 
-  //hwanseo_offensive(intake, wings);
-  // auton_skills(matchloader, wings); 
 
-  awp_diff(wings, intake); 
+  int count = 0; 
 
-  //chassis.set_angle(45);
+  // while (true) {
+  //   matchloader.set_voltage(count * 1000); 
+  //   pros::Task::delay(200);
+  //   count += 1;
+  // }
+  matchloader.set_voltage(10 * 1000); 
 
-  //offensive_4ball(wings, intake);
 
 }
 
 void opcontrol() {
   // This is preference to what you like to drive on.
-
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
-  chassis.arcade_standard(ez::SPLIT); 
-
   // Defines components 
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, 'A', 'B', 'C', 'D'};
-  Robot robot = Robot {intake, cata, wings}; 
+  Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
+  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+  Robot robot = Robot {intake, matchloader, wings}; 
 
-  // reset matchloader encoders with matchloader up
   while (true) { 
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     robot.update("TESTING");
   }
-
 }
-// void skills () {
-//   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
-//   // Defines components 
-//   Intake intake = Intake {ports::INTAKE_MOTOR};
-//   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-//   // Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
-//   // Robot robot = Robot {intake, cata, wings}; 
-//   // skills_triball();
-//   while (true) { 
+void skills () {
+  chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
+  // Defines components 
+  Intake intake = Intake {ports::INTAKE_MOTOR};
+  Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
+  Pneumatics wings = Pneumatics {ports::WING_PORT_RIGHT, ports::WING_PORT_LEFT, ports::ARM_PORT};
+  Robot robot = Robot {intake, cata, wings}; 
+  // skills_triball();
+  while (true) { 
 
-//   pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-//   robot.update("TESTING");
-//   }
-// }
+  pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+  robot.update("TESTING");
+  }
+}
 void test_motor(int8_t port_num) {
     pros::Motor mot = pros::Motor{port_num}; 
     mot.move_voltage(12000);

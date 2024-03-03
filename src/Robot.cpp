@@ -89,29 +89,29 @@ void Robot::update_matchloader() {
     // if A is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
         matchloader.toggle(); // toggle Matchloader 
-        matchloader.set_speed(constants::HIGH_VOLTAGE_CATA); 
+        if (matchloader.get_state()) {
+            matchloader.set_voltage( 10.5 * 1000); 
+        }
+
+        if (!matchloader.get_state()) {
+            matchloader.set_voltage( 0); 
+        }
     
     } 
-    // if B is pressed
-    else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-        // if (!matchloader.get_state() && (matchloader.get_speed() == constants::HIGH_VOLTAGE_CATA)) {
-        //     matchloader.toggle(); 
-        // }
-        matchloader.set_state(true);
-        matchloader.set_speed(constants::LOW_VOLTAGE_CATA);
+    // // if B is pressed
+    // else if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+    //     // if (!matchloader.get_state() && (matchloader.get_speed() == constants::HIGH_VOLTAGE_CATA)) {
+    //     //     matchloader.toggle(); 
+    //     // }
+    //     matchloader.set_state(true);
+    //     matchloader.set_speed(-constants::LOW_VOLTAGE_CATA);
      
-    }
-    if(matchloader.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
-        matchloader.set_state(false);
-
-    }
-
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        matchloader.move_rel(-200);
-    }
-
-
-    matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
+    // }
+    // if(matchloader.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)){
+    //     matchloader.set_state(false);
+`
+    // sets voltage input for matchloader
+    // matchloader.set_voltage(matchloader.get_state() * matchloader.get_speed()); 
     
 }
 
@@ -145,11 +145,11 @@ void Robot::update_wings() {
 
 // updates all components 
 void Robot::update(std::string info) {
-    update_intake();
+    // update_intake();
     // update_matchloader(); 
     update_matchloader(); 
-    update_wings();
-    update_drivetrain(); 
+    // update_wings();
+    // update_drivetrain(); 
     // master.print(0,0, "loader temp: %f", matchloader.get_temp() );
-    // master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
+    master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
 }

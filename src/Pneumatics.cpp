@@ -2,9 +2,10 @@
 
 
 // Constructor 
-Pneumatics::Pneumatics(uint8_t port_right, uint8_t port_left, uint8_t hang_port_L1) : 
-    front_wing {port_right},
-    back_wing {port_left},
+Pneumatics::Pneumatics(uint8_t port_front_right, uint8_t port_front_left, uint8_t port_back, uint8_t hang_port_L1) :
+    front_wing_right {port_front_right},
+    front_wing_left {port_front_left},
+    back_wing {port_back},
     hang_left_1 {hang_port_L1}
     {};
 
@@ -14,11 +15,24 @@ void Pneumatics::toggle_back_wings() {
     back_wing.set_value(back_wings_state);    
 }
 
-void Pneumatics::toggle_front_wings() {
-    front_wings_state = !front_wings_state; // switches wing state 
-    front_wing.set_value(front_wings_state); 
-    
+// void Pneumatics::toggle_front_wings() {
+//     front_wing_right_state = !front_wing_right_state; // switches wing state 
+//     front_wing.set_value(front_wings_state); 
+// }
+
+void Pneumatics::toggle_front_right() {
+    front_wing_right_state = !front_wing_right_state; // switches wing state 
+    front_wing_right.set_value(front_wing_right_state); 
 }
+    
+
+void Pneumatics::toggle_front_left() {
+    front_wing_left_state = !front_wing_left_state; // switches wing state 
+    front_wing_left.set_value(front_wing_left_state); 
+}
+
+
+
 
 void Pneumatics::toggle_hang() {
     hang_state = !hang_state; // switches hang piston state 
@@ -36,6 +50,6 @@ bool Pneumatics::get_state_hang() {
     return hang_state; 
 }
 
-bool Pneumatics::get_state_front_wings() {
-    return front_wings_state; 
-}
+// bool Pneumatics::get_state_front_wings() {
+//     return front_wings_state; 
+// }

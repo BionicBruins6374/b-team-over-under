@@ -30,7 +30,7 @@ class Robot {
         void update_intake();
         void update_matchloader(); // L1 toggles matchloader, L2 switches speed 
         void update_matchloader_temp(); 
-        void update_wings();
+        void update_pneumatics();
         void update_drivetrain();
         void update_climb();
 

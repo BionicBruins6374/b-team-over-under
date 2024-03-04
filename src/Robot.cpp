@@ -26,7 +26,7 @@ void Robot::update_drivetrain() {
     std::vector<double> dampened_velocities = {left_velocity * 200.0/127.0, right_velocity * 200.0/127.0};
     
     // updates drivetrain (chassis) speed 
-    chassis.joy_thresh_opcontrol(dampened_velocities[1], dampened_velocities[0]);
+    chassis.joy_thresh_opcontrol(-dampened_velocities[0], -dampened_velocities[1]);
     // chassis.arcade_standard(ez::SPLIT);
 }
 
@@ -35,29 +35,23 @@ void Robot::update_drivetrain() {
 void Robot::update_intake() {   
     int8_t multiplier = 1; 
     // saves variables of different presses/states of the buttons (for more organization )
-    int8_t R1_pressed = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1);
+    int8_t A_pressed = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A);
     int8_t R1_pressing = m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);  
     
     int8_t R2_pressed = m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2);
     int8_t R2_pressing = m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-
-
-
-    // sets intake direction to intake
-    if (R1_pressing) {
-        intake.set_state(true);
-        intake.set_polarity(1); 
+    if (A_pressed) {
+        intake.toggle();
     }
 
     // sets intake to deintake
-    else if (R2_pressing) {
-        intake.set_state(true);
+    if (R2_pressing) {
         intake.set_polarity(-1);
     }
-    
+
     else {
-        intake.set_state(false);
+        intake.set_polarity(1);
     }
     
     // sets the voltage to 0 if state = 0 (off), else sets voltage to the speed dictated by level * polarity (direction)
@@ -96,7 +90,7 @@ void Robot::update_climb() {
 }
 
 void Robot::update_matchloader() {
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
         matchloader.toggle(); // toggle Matchloader 
         if (matchloader.get_state()) {
             matchloader.set_voltage( constants::HIGH_VOLTAGE_CATA); 
@@ -112,11 +106,16 @@ void Robot::update_matchloader() {
 
 
 // updates all aspects of wings 
-void Robot::update_wings() {
+void Robot::update_pneumatics() {
     // if L1 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-        wings.toggle_front_wings();
+        wings.toggle_front_left();
+        // front left
     }  
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+        wings.toggle_front_right();
+        // front right
+    } 
     // if L2 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
         wings.toggle_back_wings(); 
@@ -143,7 +142,7 @@ void Robot::update_wings() {
 void Robot::update(std::string info) {
     update_intake();
     update_matchloader(); 
-    update_wings();
+    update_pneumatics();
     update_drivetrain(); 
     // update_climb();
 

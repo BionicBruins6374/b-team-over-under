@@ -1,8 +1,8 @@
 
 namespace constants {
 const int HIGH_VOLTAGE_INTAKE =10000; 
-const int LOW_VOLTAGE_INTAKE =10000; 
-const int HIGH_VOLTAGE_CATA = 10000;
+const int LOW_VOLTAGE_INTAKE =9000; 
+const int HIGH_VOLTAGE_CATA = 9000 ;
 const int HIGH_VELOCITY_CATA = -200;
 const int LOW_VOLTAGE_CATA = -8000;
 const float DAMPENING = 0.572; 

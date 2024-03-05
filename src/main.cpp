@@ -3,56 +3,59 @@
 #include "ports.hpp"
 
 
-// Chassis constructor DIRECTIONS ARE FORM FRONT
-Drive chassis (
-  // Left Chassis Ports (negative port will reverse it!)
-  // RED AND GREEN = LEFT 
-  // front, back-bottom, back-top 
-  //   the first port is the sensored port (when trackers are not used!)
- 
- 
-  // Right Chassis Ports (negative port = reversed) 
-  // ALL RED = RIGHT  
-  //   the first port is the sensored port (when trackers are not used!)
- 
-  // { 
-  //   ports::RIGHT_FRONT_TOP_DT,
-  //   ports::RIGHT_FRONT_BOTTOM_DT,
-  //   ports::RIGHT_BACK_DT
-   
-  // },
 
-  {  
-  ports::LEFT_BACK_DT,
-  ports::LEFT_FRONT_BOTTOM_DT,
-  ports::LEFT_FRONT_TOP_DT
-  }
+// // Chassis constructor DIRECTIONS ARE FORM FRONT
+// Drive chassis (
+//   // Left Chassis Ports (negative port will reverse it!)
+//   // RED AND GREEN = LEFT 
+//   // front, back-bottom, back-top 
+//   //   the first port is the sensored port (when trackers are not used!)
  
-  // Right Chassis Ports (negative port = reversed) 
-  // ALL RED = RIGHT  
-  //   the first port is the sensored port (when trackers are not used!)
-  ,{ 
-    ports::RIGHT_FRONT_TOP_DT,
-    ports::RIGHT_FRONT_BOTTOM_DT,
-    ports::RIGHT_BACK_DT
+ 
+//   // Right Chassis Ports (negative port = reversed) 
+//   // ALL RED = RIGHT  
+//   //   the first port is the sensored port (when trackers are not used!)
+ 
+//   // { 
+//   //   ports::RIGHT_FRONT_TOP_DT,
+//   //   ports::RIGHT_FRONT_BOTTOM_DT,
+//   //   ports::RIGHT_BACK_DT
    
-  }
+//   // },
+
+//   {  
+//   -ports::LEFT_BACK_DT,
+//   -ports::LEFT_FRONT_BOTTOM_DT,
+//   -ports::LEFT_FRONT_TOP_DT
+//   }
+ 
+//   // Right Chassis Ports (negative port = reversed) 
+//   // ALL RED = RIGHT  
+//   //   the first port is the sensored port (when trackers are not used!)
+//   ,{ 
+//     ports::RIGHT_FRONT_TOP_DT,
+//     ports::RIGHT_FRONT_BOTTOM_DT,
+//     ports::RIGHT_BACK_DT
+   
+//   }
   
-  // IMU Port
-  ,11
+//   // IMU Port
+//   ,11
 
-  // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
-  //    (or tracking wheel diameter)
-  ,3.25
+//   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
+//   //    (or tracking wheel diameter)
+//   ,3.25
 
-  // Cartridge RPM
-  //   (or tick per rotation if using tracking wheels)
-  ,600 
+//   // Cartridge RPM
+//   //   (or tick per rotation if using tracking wheels)
+//   ,600 
 
-  // External Gear Ratio (MUST BE DECIMAL)
-  //    (or gear ratio of tracking wheel)
-  ,0.75 //36/48 * 600
-);
+//   // External Gear Ratio (MUST BE DECIMAL)
+//   //    (or gear ratio of tracking wheel)
+//   ,0.75 //36/48 * 600
+// );
+
+
 
 
 void initialize() {
@@ -145,7 +148,7 @@ void opcontrol() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
   Pneumatics wings = Pneumatics {ports::WING_PORT_FRONT_RIGHT, ports::WING_PORT_FRONT_LEFT, ports::WING_PORT_BACK, ports::RATCHET};
-  Climb climb = Climb { 14, 15}; 
+  Climb climb = Climb {-ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
   Drivetrain dt = Drivetrain {
  
   ports::RIGHT_FRONT_TOP_DT,
@@ -158,6 +161,7 @@ void opcontrol() {
 
   Robot robot = Robot {dt, intake, cata, wings, climb}; 
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE); //NEW
+  intake.set_state(true);
   // reset matchloader encoders with matchloader up
   int time = 0;
   while (true) { 

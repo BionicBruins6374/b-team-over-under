@@ -26,7 +26,7 @@ void Robot::update_drivetrain() {
     std::vector<double> dampened_velocities = {left_velocity * 200.0/127.0, right_velocity * 200.0/127.0};
     
     // updates drivetrain (chassis) speed 
-    chassis.joy_thresh_opcontrol(-dampened_velocities[0], -dampened_velocities[1]);
+    chassis.joy_thresh_opcontrol(dampened_velocities[1], dampened_velocities[0]);
     // chassis.arcade_standard(ez::SPLIT);
 }
 
@@ -73,7 +73,7 @@ void Robot::update_climb() {
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
 
         climb.toggle();
-        climb.set_speed(-1 * constants::LOW_VOLTAGE_CATA);
+        climb.set_speed(-1 * constants::HIGH_VOLTAGE_CATA);
      
     }
     if(climb.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
@@ -140,11 +140,11 @@ void Robot::update_pneumatics() {
 
 // updates all components 
 void Robot::update(std::string info) {
-    update_intake();
-    update_matchloader(); 
+    // update_intake();
+    // update_matchloader(); 
     update_pneumatics();
     update_drivetrain(); 
-    // update_climb();
+    update_climb();
 
     
     // printf("motor: %s", dt.get_left_motor_group());

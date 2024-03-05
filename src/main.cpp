@@ -5,13 +5,15 @@
 
 
 
-pros::Motor left_front_motor(1, pros::E_MOTOR_GEARSET_06, false); // port 1, blue gearbox, not reversed
-pros::Motor left_back_motor(2, pros::E_MOTOR_GEARSET_18, false); // port 2, green gearbox, not reversed
-pros::Motor right_front_motor(3, pros::E_MOTOR_GEARSET_36, true); // port 3, red gearbox, reversed
-pros::Motor right_back_motor(4, pros::E_MOTOR_GEARSET_36, true); // port 4, red gearbox, reversed
+pros::Motor left_front_motor(ports::LEFT_FRONT_TOP_DT, pros::E_MOTOR_GEARSET_06); // port 1, blue gearbox, not reversed
+pros::Motor left_middle_motor(ports::LEFT_FRONT_TOP_DT, pros::E_MOTOR_GEARSET_06); // port 1, blue gearbox, not reversed
+pros::Motor left_back_motor(ports::LEFT_BACK_DT, pros::E_MOTOR_GEARSET_06); // port 2, green gearbox, not reversed
+pros::Motor right_front_motor(ports::RIGHT_FRONT_TOP_DT, pros::E_MOTOR_GEARSET_06); // port 3, red gearbox, reversed
+pros::Motor right_middle_motor(ports::RIGHT_FRONT_BOTTOM_DT, pros::E_MOTOR_GEARSET_06); // port 3, red gearbox, reversed
+pros::Motor right_back_motor(ports::RIGHT_BACK_DT, pros::E_MOTOR_GEARSET_06); // port 4, red gearbox, reversed
 
-pros::MotorGroup left_side_motors({left_front_motor, left_back_motor});
-pros::MotorGroup right_side_motors({right_front_motor, right_back_motor});
+pros::MotorGroup left_side_motors({left_front_motor,left_front_motor, left_back_motor});
+pros::MotorGroup right_side_motors({right_front_motor, right_middle_motor, right_back_motor});
 
 lemlib::Drivetrain_t drivetrain {
     &left_side_motors, // left drivetrain motors
@@ -22,7 +24,7 @@ lemlib::Drivetrain_t drivetrain {
 };
 
 // inertial sensor
-pros::Imu inertial_sensor(2); // port 2
+pros::Imu inertial_sensor(1); // port 2
  
 // odometry struct
 lemlib::OdomSensors_t sensors {
@@ -35,25 +37,27 @@ lemlib::OdomSensors_t sensors {
 
 // forward/backward PID
 lemlib::ChassisController_t lateralController {
-    8, // kP
-    30, // kD
+    17, // kP
+    60, // kD
     1, // smallErrorRange
-    100, // smallErrorTimeout
+    300, // smallErrorTimeout
     3, // largeErrorRange
-    500, // largeErrorTimeout
-    5 // slew rate
+    800, // largeErrorTimeout
+    0 // slew rate
 };
  
 // turning PID
 lemlib::ChassisController_t angularController {
-    4, // kP
-    40, // kD
+    0, // kP
+    0, // kD
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange
     500, // largeErrorTimeout
     0 // slew rate
 };
+
+// lemlib::Logger log {lemlib::logger::Level::debug};
 
 lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);
 
@@ -73,9 +77,8 @@ void initialize() {
   
   pros::lcd::initialize(); // initialize brain screen
   chassis.calibrate(); // calibrate the chassis
-  pros::Task screenTask(screen); // create a task to print the position to the screen
-  
-  chassis.setPose(0, 0, 0); // X: 0, Y: 0, Heading: 0
+  // pros::Task screenTask(screen); // create a task to print the position to the screen
+  chassis.setPose(65, -35, -90); // X: 0, Y: 0, Heading: 0
   // chassis.setPose(5.2, 10.333, 87); // X: 5.2, Y: 10.333, Heading: 87
   
 }
@@ -91,45 +94,16 @@ void competition_initialize() {
 
 
 
-void autonomous() {
-  
 
-  Intake intake = Intake {ports::INTAKE_MOTOR};
-  Pneumatics wings = Pneumatics {ports::WING_PORT_BACK, ports::WING_PORT_FRONT, ports::RATCHET};
-  Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
-
-  std::printf("delaying..");
-  pros::Task::delay(500);
-
-  // modified_exit_condition(); 
-
-  //offensive_x3(intake, wings);
-  // defensive_triballA(intake, pneumatics)
-  // offensive_new(intake, pneumatics );
-  // intake.set_voltage(12000); 
-  // drive_example(); 
-  // skills_ez(matchloader, wings);
-  // defensive_triball(intake, pneumatics);
-  // alliance_triball();
-  // defence_auton(pneumatics);
-  // skills_triball(wings, matchloader); 
-  // matchloader.set_voltage(12000);
-  // matchloader.move_position(-1200);  // * 6
-  // hwanseo_offensive(intake, wings);
-  // auton_skills(matchloader, wings); 
-
-  // awp_diff(wings, intake); 
-  // beginning_match(climb); 
-  // awp_short(wings, intake); 
-  // close_disrupt(wings);
-  // alliance_triball(); 
-
-  //offensive_4ball(wings, intake);
-
-}
 
 void opcontrol() {
+  // lemlib::Drivetrain_t dt {
+  //   &left_side_motors, 
+  //   &right_side_motors, 
+  //   11, // track 
+  //   3.25, // wheel diameter
+  //   450 // wheel rpm}
+  // }; 
   // This is preference to what you like to drive on.
 
   // chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
@@ -155,7 +129,6 @@ void opcontrol() {
   int time = 0;
   while (true) { 
 
-
     robot.update("TESTING");
 
     if(time == 129.5 * 100) //when one second is left
@@ -169,14 +142,33 @@ void opcontrol() {
 
 }
 
-void test_motor(int8_t port_num) {
-    pros::Motor mot = pros::Motor{port_num}; 
-    mot.move_voltage(12000);
-} 
+void autonomous() {
+  Intake intake = Intake {ports::INTAKE_MOTOR};
+  Pneumatics wings = Pneumatics {ports::WING_PORT_BACK, ports::WING_PORT_FRONT, ports::RATCHET};
+  Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
+  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
 
-void timer() {
-  int count = 0; 
-  while (true) {
-  pros::Task::delay(1);
-  }
+    pros::Task::delay(2000);
+  std::printf("delaying..");
+
+
+  chassis.setPose(0, 0, 0);
+
+  std::printf("move..\n");
+  chassis.moveTo(0, 12, 2000); // move to the point (10, 0) with a timeout of 1000 ms, and a maximum speed of 50
+  std::printf("Done moving");
+  pros::delay(1500);
+  chassis.moveTo(0, 0, 2000, false); 
+  // pros::delay(500);
+
+  // chassis.turnTo(53, 53, 1000); // turn to the point (53, 53) with a timeout of 1000 ms
+  //   pros::delay(1000);
+  // chassis.turnTo(0, 0, 1000); // turn to the point (53, 53) with a timeout of 1000 ms
+
+  // 6, 3
+  // chassis.moveTo(11, 0, 2000, 50);
+
+  // modified_exit_condition(); 
+
+
 }

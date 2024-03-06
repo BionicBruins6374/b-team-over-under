@@ -107,6 +107,9 @@ void disabled() {
 }
 
 void competition_initialize() {
+
+    chassis.setPose(0, 0, 0);
+
   // . . .
 }
 
@@ -142,6 +145,20 @@ void autonomous() {
   // // chassis.cancelMotion();
   //  chassis.moveToPose(0, 12, 270, 4000, {.forwards = false});
   skills();
+    // chassis.setPose(-113, 10, -130);
+
+    // // ram goal
+    // chassis.moveToPose(-115, -10, -175, 3000, {.forwards = true, .minSpeed = 110});
+
+    // pros::delay(500);
+    
+    // chassis.moveToPose(-115, -10, -174, 3000, {.forwards = true, .minSpeed = 110});
+
+    // pros::delay(500); 
+    
+    // chassis.moveToPose(-115, 6, -174, 3000, {.forwards = true, .minSpeed = 110});
+
+    // chassis.moveToPose(-115, -10, -174, 3000, {.forwards = true, .minSpeed = 110});
 
 }
 
@@ -170,6 +187,7 @@ void opcontrol() {
 
   // intake.set_state(true);
   Robot robot = Robot {dt, intake, cata, wings, climb}; 
+  pros::delay(100); 
   chassis.setPose(0, 0, 0);
   // reset matchloader encoders with matchloader up
   int time = 0;
@@ -185,62 +203,65 @@ void skills() {
     // chassis.setPose(-55, -45, -90);
     chassis.setPose(0, 0, 0);
 
-    // - 8.786, 15
+    // align wih alley
     chassis.moveToPose(-0.2, -0.67, -34, 500, {.forwards = true}); 
 
     chassis.moveToPose(-12.8, 18.5, -32, 750, {.forwards = true});
 
-    chassis.moveToPose(-12, 17.5, -64.4, 500, {.forwards = true});
+    chassis.moveToPose(-12, 17.5, -64.4, 750, {.forwards = true});
 
     chassis.moveToPose(-20.5, 21.8, -64.4, 1000, {.forwards = true});
     
     chassis.moveToPose(-18, 20, -90, 500, {.forwards = true});
 
+    // move through alley 
     chassis.moveToPose(-96, 23, -90, 2000, {.forwards = true});
 
-    chassis.moveToPose(-100, 22, -126, 600, {.forwards = true});
+    // align with corner 
+    chassis.moveToPose(-100, 23, -126, 600, {.forwards = true});
 
-    chassis.moveToPose(-100, 21, -132, 1000, {.forwards = true});
+    chassis.moveToPose(-100, 22, -132, 1000, {.forwards = true});
 
-    // -113 10 -131 
-    chassis.moveToPose(-113, 10, -131, 1000, {.forwards = true});
+    chassis.moveToPose(-110, 8, -131, 1000, {.forwards = true});
 
-    // -115, 1, -174
-    chassis.moveToPose(-115, -10, -174, 3000, {.forwards = true});
+    // ram goal
+    chassis.moveToPose(-115, -1, -174, 3000, {.forwards = true, .minSpeed = 110});
 
-    chassis.moveToPose(-115, 6, -174, 3000, {.forwards = true});
+    pros::delay(500);
+    
+    chassis.moveToPose(-115, -1, -174, 3000, {.forwards = true, .minSpeed = 110});
 
-    chassis.moveToPose(-115, -10, -174, 3000, {.forwards = true});
+    pros::delay(500); 
+
+    chassis.moveToPoint(-115, 10, 3000, false); // using moveToPoin to avoid all the fancy curvy shit of boomerang
+
+    chassis.moveToPoint(-115, -1, 3000,true);
+
+  // TURN CORNER 
+
+    // turn towards 0,0
+    chassis.turnTo(0,0, 1000, true, 90);
+
+    // move forward T 
+    chassis.moveToPoint(-115 + 21.5, -1, 3000, true); // using moveToPoin to avoid all the fancy curvy shit of boomerang
+
+    //turn towards -200, 0
+
+    chassis.turnTo(-200,-100, 2000, true, 50);
+
+    // move forward (ram into goal)
+
+    // turn backwards
+
+    // mvoe forward (so away from goal)
+
+    // turn 180, popwings
+
+    // move forward and ram 
 
 
 
 
 
-    // chassis.moveToPose(-116, 16, -166, 3000, {.forwards = true});
 
-
-
-
-
-
-    // -14.71, 16.94
-
-    // turn to
-
-    // // -69.2  20
-    // chassis.moveToPose(-69, 20, 120, 3000, {.forwards = true}); 
-
-    // // - 92 20
-    // chassis.moveToPose(-92, 20, 120, 3000, {.forwards = true}); 
-
-    // // -111 2.5 hedaing: -138
-    // chassis.moveToPose(-111, 2.5, 120, 3000, {.forwards = true}); 
-
-    // -11 1.18 heading: -117
-
-    // chassis.moveToPose(-24, 60, 120, 3000, {.forwards = true}); 
-    // // 46 -50
-    // chassis.moveToPose(46, -50, 120, 3000, {.forwards = true}); 
-    // // 59 25
-    // chassis.moveToPose(59, -25, 120, 3000, {.forwards = true}); 
 }

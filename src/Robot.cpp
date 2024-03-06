@@ -26,7 +26,7 @@ void Robot::update_drivetrain() {
     std::vector<double> dampened_velocities = {left_velocity * 200.0/127.0, right_velocity * 200.0/127.0};
     
     // updates drivetrain (chassis) speed 
-    chassis.joy_thresh_opcontrol(dampened_velocities[1], dampened_velocities[0]);
+    // chassis.joy_thresh_opcontrol(dampened_velocities[1], dampened_velocities[0]);
     // chassis.arcade_standard(ez::SPLIT);
 }
 
@@ -108,11 +108,11 @@ void Robot::update_matchloader() {
 // updates all aspects of wings 
 void Robot::update_pneumatics() {
     // if L1 is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
         wings.toggle_front_left();
         // front left
     }  
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
         wings.toggle_front_right();
         // front right
     } 
@@ -140,14 +140,14 @@ void Robot::update_pneumatics() {
 
 // updates all components 
 void Robot::update(std::string info) {
-    // update_intake();
-    // update_matchloader(); 
+    update_intake();
+    update_matchloader(); 
     update_pneumatics();
     update_drivetrain(); 
-    update_climb();
+    // update_climb();
 
     
     // printf("motor: %s", dt.get_left_motor_group());
     // master.print(0,0, "loader temp: %f", dt.get_left_motor_group() );
-    master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
+    // master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
 }

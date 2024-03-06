@@ -8,7 +8,6 @@ namespace lemlib {
  *
  */
 enum class Level { INFO, DEBUG, WARN, ERROR, FATAL };
-
 /**
  * @brief A loggable message
  *

@@ -27,7 +27,7 @@ lemlib::Drivetrain drivetrain2(
 );
 
 // inertial sensor
-pros::Imu inertial_sensor(14); // port 2
+pros::Imu inertial_sensor(10); // port 2
  
 // odometry struct
 lemlib::OdomSensors sensors {
@@ -70,6 +70,55 @@ lemlib::ControllerSettings angularController {
 
 lemlib::Chassis chassis(drivetrain2, lateralController, angularController, sensors);
 
+Drive chassis_ez (
+  // Left Chassis Ports (negative port will reverse it!)
+  // RED AND GREEN = LEFT 
+  // front, back-bottom, back-top 
+  //   the first port is the sensored port (when trackers are not used!)
+ 
+ 
+  // Right Chassis Ports (negative port = reversed) 
+  // ALL RED = RIGHT  
+  //   the first port is the sensored port (when trackers are not used!)
+ 
+  // { 
+  //   ports::RIGHT_FRONT_TOP_DT,
+  //   ports::RIGHT_FRONT_BOTTOM_DT,
+  //   ports::RIGHT_BACK_DT
+   
+  // },
+
+  {  
+  -ports::LEFT_BACK_DT,
+  -ports::LEFT_FRONT_BOTTOM_DT,
+  -ports::LEFT_FRONT_TOP_DT
+  }
+ 
+  // Right Chassis Ports (negative port = reversed) 
+  // ALL RED = RIGHT  
+  //   the first port is the sensored port (when trackers are not used!)
+  ,{ 
+    ports::RIGHT_FRONT_TOP_DT,
+    ports::RIGHT_FRONT_BOTTOM_DT,
+    ports::RIGHT_BACK_DT
+   
+  }
+  
+  // IMU Port
+  ,11
+
+  // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
+  //    (or tracking wheel diameter)
+  ,3.25
+
+  // Cartridge RPM
+  //   (or tick per rotation if using tracking wheels)
+  ,600 
+
+  // External Gear Ratio (MUST BE DECIMAL)
+  //    (or gear ratio of tracking wheel)
+  ,0.75 //36/48 * 600
+);
 
 void screen() {
     // loop forever
@@ -134,7 +183,7 @@ void opcontrol() {
   Pneumatics wings = Pneumatics {ports::WING_PORT_FRONT_RIGHT, ports::WING_PORT_FRONT_LEFT, ports::WING_PORT_BACK, ports::RATCHET};
   Climb climb = Climb {-ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR, ports::ROTATIONAL_SENSOR  }; 
   // Climb climb = Climb {18, 20 }; 
-  Matchloader cata = Matchloader {18,20};
+  Matchloader cata = Matchloader {18,19};
 
   
 
@@ -155,7 +204,8 @@ void opcontrol() {
   // reset matchloader encoders with matchloader up
   int time = 0;
   while (true) { 
-    chassis.arcade(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), 2);
+    // chassis.arcade(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), 2);
+    chassis_ez.opcontrol_arcade_standard(ez::SPLIT);
     pros::delay(10); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     robot.update("hi");
   }
@@ -274,6 +324,14 @@ void purple_6ball() {
     chassis.moveToPoint(9, -8, 3000, true, 127);
     // 48 -8
     chassis.moveToPoint(48, -8, 3000, true, 127 );
+}
+
+void awp_short() {
+  chassis.setPose(0, 0, 0); // backward 
+  
+  chassis.setPose(0, 20, 0);
+  chassis.turnTo();
+  chassis.setPose( {.forwards = false})
 }
 
 

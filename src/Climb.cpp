@@ -67,14 +67,17 @@ void Climb::set_state (bool state_input){
 
 
 void Climb::move_position(int position) {
-    m_big_motor.move_absolute(position, 127);
-    m_small_motor.move_absolute(position, 127);
-    
+    // while (!(sensor.get_value() > position * 0.9 && sensor.get_value() < position * 1.1)) {
+    // set_voltage(10000);
+    // }
+    // set_voltage(0);
+    // pros::Task::delay(50); 
 }
 
 void Climb::move_rel(int position) {
-    m_big_motor.move_relative(position, 127);
-    m_small_motor.move_relative(position, 127);
+    // while (sensor.get_value() < )
+    // m_big_motor.move_relative(position, 127);
+    // m_small_motor.move_relative(position, 127);
 }
 
 int Climb::get_pos() {

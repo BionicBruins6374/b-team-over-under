@@ -11,12 +11,6 @@ climb {climb_in}
 
 
 void Robot::update_drivetrain() {
-    // dt.op_control(0, 
-    // m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y),
-    // m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X),
-    // 1,
-    // 1,
-    // 1);
 
      // scales joystick inputs for arcade drive 
     int left_velocity = (m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) -  m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
@@ -28,6 +22,14 @@ void Robot::update_drivetrain() {
     // updates drivetrain (chassis) speed 
     // chassis.joy_thresh_opcontrol(dampened_velocities[1], dampened_velocities[0]);
     // chassis.arcade_standard(ez::SPLIT);
+
+    dt.op_control(0, 
+    m_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), 
+    m_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X),
+    1,
+    1,
+    1);
+    
 }
 
 
@@ -85,8 +87,17 @@ void Robot::update_climb() {
 
     }
 
-    climb.set_voltage(climb.get_state() * climb.get_speed()); 
+    // if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+    //      pros::Task task{[=] {
+    //         climb.move_position(1000);
+    // }};
+    // }
+
+    // else{
+    // climb.set_voltage(climb.get_state() * climb.get_speed()); 
+    // }
     
+    climb.set_voltage(climb.get_state() * climb.get_speed()); 
 }
 
 void Robot::update_matchloader() {

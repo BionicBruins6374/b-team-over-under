@@ -36,6 +36,12 @@ std::vector<double> Drivetrain::arcade(double left_y_input, double right_x_input
     // computes velocity for left and right side 
     double left_output = left_y_input -  right_x_input;
     double right_output = left_y_input + right_x_input;
+    
+    double maxMagnitude = std::max(std::abs(left_output), std::abs(right_output));
+    if (maxMagnitude > 1.0) {
+    left_output /= maxMagnitude;
+    right_output /= maxMagnitude;
+    }
 
     // scales for voltage range 
     return {left_output/127 * 12000, right_output/127 * 12000};
@@ -118,6 +124,8 @@ void Drivetrain::op_control(int drive_type, double left_input,
     move_voltage(dampened_velocities[0],dampened_velocities[1]);
 
 }
+
+
 
 auto Drivetrain::get_left_motor_group() {
     return leftMotors[0];

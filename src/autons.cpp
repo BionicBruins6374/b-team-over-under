@@ -96,30 +96,7 @@ double T= constants::TILE_LENGTH *0.8;
 // It's best practice to tune constants when the robot is empty and with heavier game objects, or with lifts up vs down.
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
 
-// void purple_6ball() {
-//      // backward: 0, -60
-//     chassis.setPose(0, -60, -90);
-//     // intake?? or push triball
-    
-//     // 48 -60
-//     chassis.moveToPose(48, -60, 127, 3000, {.forwards = false});
-//     // 62 -50, slower
-//     chassis.moveToPose(62, -50, 127, 3000, {.forwards = false});
-//     // 62 -24 
-//     chassis.moveToPose(62, -24, 127, 3000, {.forwards = false});
-//     // 4 -28
-//     chassis.moveToPose(4, -28, 127, 3000, {.forwards = true});
-//     // turn 75 deg slowly  (to 9,0)
-//     chassis.turnTo(9, 0, 1000); 
-//     // deintake
-//     // set turn to 0 slowish 
-//     // 4 0
-//     chassis.moveToPose(4, 0, 127, 3000, {.forwards = true});
-//     // 9 -8
-//     chassis.moveToPose(9, -8, 127, 3000, {.forwards = true});
-//     // 48 -8
-//     chassis.moveToPose(48, -8, 127, 3000, {.forwards = true});
-// }
+
 
 // void skills() {
 //     chassis.setPose(-55, -45, 0);

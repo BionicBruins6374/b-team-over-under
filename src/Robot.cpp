@@ -141,10 +141,10 @@ void Robot::update_pneumatics() {
 // updates all components 
 void Robot::update(std::string info) {
     update_intake();
-    update_matchloader(); 
+    // update_matchloader(); 
     update_pneumatics();
     update_drivetrain(); 
-    // update_climb();
+    update_climb();
 
     
     // printf("motor: %s", dt.get_left_motor_group());

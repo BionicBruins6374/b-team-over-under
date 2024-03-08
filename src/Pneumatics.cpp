@@ -15,10 +15,10 @@ void Pneumatics::toggle_back_wings() {
     back_wing.set_value(back_wings_state);    
 }
 
-// void Pneumatics::toggle_front_wings() {
-//     front_wing_right_state = !front_wing_right_state; // switches wing state 
-//     front_wing.set_value(front_wings_state); 
-// }
+void Pneumatics::toggle_front_wings() {
+    toggle_front_right(); 
+    toggle_front_left();
+}
 
 void Pneumatics::toggle_front_right() {
     front_wing_right_state = !front_wing_right_state; // switches wing state 

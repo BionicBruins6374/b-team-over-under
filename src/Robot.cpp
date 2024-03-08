@@ -149,5 +149,5 @@ void Robot::update(std::string info) {
     
     // printf("motor: %s", dt.get_left_motor_group());
     // master.print(0,0, "loader temp: %f", dt.get_left_motor_group() );
-    // master.print(0, 0, "dt v: %d", chassis.get_tick_per_inch()); 
+    m_controller.print(0, 0, "arm pos: %d", climb.pot.get_value()); 
 }

@@ -97,8 +97,8 @@ void initialize() {
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
   // chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used. 
   // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
-   
-  
+  pros::ADIAnalogIn sensor (ports::ROTATIONAL_SENSOR);
+  sensor.calibrate();
 }
 
 

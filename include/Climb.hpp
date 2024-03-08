@@ -5,13 +5,14 @@ class Climb {
     private:
         pros::Motor m_big_motor; // 11W
         pros::Motor m_small_motor; //5.5W
-        pros::ADIAnalogIn pot;
 
         int8_t direction = 1; 
         bool state = false; // true = on
         bool arm_state = false;
         int32_t speed = 0; 
     public:
+        pros::ADIAnalogIn pot;
+
         Climb(int8_t big_motor_port, int8_t small_motor_port, uint8_t rotational_port);
         void set_voltage(int32_t voltage);
         void toggle(); 

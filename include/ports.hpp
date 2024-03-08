@@ -18,5 +18,7 @@ namespace ports {
     constexpr uint8_t WING_PORT_FRONT_RIGHT = 'E'; 
     constexpr uint8_t WING_PORT_FRONT_LEFT = 'F'; 
     constexpr uint8_t RATCHET = 'G';
+
+    constexpr int8_t ROTATIONAL_SENSOR = 'A'; 
 };
 

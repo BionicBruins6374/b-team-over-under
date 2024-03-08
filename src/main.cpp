@@ -130,10 +130,13 @@ void opcontrol() {
 
   // Defines components 
   Intake intake = Intake {ports::INTAKE_MOTOR};
-  Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
+  // Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
   Pneumatics wings = Pneumatics {ports::WING_PORT_FRONT_RIGHT, ports::WING_PORT_FRONT_LEFT, ports::WING_PORT_BACK, ports::RATCHET};
-  // Climb climb = Climb {-ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
-  Climb climb = Climb {18, 20 }; 
+  Climb climb = Climb {-ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR, ports::ROTATIONAL_SENSOR  }; 
+  // Climb climb = Climb {18, 20 }; 
+  Matchloader cata = Matchloader {18,20};
+
+  
 
   Drivetrain dt = Drivetrain {
  
@@ -210,7 +213,7 @@ void skills(Pneumatics wings) {
 
     wings.toggle_front_right(); 
     // swing turn
-    chassis.moveToPose(-91, -20, -70, 3000, {.forwards = true, .minSpeed = 50, .lead = 0.8}); // using moveToPoin to avoid all the fancy curvy shit of boomerang
+    chassis.moveToPose(-91, -20, -70, 3000, {.forwards = true, .minSpeed = 50}); // using moveToPoin to avoid all the fancy curvy shit of boomerang
     chassis.turnTo(-91, -18, 500, true); 
 
 
@@ -279,7 +282,7 @@ void autonomous() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Pneumatics wings = Pneumatics {ports::WING_PORT_FRONT_RIGHT, ports::WING_PORT_FRONT_LEFT, ports::WING_PORT_BACK, ports::RATCHET};
   Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
+  Climb climb = Climb { ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR, ports::ROTATIONAL_SENSOR }; 
 
   std::printf("delaying..");
   pros::Task::delay(500);

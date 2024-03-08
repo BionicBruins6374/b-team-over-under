@@ -1,10 +1,10 @@
 #include "Climb.hpp"
 
 
-Climb::Climb(int8_t big_motor, int8_t small_motor) :
+Climb::Climb(int8_t big_motor, int8_t small_motor, uint8_t rotational_port) :
     m_big_motor {big_motor},
-    m_small_motor {small_motor}
-
+    m_small_motor {small_motor},
+    pot {rotational_port}
     {};
 
 void Climb::set_voltage(int32_t voltage) {

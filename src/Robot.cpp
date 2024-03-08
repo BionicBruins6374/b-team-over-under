@@ -143,7 +143,7 @@ void Robot::update(std::string info) {
     update_intake();
     // update_matchloader(); 
     update_pneumatics();
-    update_drivetrain(); 
+    // update_drivetrain(); 
     update_climb();
 
     

@@ -212,99 +212,12 @@ void opcontrol() {
 
 }
 
-void skills(Pneumatics wings) {
-    // chassis.setPose(-55, -45, -90);
-    chassis.setPose(0, 0, 0);
 
-    // align wih alley
-    chassis.moveToPose(-0.2, -0.67, -34, 500, {.forwards = true}); 
-
-    chassis.moveToPose(-12.8, 18.5, -32, 500, {.forwards = true});
-
-    chassis.moveToPose(-12, 17.5, -64.4, 500, {.forwards = true});
-
-    chassis.moveToPose(-20.5, 21.8, -64.4, 750, {.forwards = true});
-    
-    chassis.moveToPose(-18, 20, -90, 500, {.forwards = true});
-
-    // move through alley 
-    chassis.moveToPose(-96, 23, -90, 2000, {.forwards = true});
-
-    // align with corner 
-    chassis.moveToPose(-100, 23, -125, 700, {.forwards = true});
-
-    chassis.moveToPose(-110, 14.9, -125, 700, {.forwards = true});
-
-    // ram 
-    chassis.moveToPose(-110, 3.5, -175, 700, {.forwards = true, .minSpeed = 127, .earlyExitRange = 1.5});
-
-    // go back
-    chassis.moveToPose(-115, -1, -174, 3000, {.forwards = true, .minSpeed = 110});
-
-    pros::delay(500);
-
-    chassis.moveToPose(-115, -1, -174, 3000, {.forwards = true, .minSpeed = 127, .earlyExitRange = 1.5});
-
-    pros::delay(500); 
-    
-    // ram again 
-    chassis.moveToPoint(-115, 3.5, 3000, false, 127); // using moveToPoin to avoid all the fancy curvy shit of boomerang
-
-    // go back 
-    chassis.moveToPoint(-115, -1, 3000,true,127);
-
-    // TURN CORNER 
-
-    // turn towards 0,0
-    chassis.turnTo(0,0, 1000, true, 90);
-
-    // move forward T 
-    chassis.moveToPoint(-115 + 16, -2, 3000, true); // using moveToPoin to avoid all the fancy curvy shit of boomerang
-
-    wings.toggle_front_right(); 
-    // swing turn
-    chassis.moveToPose(-91, -20, -70, 3000, {.forwards = true, .minSpeed = 50}); // using moveToPoin to avoid all the fancy curvy shit of boomerang
-    chassis.turnTo(-91, -18, 500, true); 
-
-
-    // move forward (ram into goal) 
-    // -86 -17.5 -98
-    chassis.moveToPose(-100, -16.5, -98, 1000, {.forwards = true, .minSpeed = 127, .earlyExitRange = 1.5} );
-    pros::delay(500); 
-    // ????
-    chassis.moveToPose(-101.9, -19, -90, 1000, {.forwards = true, .minSpeed = 127, .earlyExitRange = 1.5} );
-
-    wings.toggle_front_right(); 
-
-    // move away from goal
-    chassis.moveToPose(-90, -19, -90, 1000, {.forwards = false, .minSpeed = 120});
-    chassis.moveToPose(-84, -17, 90, 1000, {.forwards = true} ); // moves a little towards joola to curve well
-
-
-    // spin 180 
-    chassis.moveToPose(-86, -62, -90, 1000, {.forwards = true, .lead = 1.2} ); // need to tune 1.2
-
-    wings.toggle_front_wings(); 
-
-    // move forward
-    chassis.moveToPose(-100, -62, 90, 1000, {.forwards = true, .minSpeed = 127, .earlyExitRange = 1.5});
-
-    pros::delay(500); 
-
-    // move back a bit
-    chassis.moveToPose(-88, -62, 90, 1000, {.forwards = true, .minSpeed = 127, .earlyExitRange = 1.5});
-
-
-
-}
-
-
-
-void purple_6ball() {
+// rn this is starting after we intake triball btw 
+void purple_6ball(Pneumatics wings, Intake intake) {
      // backward: 0, -60
     chassis.setPose(0, 0, 0);
     // intake?? or push triball
-    // chassis.moveToPose(0, 20, 0, 1000);
     // 0, -33, -2
     chassis.moveToPose(0, -33, 0, 2000, {.forwards = false,
         .chasePower = 0,
@@ -326,6 +239,8 @@ void purple_6ball() {
         .maxSpeed = 127,
         .minSpeed = 0,
         .earlyExitRange = 0});
+
+
     // 30 -50 -90 
     // chassis.moveToPose(30, -50, -90, 2000,{.forwards = false,
     //     .chasePower = 0,
@@ -350,7 +265,7 @@ void purple_6ball() {
    
 }
 
-void awp_short(Pneumatics wings) {
+void awp_short(Pneumatics wings, Intake intake) {
   // init pos: 66 -50, 
   chassis.setPose(66, -50, 135); // TODO: change this value based on how forward we need to be to stay in range  
 
@@ -363,7 +278,7 @@ void awp_short(Pneumatics wings) {
         .earlyExitRange = 0});
   
   // pop wings 
-
+  wings.toggle_back_wings(); 
   // turn to climb bar (and take out triball) 
   // x, y, timeout, maxSpeed 
   chassis.turnTo(0, -64, 1000, true, 127);
@@ -391,29 +306,9 @@ void autonomous() {
 
   // modified_exit_condition(); 
   chassis.setPose(0, 0, 0);
-  // example movement: Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
-  // chassis.moveToPose(0, 12, 127, 3000);
-  // pros::delay(1000);
-  // chassis.moveToPose(0, 0, 127, 3000, {.forwards = false});
-
-  // chassis.turnTo(9, 0, 1000, 90); 
-  // pros::delay(1000); 
-  // chassis.turnTo(-9, 0, 1000, 90); 
-  // lemlib::infoSink()->info("Chassis pose: {}", chassis.getPose());
-  
-  // chassis.follow("curve1.txt", 2000, 15, true);
-  // example movement: Move to x: 0 and y: 0 and face heading 270, going backwards. Timeout set to 4000ms
-  // chassis.moveToPose(0, 6, 270, 4000, {.forwards = false});
-  // // cancel the movement after it has travelled 10 inches
-  // // chassis.waitUntil(10);
-  // // chassis.cancelMotion();
-  //  chassis.moveToPose(0, 12, 270, 4000, {.forwards = false});
-  // skills(wings);
-  purple_6ball();  
-  // chassis.moveToPose(36, 25 * 0.5, 90, 2000 );
-  // chassis.moveToPose(0,-24, 0, 3000, {.forwards = false} );
-  // pros::delay(500); 
-  // chassis.moveToPoint(0,0, 3000, true );
+ 
+  purple_6ball(wings, intake ); 
+  awp_short(wings, intake); 
 
 
 

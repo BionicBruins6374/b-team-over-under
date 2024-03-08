@@ -132,6 +132,9 @@ void autonomous() {
   // alliance_triball(); 
 
   //offensive_4ball(wings, intake);
+  chassis.moveToPose
+
+  24 + 12, 24 
 
 }
 
@@ -145,7 +148,9 @@ void opcontrol() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Matchloader cata = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
   Pneumatics wings = Pneumatics {ports::WING_PORT_FRONT_RIGHT, ports::WING_PORT_FRONT_LEFT, ports::WING_PORT_BACK, ports::RATCHET};
-  Climb climb = Climb {-ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
+  // Climb climb = Climb {-ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR }; 
+  Climb climb = Climb {18, 20 }; 
+
   Drivetrain dt = Drivetrain {
  
   ports::RIGHT_FRONT_TOP_DT,
@@ -156,9 +161,10 @@ void opcontrol() {
   ports::LEFT_FRONT_BOTTOM_DT, 
   ports::LEFT_FRONT_TOP_DT  };
 
+  intake.set_state(true);
+
   Robot robot = Robot {dt, intake, cata, wings, climb}; 
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE); //NEW
-  intake.set_state(true);
   // reset matchloader encoders with matchloader up
   int time = 0;
   while (true) { 

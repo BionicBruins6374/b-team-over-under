@@ -108,11 +108,11 @@ void Robot::update_matchloader() {
 // updates all aspects of wings 
 void Robot::update_pneumatics() {
     // if L1 is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
         wings.toggle_front_left();
         // front left
     }  
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
         wings.toggle_front_right();
         // front right
     } 
@@ -140,7 +140,7 @@ void Robot::update_pneumatics() {
 
 // updates all components 
 void Robot::update(std::string info) {
-    // update_intake();
+    update_intake();
     // update_matchloader(); 
     update_pneumatics();
     update_drivetrain(); 

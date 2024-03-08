@@ -265,6 +265,7 @@ void purple_6ball(Pneumatics wings, Intake intake) {
    
 }
 
+// utlizes this for coordinates (theyre on the bottom left of the field): https://lemlib.github.io/Path-Gen/
 void awp_short(Pneumatics wings, Intake intake) {
   // init pos: 66 -50, 
   chassis.setPose(66, -50, 135); // TODO: change this value based on how forward we need to be to stay in range  
@@ -306,8 +307,8 @@ void autonomous() {
 
   // modified_exit_condition(); 
   chassis.setPose(0, 0, 0);
- 
-  purple_6ball(wings, intake ); 
+  
+  // purple_6ball(wings, intake ); 
   awp_short(wings, intake); 
 
 

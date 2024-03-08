@@ -41,9 +41,9 @@ lemlib::OdomSensors sensors {
 
 // forward/backward PID
 lemlib::ControllerSettings lateralController {
-    27, // proportional gain (kP)
+    14, // proportional gain (kP)
     0, // integral gain (kI)
-    26, // derivative gain (kD)
+    29, // derivative gain (kD)
     3, // anti windup
     1, // small error range, in inches
     100, // small error range timeout, in milliseconds
@@ -70,55 +70,55 @@ lemlib::ControllerSettings angularController {
 
 lemlib::Chassis chassis(drivetrain2, lateralController, angularController, sensors);
 
-Drive chassis_ez (
-  // Left Chassis Ports (negative port will reverse it!)
-  // RED AND GREEN = LEFT 
-  // front, back-bottom, back-top 
-  //   the first port is the sensored port (when trackers are not used!)
+// Drive chassis_ez (
+//   // Left Chassis Ports (negative port will reverse it!)
+//   // RED AND GREEN = LEFT 
+//   // front, back-bottom, back-top 
+//   //   the first port is the sensored port (when trackers are not used!)
  
  
-  // Right Chassis Ports (negative port = reversed) 
-  // ALL RED = RIGHT  
-  //   the first port is the sensored port (when trackers are not used!)
+//   // Right Chassis Ports (negative port = reversed) 
+//   // ALL RED = RIGHT  
+//   //   the first port is the sensored port (when trackers are not used!)
  
-  // { 
-  //   ports::RIGHT_FRONT_TOP_DT,
-  //   ports::RIGHT_FRONT_BOTTOM_DT,
-  //   ports::RIGHT_BACK_DT
+//   // { 
+//   //   ports::RIGHT_FRONT_TOP_DT,
+//   //   ports::RIGHT_FRONT_BOTTOM_DT,
+//   //   ports::RIGHT_BACK_DT
    
-  // },
+//   // },
 
-  {  
-  -ports::LEFT_BACK_DT,
-  -ports::LEFT_FRONT_BOTTOM_DT,
-  -ports::LEFT_FRONT_TOP_DT
-  }
+//   {  
+//   -ports::LEFT_BACK_DT,
+//   -ports::LEFT_FRONT_BOTTOM_DT,
+//   -ports::LEFT_FRONT_TOP_DT
+//   }
  
-  // Right Chassis Ports (negative port = reversed) 
-  // ALL RED = RIGHT  
-  //   the first port is the sensored port (when trackers are not used!)
-  ,{ 
-    ports::RIGHT_FRONT_TOP_DT,
-    ports::RIGHT_FRONT_BOTTOM_DT,
-    ports::RIGHT_BACK_DT
+//   // Right Chassis Ports (negative port = reversed) 
+//   // ALL RED = RIGHT  
+//   //   the first port is the sensored port (when trackers are not used!)
+//   ,{ 
+//     ports::RIGHT_FRONT_TOP_DT,
+//     ports::RIGHT_FRONT_BOTTOM_DT,
+//     ports::RIGHT_BACK_DT
    
-  }
+//   }
   
-  // IMU Port
-  ,11
+//   // IMU Port
+//   ,11
 
-  // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
-  //    (or tracking wheel diameter)
-  ,3.25
+//   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
+//   //    (or tracking wheel diameter)
+//   ,3.25
 
-  // Cartridge RPM
-  //   (or tick per rotation if using tracking wheels)
-  ,600 
+//   // Cartridge RPM
+//   //   (or tick per rotation if using tracking wheels)
+//   ,600 
 
-  // External Gear Ratio (MUST BE DECIMAL)
-  //    (or gear ratio of tracking wheel)
-  ,0.75 //36/48 * 600
-);
+//   // External Gear Ratio (MUST BE DECIMAL)
+//   //    (or gear ratio of tracking wheel)
+//   ,0.75 //36/48 * 600
+// );
 
 void screen() {
     // loop forever
@@ -136,7 +136,7 @@ void initialize() {
   pros::lcd::initialize(); // initialize brain screen
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
   chassis.calibrate(); // calibrate the chassis
-  chassis.setPose(0, 0, 0);
+  // chassis.setPose(0, 0, 0);
 
   pros::Task screenTask(screen); // create a task to print the position to the screen
   // Configure your chassis controls
@@ -160,7 +160,7 @@ void competition_initialize() {
   pros::lcd::initialize(); // initialize brain screen
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
   chassis.calibrate(); // calibrate the chassis
-  chassis.setPose(0, 0, 0);
+  // chassis.setPose(0, 0, 0);
 
   pros::Task screenTask(screen); // 
 
@@ -205,7 +205,7 @@ void opcontrol() {
   int time = 0;
   while (true) { 
     // chassis.arcade(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), 2);
-    chassis_ez.opcontrol_arcade_standard(ez::SPLIT);
+    // chassis_ez.opcontrol_arcade_standard(ez::SPLIT);
     pros::delay(10); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     robot.update("hi");
   }
@@ -302,36 +302,80 @@ void skills(Pneumatics wings) {
 
 void purple_6ball() {
      // backward: 0, -60
-    chassis.setPose(0, -60, -90);
+    chassis.setPose(0, 0, 0);
     // intake?? or push triball
-    
-    // 48 -60
-    chassis.moveToPoint(45, -60, 3000, false, 127);
-    // 62 -50, slower
-    chassis.moveToPoint(62, -50, 3000, false, 100);
-    pros::delay(500); 
-    // 62 -24 
-    chassis.moveToPoint(62, -24, 300,false, 127);
-    // 4 -28
-    chassis.moveToPoint(4, -28, 3000, true, 127 );
-    // turn 75 deg slowly  (to 9,0)
-    chassis.turnTo(9, 0, 1000); 
-    // deintake
-    // set turn to 0 slowish 
-    // 4 0
-    chassis.moveToPoint(4, 0, 3000, true, 127 );
-    // 9 -8
-    chassis.moveToPoint(9, -8, 3000, true, 127);
-    // 48 -8
-    chassis.moveToPoint(48, -8, 3000, true, 127 );
+    // chassis.moveToPose(0, 20, 0, 1000);
+    // 0, -33, -2
+    chassis.moveToPose(0, -33, 0, 2000, {.forwards = false,
+        .chasePower = 0,
+        .lead = 0.6,
+        .maxSpeed = 127,
+        .minSpeed = 0,
+        .earlyExitRange = 0});
+    // 2 -36 -45
+    chassis.moveToPose(0, -33, -45, 2000, {.forwards = false,
+        .chasePower = 0,
+        .lead = 0.6,
+        .maxSpeed = 127,
+        .minSpeed = 0,
+        .earlyExitRange = 0});
+    // 13.5 -48 -42
+    chassis.moveToPose(13.5, -44, -42, 2000, {.forwards = false,
+        .chasePower = 0,
+        .lead = 0.6,
+        .maxSpeed = 127,
+        .minSpeed = 0,
+        .earlyExitRange = 0});
+    // 30 -50 -90 
+    // chassis.moveToPose(30, -50, -90, 2000,{.forwards = false,
+    //     .chasePower = 0,
+    //     .lead = 0.6,
+    //     .maxSpeed = 127,
+    //     .minSpeed = 120,
+    //     .earlyExitRange = 0});
+
+    // chassis.moveToPose(25, -50, -90, 2000,{.forwards = false,
+    //     .chasePower = 0,
+    //     .lead = 0.6,
+    //     .maxSpeed = 127,
+    //     .minSpeed = 120,
+    //     .earlyExitRange = 0});
+
+    // chassis.moveToPose(9.4, 7.8, 0, 2000, {.forwards = false,
+    //     .chasePower = 0,
+    //     .lead = 0.3,
+    //     .maxSpeed = 127,
+    //     .minSpeed = 0,
+    //     .earlyExitRange = 0});
+   
 }
 
-void awp_short() {
-  chassis.setPose(0, 0, 0); // backward 
+void awp_short(Pneumatics wings) {
+  // init pos: 66 -50, 
+  chassis.setPose(66, -50, 135); // TODO: change this value based on how forward we need to be to stay in range  
+
+  //move along the matchload bar
+  chassis.moveToPose(50, -64, 135, 1000, {.forwards = false,
+        .chasePower = 0,
+        .lead = 0.1,
+        .maxSpeed = 67,
+        .minSpeed = 0,
+        .earlyExitRange = 0});
   
-  chassis.setPose(0, 20, 0);
-  chassis.turnTo();
-  chassis.setPose( {.forwards = false})
+  // pop wings 
+
+  // turn to climb bar (and take out triball) 
+  // x, y, timeout, maxSpeed 
+  chassis.turnTo(0, -64, 1000, true, 127);
+
+  // move to climb bar intake facing front: 0 -64
+  chassis.moveToPose(0, -64, 0, 1000, {.forwards = true,
+        .chasePower = 0,
+        .lead = 0.6,
+        .maxSpeed = 100,
+        .minSpeed = 0,
+        .earlyExitRange = 0});
+
 }
 
 
@@ -346,7 +390,7 @@ void autonomous() {
   pros::Task::delay(500);
 
   // modified_exit_condition(); 
-  // chassis.setPose(0, 0, 0);
+  chassis.setPose(0, 0, 0);
   // example movement: Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
   // chassis.moveToPose(0, 12, 127, 3000);
   // pros::delay(1000);
@@ -365,9 +409,12 @@ void autonomous() {
   // // chassis.cancelMotion();
   //  chassis.moveToPose(0, 12, 270, 4000, {.forwards = false});
   // skills(wings);
-  // purple_6ball();  
+  purple_6ball();  
   // chassis.moveToPose(36, 25 * 0.5, 90, 2000 );
-  // chassis.moveToPose(0,0, 0, 3000, {.forwards = false} );
+  // chassis.moveToPose(0,-24, 0, 3000, {.forwards = false} );
+  // pros::delay(500); 
+  // chassis.moveToPoint(0,0, 3000, true );
+
 
 
 }

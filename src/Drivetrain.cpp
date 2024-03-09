@@ -48,40 +48,7 @@ std::vector<double> Drivetrain::arcade(double left_y_input, double right_x_input
 }
 
 
-// computes curvature drive values 
-// std::vector<double> Drivetrain::curvature(
-//     double xSpeed, double zRotation, bool allowTurnInPlace) {
 
-//     // scales everything to a -1 to 1 range
-//     xSpeed = xSpeed/127;
-//     zRotation = zRotation/127;
-
-//     double leftSpeed = 0.0;
-//     double rightSpeed = 0.0;
-
-//     // if turn in place, default to arcade-like calculation 
-//     if (allowTurnInPlace) {
-//     leftSpeed = xSpeed - zRotation;
-//     rightSpeed = xSpeed + zRotation;
-//     } 
-
-//     // left and right side are adjusted according to the rotational amount specified by right joystick
-//     // dampens the impact of curvature joystick by the speed 
-//     else {
-//     leftSpeed = xSpeed - std::abs(xSpeed) * zRotation; // x(1 - z)
-//     rightSpeed = xSpeed + std::abs(xSpeed) * zRotation; // x (1 + z)
-//     }
-
-//     // Desaturate wheel speeds 
-//     // (essentially if one value is outside of the limits -1 to 1, rescales values accordingly)
-//     double maxMagnitude = std::max(std::abs(leftSpeed), std::abs(rightSpeed));
-//     if (maxMagnitude > 1.0) {
-//     leftSpeed /= maxMagnitude;
-//     rightSpeed /= maxMagnitude;
-//     }
-
-//     return {leftSpeed * 12000, rightSpeed* 12000};
-// }
 
 
 std::vector<double> Drivetrain::curvature(double throttle, double turn) {

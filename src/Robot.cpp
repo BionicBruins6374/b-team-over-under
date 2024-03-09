@@ -66,26 +66,26 @@ void Robot::update_intake() {
 
 void Robot::update_climb() {
     // if up is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+    if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
         climb.toggle(); // toggle Matchloader 
         climb.set_speed(constants::HIGH_VOLTAGE_CATA); 
     
     } 
     // if down is pressed
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
 
         climb.toggle();
-        climb.set_speed(-1 * constants::HIGH_VOLTAGE_CATA);
+        climb.set_speed(-constants::HIGH_VOLTAGE_CATA);
      
     }
-    if(climb.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-        climb.set_state(false);
+    // if(climb.get_speed() == constants::HIGH_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+    //     climb.set_state(false);
 
-    }
-      if(climb.get_speed() == constants::HIGH_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-        climb.set_state(false);
+    // }
+    //   if(climb.get_speed() == constants::HIGH_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+    //     climb.set_state(false);
 
-    }
+    // }
 
     // if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
     //      pros::Task task{[=] {
@@ -119,20 +119,19 @@ void Robot::update_matchloader() {
 // updates all aspects of wings 
 void Robot::update_pneumatics() {
     // if L1 is pressed 
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
         wings.toggle_front_left();
+        // wings.toggle_front_right();
+        wings.toggle_back_wings(); 
+
         // front left
     }  
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-        wings.toggle_front_right();
-        // front right
-    } 
     // if L2 is pressed 
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-        wings.toggle_back_wings(); 
+        wings.toggle_front_right(); 
     }
     // hang = X
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
         wings.toggle_hang();    
     }
 }
@@ -154,11 +153,11 @@ void Robot::update(std::string info) {
     update_intake();
     // update_matchloader(); 
     update_pneumatics();
-    // update_drivetrain(); 
+    update_drivetrain(); 
     update_climb();
 
     
     // printf("motor: %s", dt.get_left_motor_group());
     // master.print(0,0, "loader temp: %f", dt.get_left_motor_group() );
-    m_controller.print(0, 0, "arm pos: %d", climb.pot.get_value()); 
+    // m_controller.print(0, 0, "arm pos: %d", climb.pot.get_value()); 
 }

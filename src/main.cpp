@@ -73,55 +73,55 @@ lemlib::ControllerSettings angularController {
 
 lemlib::Chassis chassis(drivetrain2, lateralController, angularController, sensors);
 
-Drive chassis_ez (
-  // Left Chassis Ports (negative port will reverse it!)
-  // RED AND GREEN = LEFT 
-  // front, back-bottom, back-top 
-  //   the first port is the sensored port (when trackers are not used!)
+// Drive chassis_ez (
+//   // Left Chassis Ports (negative port will reverse it!)
+//   // RED AND GREEN = LEFT 
+//   // front, back-bottom, back-top 
+//   //   the first port is the sensored port (when trackers are not used!)
  
  
-  // Right Chassis Ports (negative port = reversed) 
-  // ALL RED = RIGHT  
-  //   the first port is the sensored port (when trackers are not used!)
+//   // Right Chassis Ports (negative port = reversed) 
+//   // ALL RED = RIGHT  
+//   //   the first port is the sensored port (when trackers are not used!)
  
-  // { 
-  //   ports::RIGHT_FRONT_TOP_DT,
-  //   ports::RIGHT_FRONT_BOTTOM_DT,
-  //   ports::RIGHT_BACK_DT
+//   // { 
+//   //   ports::RIGHT_FRONT_TOP_DT,
+//   //   ports::RIGHT_FRONT_BOTTOM_DT,
+//   //   ports::RIGHT_BACK_DT
    
-  // },
+//   // },
 
-  {  
-  -ports::LEFT_BACK_DT,
-  -ports::LEFT_FRONT_BOTTOM_DT,
-  -ports::LEFT_FRONT_TOP_DT
-  }
+//   {  
+//   -ports::LEFT_BACK_DT,
+//   -ports::LEFT_FRONT_BOTTOM_DT,
+//   -ports::LEFT_FRONT_TOP_DT
+//   }
  
-  // Right Chassis Ports (negative port = reversed) 
-  // ALL RED = RIGHT  
-  //   the first port is the sensored port (when trackers are not used!)
-  ,{ 
-    ports::RIGHT_FRONT_TOP_DT,
-    ports::RIGHT_FRONT_BOTTOM_DT,
-    ports::RIGHT_BACK_DT
+//   // Right Chassis Ports (negative port = reversed) 
+//   // ALL RED = RIGHT  
+//   //   the first port is the sensored port (when trackers are not used!)
+//   ,{ 
+//     ports::RIGHT_FRONT_TOP_DT,
+//     ports::RIGHT_FRONT_BOTTOM_DT,
+//     ports::RIGHT_BACK_DT
    
-  }
+//   }
   
-  // IMU Port
-  ,11
+//   // IMU Port
+//   ,11
 
-  // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
-  //    (or tracking wheel diameter)
-  ,3.25
+//   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
+//   //    (or tracking wheel diameter)
+//   ,3.25
 
-  // Cartridge RPM
-  //   (or tick per rotation if using tracking wheels)
-  ,600 
+//   // Cartridge RPM
+//   //   (or tick per rotation if using tracking wheels)
+//   ,600 
 
-  // External Gear Ratio (MUST BE DECIMAL)
-  //    (or gear ratio of tracking wheel)
-  ,0.75 //36/48 * 600
-);
+//   // External Gear Ratio (MUST BE DECIMAL)
+//   //    (or gear ratio of tracking wheel)
+//   ,0.75 //36/48 * 600
+// );
 
 void screen() {
     // loop forever
@@ -203,25 +203,22 @@ void opcontrol() {
   ports::LEFT_FRONT_TOP_DT  };
 
   intake.set_state(true);
-  left_side_motors.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
-  right_side_motors.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+  left_side_motors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
+  right_side_motors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
 
   Robot robot = Robot {dt, intake, cata, wings, climb}; 
   pros::delay(100); 
   // chassis.setPose(0, 0, 0);
   // reset matchloader encoders with matchloader up
-  std::uint32_t time = pros::millis();
+  // std::uint32_t time = pros::millis();
 
   while (true) { 
-    // chassis.arcade(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), 2);
+    chassis.arcade(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), 2);
     // chassis_ez.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
     // chassis_ez.opcontrol_arcade_standard(ez::SPLIT);
     pros::delay(10); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     robot.update("hi");
-    if((pros::millis() - time) >= 89000 && (!wings.get_state_hang())) //when one second is left
-    {
-      wings.toggle_hang();
-    }
+  
   }
 
 }
@@ -324,11 +321,48 @@ void purple_6ball(Pneumatics wings, Intake intake) {
   
    
 }
+void disrupt(Pneumatics wings, Intake intake){
+  
+  //set current as 0
+  chassis.setPose(0,0,17);
+  //intake on
+  intake.set_voltage(12000);
+  //move to the middle of the two sets of triballs
+  chassis.moveToPose(13, 53, 26, 2000 , {
+        .forwards = true,
+        .chasePower = 0,
+        .lead = 0.4,
+        .maxSpeed = 127,
+        .minSpeed = 0,
+        .earlyExitRange = 0});
+  chassis.turnTo(10,48,2000, 120);
+  chassis.moveToPoint(10, 48, 2000, true, 120);
+  pros::delay(250);
+  //wings
+  wings.toggle_front_left();
+  wings.toggle_back_wings();
+  //move back
+  chassis.moveToPose(15, 49, 90, 1000 , {
+    .forwards = false,
+        .chasePower = 0,
+        .lead = 0.4,
+        .maxSpeed = 125,
+        .minSpeed = 0,
+        .earlyExitRange = 0});
+  chassis.moveToPoint(36, 49, 2000, tru
+  e);
+  intake.set_voltage(-12000);
+  pros::delay(500); 
+  intake.set_voltage(0); 
+
+
+
+}
 
 
 void beginning_match(Climb climb) {
   climb.set_voltage(-10000); 
-  pros::Task::delay(100); 
+  pros::Task::delay(300); 
   climb.set_voltage(0); 
 }
 
@@ -447,9 +481,9 @@ void awp_short(Pneumatics wings, Intake intake, Climb climb) {
     intake.set_voltage(0);
 
 
-    climb.set_voltage(-10000); 
-    pros::delay(1700);
-    climb.set_voltage(0);
+  climb.set_voltage(10000); 
+  pros::delay(1700);
+  climb.set_voltage(0);
 }
 
 
@@ -460,7 +494,7 @@ void autonomous() {
   Intake intake = Intake {ports::INTAKE_MOTOR};
   Pneumatics wings = Pneumatics {ports::WING_PORT_BACK, ports::WING_PORT_FRONT_RIGHT, ports::WING_PORT_FRONT_LEFT, ports::RATCHET};
   Matchloader matchloader = Matchloader {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR };
-  Climb climb = Climb {ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR, ports::ROTATIONAL_SENSOR }; 
+  Climb climb = Climb {-ports::BIG_CATAPULT_MOTOR,ports::SMALL_CATAPULT_MOTOR, ports::ROTATIONAL_SENSOR  }; 
 
   std::printf("delaying..");
   pros::Task::delay(500);
@@ -469,7 +503,9 @@ void autonomous() {
   chassis.setPose(0, 0, 0);
   beginning_match(climb);
   // purple_6ball(wings, intake ); 
-  awp_short(wings, intake, climb); 
+  // awp_short(wings, intake, climb); 
+  disrupt(wings, intake); 
+   
 
 
 }

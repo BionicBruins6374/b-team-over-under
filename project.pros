@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "NEWCA",
+    "project_name": "disrupt",
     "target": "v5",
     "templates": {
       "EZ-Template": {

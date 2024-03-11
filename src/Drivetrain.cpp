@@ -78,17 +78,12 @@ right input = input from right joystick
 void Drivetrain::op_control(int drive_type, double left_input, 
     double right_input, double left_dampen, double right_dampen, double curve_gain ) {
     std::vector<double> raw_volt;
-
-    if (drive_type ==0) {
-        raw_volt = arcade(left_input, right_input); 
-    }
-    else if (drive_type == 1) {
-        raw_volt = curvature(right_input, left_input);
-    }
+    raw_volt = arcade(left_input, right_input); 
+    
 
     std::vector<double> dampened_velocities = dampen_turns(raw_volt[0], 
         raw_volt[1], left_dampen, right_dampen);
-    move_voltage(dampened_velocities[0],dampened_velocities[1]);
+    this->move_voltage(dampened_velocities[0],dampened_velocities[1]);
 
 }
 

@@ -65,40 +65,33 @@ void Robot::update_intake() {
 
 
 void Robot::update_climb() {
-    // if up is pressed 
-    if (m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+ // if up is pressed 
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
         climb.toggle(); // toggle Matchloader 
         climb.set_speed(constants::HIGH_VOLTAGE_CATA); 
     
     } 
     // if down is pressed
-    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+    if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
 
         climb.toggle();
-        climb.set_speed(-constants::HIGH_VOLTAGE_CATA);
+        climb.set_speed(-1 * constants::HIGH_VOLTAGE_CATA);
      
     }
-    // if(climb.get_speed() == constants::HIGH_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-    //     climb.set_state(false);
+    if(climb.get_speed() == constants::LOW_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+        climb.set_state(false);
 
-    // }
-    //   if(climb.get_speed() == constants::HIGH_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-    //     climb.set_state(false);
+    }
+      if(climb.get_speed() == constants::HIGH_VOLTAGE_CATA && !m_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+        climb.set_state(false);
 
-    // }
+    }
 
-    // if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-    //      pros::Task task{[=] {
-    //         climb.move_position(1000);
-    // }};
-    // }
-
-    // else{
-    // climb.set_voltage(climb.get_state() * climb.get_speed()); 
-    // }
-    
     climb.set_voltage(climb.get_state() * climb.get_speed()); 
+
+
 }
+
 
 void Robot::update_matchloader() {
     if (m_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
@@ -153,7 +146,7 @@ void Robot::update(std::string info) {
     update_intake();
     // update_matchloader(); 
     update_pneumatics();
-    update_drivetrain(); 
+    // update_drivetrain(); 
     update_climb();
 
     
